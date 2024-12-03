@@ -31,11 +31,11 @@
                                 <li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <path
                                             d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> 9.7</li>
+                                    </svg> {{ $movie->rating }}</li>
                                 <li>{{ $movie->countries }}</li>
                                 <li>{{ $movie->release_year }}</li>
                                 <li>{{ $movie->duration }} min</li>
-                                <li>16+</li>
+                                <li>{{ $movie->age_rating }}+</li>
                             </ul>
 
                             <p>{{ $movie->description }}</p>
@@ -45,30 +45,55 @@
 
                     <!-- video player -->
                     <div class="col-12 col-xl-8">
-                        {{-- <iframe width="560" height="315" src="https://www.youtube.com/embed/ZA-WzArNGKA?si=8hz0J_JAKJAZDtAY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> --}}
-                        <video data-watched-duration="{{ $watchedDuration }}" controls crossorigin playsinline
-                            poster="{{ Storage::url('public/images/' . $movie->poster_url) }}" id="player">
-                            <!-- Video files -->
-                            <source src="{{ Storage::url('public/videos/' . $movie->video_url) }}" type="video/mp4">
 
-                            {{-- <source src="{{Storage::url('public/videos/'.$movie->video_url)}}" type="video/mp4" size="720">
-							<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4" type="video/mp4" size="1080"> --}}
+                        @if ($episode->link_video_internet!=null)
+                            <video id="player" data-watched-duration="{{ $watchedDuration }}"
+                                poster="{{ $movie->link_poster_internet!=null?$movie->link_poster_internet:Storage::url('public/images/' . $movie->poster_url) }}" controls>
 
-                            <!-- Caption files -->
-                            <track kind="captions" label="English" srclang="en"
-                                src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt" default>
-                            <track kind="captions" label="Français" srclang="fr"
-                                src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">
+                            </video>
+                            <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+                            <script>
+                                // URL của video HLS (.m3u8)
+                                const videoUrl = 'https://vip.opstream16.com/20230114/29210_45f6d896/index.m3u8';
 
-                            <!-- Fallback for browsers that don't support the <video> element -->
-                            <a href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
-                                download>Download</a>
-                        </video>
+                                // Lấy phần tử video
+                                const video = document.getElementById('player');
+
+                                // Kiểm tra nếu trình duyệt hỗ trợ native HLS (Safari)
+                                if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                                    video.src = videoUrl;
+                                } else if (Hls.isSupported()) {
+                                    // Trình duyệt không hỗ trợ HLS natively, dùng HLS.js
+                                    const hls = new Hls();
+                                    hls.loadSource(videoUrl);
+                                    hls.attachMedia(video);
+                                } else {
+                                    console.error('HLS không được hỗ trợ trên trình duyệt này.');
+                                }
+                            </script>
+                        @else
+                            <video data-watched-duration="{{ $watchedDuration }}" controls crossorigin playsinline
+                                poster="{{ $movie->link_poster_internet!=null?$movie->link_poster_internet:Storage::url('public/images/' . $movie->poster_url) }}" id="player">
+
+                                <source src="{{ Storage::url('public/videos/' . $episode->video_url) }}" type="video/mp4">
+
+
+                                <track kind="captions" label="English" srclang="en"
+                                    src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt" default>
+                                <track kind="captions" label="Français" srclang="fr"
+                                    src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">
+
+
+                                <a href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
+                                    download>Download</a>
+                            </video>
+                        @endif
+
                         <script>
                             document.addEventListener('DOMContentLoaded', () => {
                                 const video = document.getElementById('player'); // Lấy thẻ video
                                 const watchedDuration = parseInt(video.getAttribute('data-watched-duration'), 10) ||
-                                0; // Lấy watchedDuration từ data-watched-duration
+                                    0; // Lấy watchedDuration từ data-watched-duration
 
                                 // Set thời gian bắt đầu cho video
                                 video.currentTime = watchedDuration;
@@ -126,7 +151,7 @@
                     <!-- end video player -->
 
                     <!-- series -->
-                    <div class="col-12">
+                    {{-- <div class="col-12">
                         <div class="series-wrap">
                             <h3 class="series-wrap__title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <path
@@ -261,17 +286,34 @@
                                     </svg></button>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <!-- end series -->
 
                     <div class="col-12 col-xl-8">
                         <!-- categories -->
                         <div class="categories">
                             <h3 class="categories__title">Genres</h3>
-                            <a href="category.html" class="categories__item">Action</a>
-                            <a href="category.html" class="categories__item">Thriller</a>
-                            <a href="category.html" class="categories__item">Crime</a>
+                            @foreach ($movie->categories as $category)
+                                <a href="{{ route('category.filter', ['category' => $category->id]) }}"
+                                    class="categories__item">{{ $category->name }}</a>
+                            @endforeach
+
+                            {{-- <a href="category.html" class="categories__item">Thriller</a>
+                            <a href="category.html" class="categories__item">Crime</a> --}}
                         </div>
+                        @if (isset($movie->episodes))
+                            <div class="categories">
+                                <h3 class="categories__title">Episodes</h3>
+                                @foreach ($movie->episodes as $episode)
+                                    <a href="{{ route('movie.show', ['movie_id' => $movie->id,'episode' => $episode->id]) }}"
+                                        class="categories__item">{{ $episode->episode_number }}</a>
+                                @endforeach
+
+                                {{-- <a href="category.html" class="categories__item">Thriller</a>
+                            <a href="category.html" class="categories__item">Crime</a> --}}
+                            </div>
+                        @endif
+
                         <!-- end categories -->
 
                         <!-- share -->
@@ -1161,8 +1203,7 @@
                                         <path
                                             d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
                                     </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
+                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <path
                                             d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
                                     </svg> 7.0</span>
@@ -1192,8 +1233,7 @@
                                         <path
                                             d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
                                     </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
+                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <path
                                             d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
                                     </svg> 7.5</span>
@@ -1223,8 +1263,7 @@
                                         <path
                                             d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
                                     </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
+                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <path
                                             d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
                                     </svg> 7.2</span>
@@ -1254,8 +1293,7 @@
                                         <path
                                             d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
                                     </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
+                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <path
                                             d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
                                     </svg> 7.1</span>
@@ -1285,8 +1323,7 @@
                                         <path
                                             d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
                                     </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
+                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <path
                                             d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
                                     </svg> 7.2</span>
@@ -1352,55 +1389,55 @@
         </div>
     </section>
     @if (!empty(Auth::user()))
-	<script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const video = document.getElementById('player'); // Lấy thẻ video
-            const userId = {{ auth()->user()->id }}
-            const movieId = {{ $movie->id }}; // Lấy ID phim từ server (Laravel Blade)
-            const token = '{{ csrf_token() }}'; // CSRF token nếu cần
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const video = document.getElementById('player'); // Lấy thẻ video
+                const userId = {{ auth()->user()->id }}
+                const movieId = {{ $movie->id }}; // Lấy ID phim từ server (Laravel Blade)
+                const token = '{{ csrf_token() }}'; // CSRF token nếu cần
 
-            // Hàm để gửi dữ liệu lịch sử xem
-            function saveViewHistory() {
-                const currentTime = video.currentTime; // Thời gian hiện tại của video
+                // Hàm để gửi dữ liệu lịch sử xem
+                function saveViewHistory() {
+                    const currentTime = video.currentTime; // Thời gian hiện tại của video
 
-                // Gửi dữ liệu đến server bằng fetch
-                fetch('/api/view-history', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer <YOUR_ACCESS_TOKEN>` // Thay YOUR_ACCESS_TOKEN bằng token thực tế nếu cần
-                        },
-                        body: JSON.stringify({
-                            user_id: userId,
-                            movie_id: movieId,
-                            watched_duration: Math.floor(
-                            currentTime), // Lấy thời gian hiện tại (làm tròn)
+                    // Gửi dữ liệu đến server bằng fetch
+                    fetch('/api/view-history', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer <YOUR_ACCESS_TOKEN>` // Thay YOUR_ACCESS_TOKEN bằng token thực tế nếu cần
+                            },
+                            body: JSON.stringify({
+                                user_id: userId,
+                                movie_id: movieId,
+                                watched_duration: Math.floor(
+                                    currentTime), // Lấy thời gian hiện tại (làm tròn)
+                            })
                         })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to save view history');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('View history updated:', data);
-                    })
-                    .catch(error => {
-                        console.error('Error updating view history:', error);
-                    });
-            }
-
-            // Gửi dữ liệu định kỳ mỗi 5 giây
-            setInterval(() => {
-                if (!video.paused) { // Chỉ lưu nếu video đang được phát
-                    saveViewHistory();
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to save view history');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('View history updated:', data);
+                        })
+                        .catch(error => {
+                            console.error('Error updating view history:', error);
+                        });
                 }
-            }, 5000); // Mỗi 5 giây
-        });
-    </script>
+
+                // Gửi dữ liệu định kỳ mỗi 5 giây
+                setInterval(() => {
+                    if (!video.paused) { // Chỉ lưu nếu video đang được phát
+                        saveViewHistory();
+                    }
+                }, 5000); // Mỗi 5 giây
+            });
+        </script>
     @endif
-    
+
     {{-- <script src="js/scripts.js"></script> --}}
 
     <!-- end similar -->

@@ -26,55 +26,43 @@
             <div class="row">
                 <div class="col-12">
                     <div class="catalog__nav">
-                        <div class="catalog__select-wrap">
-                            <select class="catalog__select" name="genres">
-                                <option value="All genres">All genres</option>
-                                <option value="Action/Adventure">Action/Adventure</option>
-                                <option value="Animals">Animals</option>
-                                <option value="Animation">Animation</option>
-                                <option value="Biography">Biography</option>
-                                <option value="Comedy">Comedy</option>
-                                <option value="Cooking">Cooking</option>
-                                <option value="Dance">Dance</option>
-                                <option value="Documentary">Documentary</option>
-                                <option value="Drama">Drama</option>
-                                <option value="Education">Education</option>
-                                <option value="Entertainment">Entertainment</option>
-                                <option value="Family">Family</option>
-                                <option value="Fantasy">Fantasy</option>
-                                <option value="History">History</option>
-                                <option value="Horror">Horror</option>
-                                <option value="Independent">Independent</option>
-                                <option value="International">International</option>
-                                <option value="Kids & Family">Kids & Family</option>
-                                <option value="Medical">Medical</option>
-                                <option value="Military/War">Military/War</option>
-                                <option value="Music">Music</option>
-                                <option value="Mystery/Crime">Mystery/Crime</option>
-                                <option value="Nature">Nature</option>
-                                <option value="Paranormal">Paranormal</option>
-                                <option value="Politics">Politics</option>
-                                <option value="Racing">Racing</option>
-                                <option value="Romance">Romance</option>
-                                <option value="Sci-Fi/Horror">Sci-Fi/Horror</option>
-                                <option value="Science">Science</option>
-                                <option value="Science Fiction">Science Fiction</option>
-                                <option value="Science/Nature">Science/Nature</option>
-                                <option value="Travel">Travel</option>
-                                <option value="Western">Western</option>
-                            </select>
 
-                            <select class="catalog__select" name="years">
-                                <option value="All the years">All the years</option>
-                                <option value="1">'50s</option>
-                                <option value="2">'60s</option>
-                                <option value="3">'70s</option>
-                                <option value="4">'80s</option>
-                                <option value="5">'90s</option>
-                                <option value="6">2000-10</option>
-                                <option value="7">2010-20</option>
-                                <option value="8">2021</option>
-                            </select>
+
+
+
+                        <div class="catalog__select-wrap">
+                            <form action="{{ route('category.filter') }}" method="get">
+                                <select class="catalog__select" name="category">
+                                    <option value="">All genres</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}"
+                                            @if ($category->id == request()->category) selected @endif>{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+
+                                <select class="catalog__select" name="year">
+                                    <option value="">All the years</option>
+                                    <option value="1">'50s</option>
+                                    <option value="2">'60s</option>
+                                    <option value="3">'70s</option>
+                                    <option value="4">'80s</option>
+                                    <option value="5">'90s</option>
+                                    <option value="6">2000-10</option>
+                                    <option value="7">2010-20</option>
+                                    <option value="8">2021</option>
+                                </select>
+                                <select class="catalog__select" name="type_film">
+                                    <option value="">All the type firm</option>
+                                    <option value="TV Show">TV Show</option>
+                                    <option value="Movie">Movie</option>
+                                   
+                                </select>
+                                <input type="text" style="padding: 0 0 0 20px; background-color:    #131720; color:#fff; border: none; margin-right: 10px; height: 40px; border-radius: 16px;"
+                                    name="search" value="{{ request()->search }}"  placeholder="I'm looking for...">
+                                <button type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#2f80ed" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>                                </button>
+                            </form>
+
                         </div>
 
                         <div class="slider-radio">
@@ -83,14 +71,15 @@
                             <input type="radio" name="grade" id="popular"><label for="popular">Popular</label>
                             <input type="radio" name="grade" id="newest"><label for="newest">Newest</label>
                         </div>
+
                     </div>
 
                     <div class="row row--grid">
-                        @foreach ($movies as $item)
+                        @foreach ($movies as $movie)
                             <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
                                 <div class="card">
-                                    <a href="{{ route('movie.show', $item->id) }}" class="card__cover">
-                                        <img src="{{ Storage::url('public/images/' . $item->poster_url) }}" alt="">
+                                    <a href="{{ route('movie.show', $movie->id) }}" class="card__cover">
+                                        <img src="{{ $movie->link_poster_internet!=null?$movie->link_poster_internet:Storage::url('public/images/' . $movie->poster_url) }}" alt="">
                                         <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -101,21 +90,51 @@
                                                 stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>
                                     </a>
-                                    <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                        </svg></button>
-                                    <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24">
+                                    <form action="{{ route('favorite.add') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="movie_id" value="{{ $movie->id }}">
+                                        <input type="hidden" name="user_id" value="{{ Auth::user()->id ?? null }}">
+                                        <button class="card__add" type="submit">
+											
+											@if (auth()->check())
+											<?php $dem = 0; ?>
+											@foreach ($favorites as $item)
+												@if ($item->user_id == auth()->user()->id && $item->movie_id == $movie->id)
+													<?php $dem += 1; ?>
+												@endif
+											@endforeach
+											@if ($dem == 0)
+											<svg xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 24 24">
+											<path
+												d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
+										</svg>
+											@else
+												<svg xmlns="http://www.w3.org/2000/svg" height="6.5" width="7.5"
+													viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+													<path fill="#FFD43B"
+														d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z" />
+												</svg>
+											@endif
+										@else
+										<svg xmlns="http://www.w3.org/2000/svg"
+										viewBox="0 0 24 24">
+										<path
+											d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
+									</svg>
+										@endif
+										</button>
+                                    </form>
+                                    <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                             <path
                                                 d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                        </svg> 8.3</span>
-                                    <h3 class="card__title"><a href="details.html">{{ $item->title }}</a></h3>
+                                        </svg> {{$movie->rating}}</span>
+                                    <h3 class="card__title"><a
+                                            href="{{ route('movie.show', $movie->id) }}">{{ $movie->title }}</a></h3>
                                     <ul class="card__list">
                                         {{-- <li>Free</li> --}}
-                                        <li>Action</li>
-                                        <li>2019</li>
+                                        <li>{{ $movie->release_year }}</li>
+                                        <li>{{ $movie->categories->first()->name ?? null }}</li>
                                     </ul>
                                 </div>
                             </div>

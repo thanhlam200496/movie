@@ -63,7 +63,7 @@
             <div class="main__title">
                 <h2>Catalog</h2>
 
-                <span class="main__title-stat">14 452 total</span>
+                <span class="main__title-stat"><a href="{{route('admin.episode.create',$movie_id)}}">Add episode</a></span>
 
                 <div class="main__title-wrap">
                     <!-- filter sort -->
@@ -114,16 +114,75 @@
                         <tr>
                             <th>ID</th>
                             <th>TITLE</th>
-                            <th>RATING</th>
-                            <th>CATEGORY</th>
-                            <th>VIEWS</th>
-                            <th>STATUS</th>
+                            <th>Episode number</th>
+
                             <th>CRAETED DATE</th>
                             <th>ACTIONS</th>
                         </tr>
                     </thead>
                     <tbody id="movieTable">
-                        @include('admin_movie.movies.partials.movie_table', ['movies' => $movies])
+                        @foreach ($episodes as $movie)
+                            
+                            <div id="modal-delete-{{ $movie->id }}" class="zoom-anim-dialog mfp-hide modal">
+                                <h6 class="modal__title">movie delete</h6>
+
+                                <p class="modal__text">Are you sure to permanently delete this movie?</p>
+
+                                <div class="modal__btns">
+                                    <form action="{{ route('admin.episode.destroy', $movie->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="modal__btn modal__btn--apply" type="submit">Delete</button>
+                                    </form>
+
+                                    <button class="modal__btn modal__btn--dismiss" type="button">Dismiss</button>
+                                </div>
+                            </div>
+                            <tr class="main__table-row">
+                                <td>
+                                    <div class="main__table-text">{{ $movie->id }}</div>
+                                </td>
+                                <td>
+                                    <div class="main__table-text">
+                                        @if (strlen($movie->title) > 40)
+                                            {{ substr($movie->title, 0, 39) }}...
+                                        @else
+                                            {{ $movie->title }}
+                                        @endif
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="main__table-text">{{ $movie->episode_number }}</div>
+                                </td>
+
+
+                                <td>
+                                    <div class="main__table-text">{{ $movie->created_at->format('Y-m-d') }}</div>
+                                </td>
+                                <td>
+                                    <div class="main__table-btns">
+
+
+                                        <a href="{{ route('admin.episode.show', ['movie_id'=>$movie_id,'episode_id'=>$movie->id]) }}"
+                                            class="main__table-btn main__table-btn--edit">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M22,7.24a1,1,0,0,0-.29-.71L17.47,2.29A1,1,0,0,0,16.76,2a1,1,0,0,0-.71.29L13.22,5.12h0L2.29,16.05a1,1,0,0,0-.29.71V21a1,1,0,0,0,1,1H7.24A1,1,0,0,0,8,21.71L18.87,10.78h0L21.71,8a1.19,1.19,0,0,0,.22-.33,1,1,0,0,0,0-.24.7.7,0,0,0,0-.14ZM6.83,20H4V17.17l9.93-9.93,2.83,2.83ZM18.17,8.66,15.34,5.83l1.42-1.41,2.82,2.82Z" />
+                                            </svg>
+                                        </a>
+
+                                        <a href="#modal-delete-{{ $movie->id }}"
+                                            class="main__table-btn main__table-btn--delete open-modal">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18ZM20,6H16V5a3,3,0,0,0-3-3H11A3,3,0,0,0,8,5V6H4A1,1,0,0,0,4,8H5V19a3,3,0,0,0,3,3h8a3,3,0,0,0,3-3V8h1a1,1,0,0,0,0-2ZM10,5a1,1,0,0,1,1-1h2a1,1,0,0,1,1,1V6H10Zm7,14a1,1,0,0,1-1,1H8a1,1,0,0,1-1-1V8H17Zm-3-1a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z" />
+                                            </svg>
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
 
@@ -136,19 +195,19 @@
             <div class="paginator">
                 <span class="paginator__pages">
                     Showing
-                    @if ($movies->lastItem() != $movies->total())
-                        {{ $movies->firstItem() }}
+                    @if ($episodes->lastItem() != $episodes->total())
+                        {{ $episodes->firstItem() }}
                         to
                     @endif
-                    {{ $movies->lastItem() }} item
-                    of {{ $movies->total() }} results
+                    {{ $episodes->lastItem() }} item
+                    of {{ $episodes->total() }} results
                 </span>
 
                 <ul class="paginator__paginator">
                     <!-- Nút Previous -->
-                    @if (!$movies->onFirstPage())
+                    @if (!$episodes->onFirstPage())
                         <li>
-                            <a href="{{ $movies->previousPageUrl() }}">
+                            <a href="{{ $episodes->previousPageUrl() }}">
                                 <svg width="14" height="11" viewBox="0 0 14 11" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M0.75 5.36475L13.1992 5.36475" stroke-width="1.2" stroke-linecap="round"
@@ -162,13 +221,13 @@
 
                     <!-- Hiển thị các trang lân cận -->
                     @php
-                        $start = max(1, $movies->currentPage() - 2); // Trang bắt đầu hiển thị (2 trang trước)
-                        $end = min($movies->lastPage(), $movies->currentPage() + 2); // Trang kết thúc hiển thị (2 trang sau)
+                        $start = max(1, $episodes->currentPage() - 2); // Trang bắt đầu hiển thị (2 trang trước)
+                        $end = min($episodes->lastPage(), $episodes->currentPage() + 2); // Trang kết thúc hiển thị (2 trang sau)
                     @endphp
 
                     <!-- Hiển thị trang đầu tiên và '...' nếu cần -->
                     @if ($start > 1)
-                        <li><a href="{{ $movies->url(1) }}">1</a></li>
+                        <li><a href="{{ $episodes->url(1) }}">1</a></li>
                         @if ($start > 2)
                             <li><span style="color: #fff">...</span></li>
                         @endif
@@ -176,23 +235,23 @@
 
                     <!-- Vòng lặp hiển thị các trang trong khoảng $start đến $end -->
                     @for ($page = $start; $page <= $end; $page++)
-                        <li class="{{ $movies->currentPage() == $page ? 'active' : '' }}">
-                            <a href="{{ $movies->url($page) }}">{{ $page }}</a>
+                        <li class="{{ $episodes->currentPage() == $page ? 'active' : '' }}">
+                            <a href="{{ $episodes->url($page) }}">{{ $page }}</a>
                         </li>
                     @endfor
 
                     <!-- Hiển thị trang cuối cùng và '...' nếu cần -->
-                    @if ($end < $movies->lastPage())
-                        @if ($end < $movies->lastPage() - 1)
+                    @if ($end < $episodes->lastPage())
+                        @if ($end < $episodes->lastPage() - 1)
                             <li><span style="color: #fff">...</span></li>
                         @endif
-                        <li><a href="{{ $movies->url($movies->lastPage()) }}">{{ $movies->lastPage() }}</a></li>
+                        <li><a href="{{ $episodes->url($episodes->lastPage()) }}">{{ $episodes->lastPage() }}</a></li>
                     @endif
 
                     <!-- Nút Next -->
-                    @if ($movies->hasMorePages())
+                    @if ($episodes->hasMorePages())
                         <li>
-                            <a href="{{ $movies->nextPageUrl() }}">
+                            <a href="{{ $episodes->nextPageUrl() }}">
                                 <svg width="14" height="11" viewBox="0 0 14 11" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M13.1992 5.3645L0.75 5.3645" stroke-width="1.2" stroke-linecap="round"

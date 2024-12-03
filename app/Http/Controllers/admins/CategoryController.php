@@ -16,7 +16,7 @@ class CategoryController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%')
             ->orWhere('description', 'like', '%' . $request->search . '%');
         }
-        $categories = $query->paginate(10);
+        $categories = $query->paginate(5);
 
         return view('admin_movie.categories.index', compact('categories'));
     }

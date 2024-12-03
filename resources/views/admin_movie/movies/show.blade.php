@@ -6,6 +6,7 @@
             <div class="main__title"
                 style="position: fixed; background-color: #131720; z-index: 1000; padding: 10px 0; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); width: 100%">
                 <h2>Add new item</h2>
+                <a href="{{ route('admin.episode.index', $movie->id) }}">list episode</a>
             </div>
         </div>
         <!-- end main title -->
@@ -24,7 +25,7 @@
                                     <label for="form__img-upload">Upload cover (190 x 270)</label>
                                     <input id="form__img-upload" name="poster_url_new" type="file"
                                         accept=".png, .jpg, .jpeg">
-                                    <img id="form__img" src="{{ Storage::url('public/images/' . $movie->poster_url) }}"
+                                    <img id="form__img" src="{{ $movie->link_poster_internet!=null?$movie->link_poster_internet:Storage::url('public/images/' . $movie->poster_url) }}"
                                         alt=" ">
                                     @error('poster_url')
                                         <div class="main__table-text--red">{{ $message }}</div>
@@ -32,14 +33,15 @@
                                 </div>
                             </div>
                             <div class="col-12 col-sm-6 col-md-12">
-                            @if ($movie->video_url == null || $movie->video_url == '')
-                                <span style="color: #fff">Không có video</span>
-                            @else
-                                <video id="videoPlayer" controls width="270">
-                                    <source src="{{ Storage::url('public/videos/' . $movie->video_url) }}" type="video/mp4">
-                                    Trình duyệt của bạn không hỗ trợ thẻ video.
-                                </video>
-                            @endif
+                                @if ($movie->video_url == null || $movie->video_url == '')
+                                    <span style="color: #fff">Không có video</span>
+                                @else
+                                    <video id="videoPlayer" controls width="270">
+                                        <source src="{{ $movie->link_video_internet!=null?$movie->link_poster_internet:Storage::url('public/videos/' . $movie->video_url) }}"
+                                            type="video/mp4">
+                                        Trình duyệt của bạn không hỗ trợ thẻ video.
+                                    </video>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -48,21 +50,29 @@
 
                     <div class="col-12 col-md-7 form__content">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 col-lg-6">
                                 <div class="form__group">
-                                    <label style="color: #fff" for="">Title:</label>
-                                    <input type="text" class="form__input" name="title" value="{{ $movie->title }}"
-                                        placeholder="Title">
+
+                                    <input type="text" class="form__input" onkeyup="ChangeToSlug()" id="title"
+                                        name="title" value="{{ $movie->title }}" placeholder="Title">
                                     @error('title')
                                         <div class="main__table-text--red">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                             </div>
-
+                            <div class="col-12 col-lg-6">
+                                <div class="form__group">
+                                    <input type="text" class="form__input" id="slug" name="slug"
+                                        value="{{ $movie->slug }}" readonly placeholder="Slug">
+                                    @error('title')
+                                        <div class="main__table-text--red">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="col-12">
                                 <div class="form__group">
-                                    <label style="color: #fff" for="">Description:</label>
+
                                     <textarea id="text" name="description" class="form__textarea" placeholder="Description">{{ $movie->description }}</textarea>
                                     @error('description')
                                         <div class="main__table-text--red">{{ $message }}</div>
@@ -72,7 +82,7 @@
 
                             <div class="col-12 col-sm-6 col-lg-3">
                                 <div class="form__group">
-                                    <label style="color: #fff" for="">Release year:</label>
+
                                     <input type="text" name="release_year" class="form__input" placeholder="Release year"
                                         value="{{ $movie->release_year }}">
                                     @error('release_year')
@@ -83,7 +93,7 @@
 
                             <div class="col-12 col-sm-6 col-lg-3">
                                 <div class="form__group">
-                                    <label style="color: #fff" for="">Running timed in minutes:</label>
+
                                     <input type="text" name="duration" class="form__input"
                                         placeholder="Running timed in minutes" value="{{ $movie->duration }}">
                                     @error('duration')
@@ -94,10 +104,12 @@
 
                             <div class="col-12 col-sm-6 col-lg-3">
                                 <div class="form__group">
-                                    <label style="color: #fff" for="">Status:</label>
+
                                     <select class="js-example-basic-single" name="status" id="quality">
-                                        <option value="Hidden" {{ $movie->status == 'Hidden' ? 'selected' : '' }}>Hidden</option>
-                                        <option value="Public" {{ $movie->status == 'Public' ? 'selected' : '' }}>Public</option>
+                                        <option value="Hidden" {{ $movie->status == 'Hidden' ? 'selected' : '' }}>Hidden
+                                        </option>
+                                        <option value="Public" {{ $movie->status == 'Public' ? 'selected' : '' }}>Public
+                                        </option>
                                         <option value="Not Released"
                                             {{ $movie->status == 'Not Released' ? 'selected' : '' }}>Not Released</option>
                                     </select>
@@ -106,7 +118,7 @@
 
                             <div class="col-12 col-sm-6 col-lg-3">
                                 <div class="form__group">
-                                    <label style="color: #fff" for="">Age:</label>
+
                                     <input type="text" name="age_rating" class="form__input" placeholder="Age"
                                         value="{{ $movie->age_rating }}">
                                     @error('age_rating')
@@ -117,8 +129,9 @@
 
                             <div class="col-12 col-lg-6">
                                 <div class="form__group">
-                                    <label style="color: #fff" for="">Countries:</label>
-                                    <select class="js-example-basic-multiple" name="countries[]" id="country" multiple="multiple">
+
+                                    <select class="js-example-basic-multiple" name="countries[]" id="country"
+                                        multiple="multiple">
 
                                         <option value="Afghanistan" @if (in_array('Afghanistan', old('countries', []))) selected @endif>
                                             Afghanistan</option>
@@ -439,7 +452,7 @@
 
                             <div class="col-12 col-lg-6">
                                 <div class="form__group">
-                                    <label style="color: #fff" for="">Categories:</label>
+
                                     <select class="js-example-basic-multiple" name="categories_id[]" id="genre"
                                         multiple="multiple">
                                         @foreach ($allCategories as $item)
@@ -458,7 +471,13 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12 col-lg-6">
+                                <div class="form__group form__group--link-poster">
+                                    <input type="text" class="form__input" name="link_poster_internet"
+                                        placeholder="or add a link poster" value="{{$movie->link_poster_internet}}">
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
                                 <ul class="form__radio">
                                     <li>
                                         <span>Item type:</span>
@@ -478,29 +497,26 @@
                             <div class="col-12 col-lg-6">
                                 <div class="form__video">
                                     <label id="movie1" for="form__video-upload">Upload video</label>
-                                    <input data-name="#movie1" id="form__video-upload" name="video_url_new"
+                                    <input data-name="#movie1" id="form__video-upload" name="video_url"
                                         class="form__video-upload" type="file" accept="video/mp4,video/x-m4v,video/*">
-                                    @error('video_url')
-                                        <div class="main__table-text--red">{{ $message }}</div>
-                                    @enderror
                                 </div>
                             </div>
-
+                            
                             <div class="col-12 col-lg-6">
                                 <div class="form__group form__group--link">
-                                    <input type="text" class="form__input" placeholder="or add a link">
+                                    <input type="text" class="form__input" value="{{$movie->link_video_internet}}"  name="link_video_internet" placeholder="or add a link">
                                 </div>
                             </div>
-                            
-                            
 
-                                <div class="col-12">
-                                    <button type="submit" class="form__btn">publish</button>
-                                </div>
-                            
+
+
+                            <div class="col-12">
+                                <button type="submit" class="form__btn">publish</button>
+                            </div>
+
                         </div>
                     </div>
-                    
+
 
 
 
@@ -512,4 +528,59 @@
         </div>
         <!-- end form -->
     </div>
+    <script>
+        function ChangeToSlug() {
+            var title = document.getElementById("title").value;
+
+            //Đổi chữ hoa thành chữ thường
+            var slug = title.toLowerCase();
+
+            //Đổi ký tự có dấu thành không dấu
+            slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+            slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+            slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+            slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+            slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+            slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+            slug = slug.replace(/đ/gi, 'd');
+            //Xóa các ký tự đặc biệt
+            slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
+            //Đổi khoảng trắng thành ký tự gạch ngang
+            slug = slug.replace(/ /gi, "-");
+            //Đổi nhiều ký tự gạch ngang liên tiếp thành 1 ký tự gạch ngang
+            slug = slug.replace(/\-\-\-\-\-/gi, '-');
+            slug = slug.replace(/\-\-\-\-/gi, '-');
+            slug = slug.replace(/\-\-\-/gi, '-');
+            slug = slug.replace(/\-\-/gi, '-');
+            //Xóa các ký tự gạch ngang ở đầu và cuối
+            slug = '@' + slug + '@';
+            slug = slug.replace(/\@\-|\-\@|\@/gi, '');
+
+            document.getElementById('slug').value = slug;
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const movieRadio = document.getElementById('type1'); // Radio button Movie
+            const tvShowRadio = document.getElementById('type2'); // Radio button TV Show
+            const uploadSection = document.querySelectorAll(
+            '.form__video, .form__group--link'); // Chọn các div cần ẩn/hiện
+
+            // Hàm ẩn hoặc hiện phần upload
+            function toggleUploadSection() {
+                if (movieRadio.checked) {
+                    uploadSection.forEach(element => element.style.display = 'block'); // Hiện khi chọn Movie
+                } else {
+                    uploadSection.forEach(element => element.style.display = 'none'); // Ẩn khi chọn TV Show
+                }
+            }
+
+            // Lắng nghe sự kiện thay đổi radio button
+            movieRadio.addEventListener('change', toggleUploadSection);
+            tvShowRadio.addEventListener('change', toggleUploadSection);
+
+            // Gọi hàm khi tải trang lần đầu để đảm bảo trạng thái đúng
+            toggleUploadSection();
+        });
+    </script>
 @endsection

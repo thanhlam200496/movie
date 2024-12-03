@@ -19,7 +19,7 @@
 	<!-- Favicons -->
 	<link rel="icon" type="image/png" href="{{asset('clients/icon/favicon-32x32.png')}}" sizes="32x32">
 	<link rel="apple-touch-icon" href="{{asset('clients/icon/favicon-32x32.png')}}">
-
+{{-- <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" /> --}}
 	<meta name="description" content="">
 	<meta name="keywords" content="">
 	<meta name="author" content="Dmitry Volkov">
@@ -49,6 +49,8 @@
 	<script src="{{asset('clients/js/jquery.magnific-popup.min.js')}}"></script>
 	<script src="{{asset('clients/js/plyr.min.js')}}"></script>
 	<script src="{{asset('clients/js/main.js')}}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
 </body>
 
 <!-- Mirrored from flixtv.volkovdesign.com/main/index3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 03 Nov 2024 08:09:33 GMT -->

@@ -34,9 +34,9 @@
 
                     <div class="col-12 col-md-7 form__content">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 col-lg-6">
                                 <div class="form__group">
-                                    <input type="text" class="form__input" name="title" value="{{ old('title') }}"
+                                    <input type="text" class="form__input" onkeyup="ChangeToSlug()" id="title" name="title" value="{{ old('title') }}"
                                         placeholder="Title">
                                     @error('title')
                                         <div class="main__table-text--red">{{ $message }}</div>
@@ -44,7 +44,15 @@
                                 </div>
 
                             </div>
-
+                            <div class="col-12 col-lg-6">
+                                <div class="form__group">
+                                    <input type="text" class="form__input" id="slug" name="slug" value="{{ old('slug') }}" readonly
+                                        placeholder="Slug">
+                                    @error('title')
+                                        <div class="main__table-text--red">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="col-12">
                                 <div class="form__group">
                                     <textarea id="text" name="description" class="form__textarea" placeholder="Description">{{ old('description') }}</textarea>
@@ -430,7 +438,12 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12 col-lg-6">
+                                <div class="form__group form__group--link-poster">
+                                    <input type="text" class="form__input"  name="link_poster_internet" placeholder="or add a link poster">
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
                                 <ul class="form__radio">
                                     <li>
                                         <span>Item type:</span>
@@ -445,12 +458,6 @@
                                     </li>
                                 </ul>
                             </div>
-                            {{-- <div class="col-12">
-                                <div class="form__gallery">
-                                    <label id="gallery1" for="form__gallery-upload">Upload photos</label>
-                                    <input data-name="#gallery1" id="form__gallery-upload" name="gallery" class="form__gallery-upload" type="file" accept=".png, .jpg, .jpeg" multiple>
-                                </div>
-                            </div> --}}
                         </div>
                     </div>
 
@@ -463,15 +470,12 @@
                                     <label id="movie1" for="form__video-upload">Upload video</label>
                                     <input data-name="#movie1" id="form__video-upload" name="video_url"
                                         class="form__video-upload" type="file" accept="video/mp4,video/x-m4v,video/*">
-                                    @error('video_url')
-                                        <div class="main__table-text--red">{{ $message }}</div>
-                                    @enderror
                                 </div>
                             </div>
-
+                            
                             <div class="col-12 col-lg-6">
                                 <div class="form__group form__group--link">
-                                    <input type="text" class="form__input" placeholder="or add a link">
+                                    <input type="text" class="form__input"  name="link_video_internet" placeholder="or add a link">
                                 </div>
                             </div>
 
@@ -481,6 +485,61 @@
                         </div>
                     </div>
                 </div>
+                <script>
+                    function ChangeToSlug() {
+                        var title = document.getElementById("title").value;
+                        
+                        //Đổi chữ hoa thành chữ thường
+                        var slug = title.toLowerCase();
+                    
+                        //Đổi ký tự có dấu thành không dấu
+                        slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+                        slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+                        slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+                        slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+                        slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+                        slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+                        slug = slug.replace(/đ/gi, 'd');
+                        //Xóa các ký tự đặc biệt
+                        slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
+                        //Đổi khoảng trắng thành ký tự gạch ngang
+                        slug = slug.replace(/ /gi, "-");
+                        //Đổi nhiều ký tự gạch ngang liên tiếp thành 1 ký tự gạch ngang
+                        slug = slug.replace(/\-\-\-\-\-/gi, '-');
+                        slug = slug.replace(/\-\-\-\-/gi, '-');
+                        slug = slug.replace(/\-\-\-/gi, '-');
+                        slug = slug.replace(/\-\-/gi, '-');
+                        //Xóa các ký tự gạch ngang ở đầu và cuối
+                        slug = '@' + slug + '@';
+                        slug = slug.replace(/\@\-|\-\@|\@/gi, '');
+                        
+                        document.getElementById('slug').value = slug;
+                    }
+                </script>
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const movieRadio = document.getElementById('type1'); // Radio button Movie
+                        const tvShowRadio = document.getElementById('type2'); // Radio button TV Show
+                        const uploadSection = document.querySelectorAll('.form__video, .form__group--link'); // Chọn các div cần ẩn/hiện
+                
+                        // Hàm ẩn hoặc hiện phần upload
+                        function toggleUploadSection() {
+                            if (movieRadio.checked) {
+                                uploadSection.forEach(element => element.style.display = 'block'); // Hiện khi chọn Movie
+                            } else {
+                                uploadSection.forEach(element => element.style.display = 'none');  // Ẩn khi chọn TV Show
+                            }
+                        }
+                
+                        // Lắng nghe sự kiện thay đổi radio button
+                        movieRadio.addEventListener('change', toggleUploadSection);
+                        tvShowRadio.addEventListener('change', toggleUploadSection);
+                
+                        // Gọi hàm khi tải trang lần đầu để đảm bảo trạng thái đúng
+                        toggleUploadSection();
+                    });
+                </script>
+                
             </form>
         </div>
         <!-- end form -->

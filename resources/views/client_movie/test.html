@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLS.js Video Player</title>
+    <style>
+        video {
+            width: 100%;
+            max-width: 720px;
+            margin: 20px auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>HLS Video Player with HLS.js</h1>
+    <video id="video" controls></video>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        // URL của video HLS (.m3u8)
+        const videoUrl = 'https://vip.opstream16.com/20230114/29210_45f6d896/index.m3u8';
+
+        // Lấy phần tử video
+        const video = document.getElementById('video');
+
+        // Kiểm tra nếu trình duyệt hỗ trợ native HLS (Safari)
+        if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoUrl;
+        } else if (Hls.isSupported()) {
+            // Trình duyệt không hỗ trợ HLS natively, dùng HLS.js
+            const hls = new Hls();
+            hls.loadSource(videoUrl);
+            hls.attachMedia(video);
+        } else {
+            console.error('HLS không được hỗ trợ trên trình duyệt này.');
+        }
+    </script>
+
+</body>
+</html>
