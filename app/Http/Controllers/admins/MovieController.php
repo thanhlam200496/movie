@@ -55,7 +55,7 @@ class MovieController extends Controller
             'status.required' => 'Trạng thái là bắt buộc.',
             'status.in' => 'Trạng thái không hợp lệ.',
         ]);
-        $data = $request->all('link_poster_internet', 'slug','link_video_internet', 'title', 'poster_url', 'type_film', 'duration', 'age_rating', 'release_year', 'description', 'age_rating', 'status', 'video_url');
+        $data = $request->all('link_poster_internet', 'slug', 'link_video_internet', 'title', 'poster_url', 'type_film', 'duration', 'age_rating', 'release_year', 'description', 'age_rating', 'status', 'video_url');
 
         if ($request->hasFile('poster_url')) {
             $poster_url = $request->file('poster_url')->getClientOriginalName() . '_' . Carbon::now()->timestamp . '.' . $request->poster_url->getClientOriginalExtension();
@@ -97,22 +97,26 @@ class MovieController extends Controller
     }
     public function index(Request $request)
     {
-        $query = Movie::query();
-        if ($request->has('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%')
-                ->orWhere('description', 'like', '%' . $request->search . '%');
+        $moviesFilter = Movie::query()->with('categories');
+
+        // Tìm kiếm theo tiêu đề
+        if ($request->has('search')&&$request->search!=null) {
+            $moviesFilter->where('title', 'like', '%' . $request->search . '%')->orwhere('description', 'like', '%' . $request->search . '%');
+            
         }
-        if ($request->has('filter') && $request->filter == "date-created") {
-            $movies = $query->orderBy('created_at', 'DESC');
+        if ($request->has('type_film')&&$request->type_film!=null) {
+            $moviesFilter->where('type_film', 'like', '%' . $request->type_film . '%');
         }
-        if ($request->has('filter') && $request->filter == "rating") {
-            $movies = $query->orderBy('rating', 'DESC');
+        // Tìm kiếm theo danh mục
+        if ($request->has('category')&&$request->category!=null) {
+            $categoryId = $request->input('category');
+            $moviesFilter->whereHas('categories', function ($query) use ($categoryId) {
+                $query->where('categories.id', $categoryId);
+            });
         }
-        if ($request->has('filter') && $request->filter == "views") {
-            $movies = $query->orderBy('views', 'DESC');
-        }
-        $movies = $query->paginate(5);
-        return view('admin_movie.movies.index', compact('movies'));
+        $categories = Category::orderBy('name', 'ASC')->get();
+        $movies = $moviesFilter->paginate(5);
+        return view('admin_movie.movies.index', compact('movies','categories'));
     }
 
     public function paginate(Request $request)
@@ -123,7 +127,7 @@ class MovieController extends Controller
     }
     public function show(Movie $movie)
     {
-        
+
         $categories = $movie->categories;
         $allCategories = Category::orderBy('name', 'ASC')->get();
         $countries = explode(', ', $movie->countries);
@@ -168,7 +172,7 @@ class MovieController extends Controller
             'status.required' => 'Trạng thái là bắt buộc.',
             'status.in' => 'Trạng thái không hợp lệ.',
         ]);
-        $data = $request->all('link_poster_internet', 'slug','link_video_internet', 'title', 'type_film', 'duration', 'age_rating', 'release_year', 'description', 'age_rating', 'status');
+        $data = $request->all('link_poster_internet', 'slug', 'link_video_internet', 'title', 'type_film', 'duration', 'age_rating', 'release_year', 'description', 'age_rating', 'status');
 
         if ($request->hasFile('poster_url_new')) {
             $poster_url = $request->file('poster_url_new')->getClientOriginalName() . '_' . Carbon::now()->timestamp . '.' . $request->poster_url_new->getClientOriginalExtension();
@@ -190,16 +194,14 @@ class MovieController extends Controller
         $movie_category_id = Movie::find($movie->id);
         $movie_category_id->categories()->sync($request->categories_id);
         if ($request->type_film == 'Movie') {
-            $dataEpisode = [
-                
-            ];  
+            $dataEpisode = [];
             if (isset($request->link_video_internet)) {
                 $dataEpisode['link_video_internet'] = $request->link_video_internet;
             }
             if ($request->hasFile('video_url_new')) {
                 $dataEpisode['video_url'] = $video_url;
             }
-            $episode=Episode::where('movie_id',$movie->id);
+            $episode = Episode::where('movie_id', $movie->id);
             $episode->update($dataEpisode);
         }
         return redirect()->route('admin.movie.index')->with('success', 'Cập nhật phim ' . $movie->title . ' thành công');

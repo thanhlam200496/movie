@@ -3,6 +3,8 @@
 use App\Http\Controllers\admins\CategoryController;
 use App\Http\Controllers\admins\DashboardController;
 use App\Http\Controllers\admins\EpisodeController;
+use App\Http\Controllers\admins\LeechMovieController;
+use App\Http\Controllers\admins\LeechMovieUrlCOntroller;
 use App\Http\Controllers\admins\MovieController;
 use App\Http\Controllers\clients\CategoryController as ClientsCategoryController;
 use App\Http\Controllers\clients\FavoriteController;
@@ -11,6 +13,7 @@ use App\Http\Controllers\clients\MovieController as ClientsMovieController;
 use App\Http\Controllers\clients\UserController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ViewHistoryController;
+use App\Models\LeechMovieUrl;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,14 +62,22 @@ Route::group(
         Route::get('/', [DashboardController::class, 'index']);
         Route::resource('category', CategoryController::class);
         Route::resource('episode', EpisodeController::class);
-
         Route::get('list-episode/{id}', [EpisodeController::class, 'index'])->name('episode.index');
+
+        Route::get('list-movie-api/{id}', [LeechMovieController::class, 'getMovies'])->name('leech.list');
+        Route::get('/fetch-all-movies', [LeechMovieController::class, 'importAllMoviesWithEpisodes'])->name('leech.postAll');
+
+        Route::post('/fetch-all-movies', [LeechMovieController::class, 'importAllMoviesWithEpisodes'])->name('leech.postByPage');
+        
+        Route::get('importMovieDetails/{slug}', [LeechMovieController::class, 'importMovieDetails'])->name('leech.bySlug');
+        Route::post('importMovieDetails', [LeechMovieController::class, 'importMovieDetailsBySlug'])->name('leech.slug');
         Route::get('create-episode/{id}', [EpisodeController::class, 'create'])->name('episode.create');
         Route::get('show-episode/{movie_id}/{episode_id}', [EpisodeController::class, 'show'])->name('episode.show');
         Route::put('update-episode/{movie_id}/{episode_id}', [EpisodeController::class, 'update'])->name('episode.update');
         Route::post('create-episode/{id}', [EpisodeController::class, 'store'])->name('episode.store');
         Route::resource('movie', MovieController::class);
         Route::put('update-status/{id}', [MovieController::class, 'update_status'])->name('update_status');
+        Route::resource('leech_url', LeechMovieUrlCOntroller::class);
         // Route::controller('movie',MovieController::class)->group(function ()  {
         //     Route::put('update-status/{id}','update_status')->name('update_status');
         // });

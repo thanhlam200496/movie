@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\DB;
 
 class MovieController extends Controller
 {
-    function show($id, Request $request)
+    function show($movie_id, $episode=null)
     {
-
+// dd($request->all());
         // if (auth()->check()) {
         //     $userId = auth()->user()->id ?? 1; // Mặc định user_id là 1 nếu không có chức năng auth
         //     $watchedDuration = DB::table('view_history')
@@ -42,27 +42,32 @@ class MovieController extends Controller
         // // return view('client_movie.detail',compact('movie'));
         $userId = auth()->check() ? auth()->user()->id : 1;
 
-    // Lấy watched_duration từ bảng view_history mà không cần định nghĩa quan hệ
-    $watchedDuration = DB::table('view_history')
-        ->where('user_id', $userId)
-        ->where('movie_id', $id)
-        ->value('watched_duration') ?? 0;
+        // Lấy watched_duration từ bảng view_history mà không cần định nghĩa quan hệ
+        $watchedDuration = DB::table('view_history')
+            ->where('user_id', $userId)
+            ->where('movie_id', $movie_id)
+            ->value('watched_duration') ?? 0;
 
-    // Lấy movie với các liên kết categories và episodes
-    $movie = Movie::with(['categories', 'episodes'])
-        ->findOrFail($id);
+        // Lấy movie với các liên kết categories và episodes
+        $movie = Movie::with(['categories', 'episodes'])
+            ->findOrFail($movie_id);
 
-    // Lựa chọn episode dựa vào request hoặc lấy tập đầu tiên
-    $episode = $request->has('episode_number')
-        ? Episode::where('movie_id', $movie->id)
-                 ->where('episode_number', $request->episode_number)
-                 ->firstOrFail()
-        : $movie->episodes->first();
+        if (isset($episode)) {
+            // return 'Failed to fetch movie details.';
+            $episode = Episode::where(['movie_id' => $movie->id, 'id' => $episode])->first();
+            // dd($episode);
+        } else {
+            // dd($episode);
+            $episode = $movie->episodes[0];
+        }
 
-    return view('client_movie.detail', [
-        'movie' => $movie,
-        'episode' => $episode,
-        'watchedDuration' => $watchedDuration
-    ]);
+
+
+        // dd($episode);
+        return view('client_movie.detail', [
+            'movie' => $movie,
+            'episode' => $episode,
+            'watchedDuration' => $watchedDuration
+        ]);
     }
 }

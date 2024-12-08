@@ -54,7 +54,7 @@
                             <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
                             <script>
                                 // URL của video HLS (.m3u8)
-                                const videoUrl = 'https://vip.opstream16.com/20230114/29210_45f6d896/index.m3u8';
+                                const videoUrl = '{{$episode->link_video_internet}}';
 
                                 // Lấy phần tử video
                                 const video = document.getElementById('player');
@@ -88,7 +88,13 @@
                                     download>Download</a>
                             </video>
                         @endif
-
+                        <button class="button" id="skipButton">⏩</button>
+                        <script>
+                            const skipButton = document.getElementById('skipButton');
+                            skipButton.addEventListener('click', () => {
+        video.currentTime += 10;
+    }); 
+                        </script>
                         <script>
                             document.addEventListener('DOMContentLoaded', () => {
                                 const video = document.getElementById('player'); // Lấy thẻ video

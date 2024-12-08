@@ -13,6 +13,6 @@ class Category extends Model
 {
     return $this->belongsToMany(Movie::class, 'category_movie');
 }
-protected $fillable=['name','description'];
+protected $fillable=['name','description','slug'];
 
 }

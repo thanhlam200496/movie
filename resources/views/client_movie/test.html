@@ -3,41 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HLS.js Video Player</title>
-    <style>
-        video {
-            width: 100%;
-            max-width: 720px;
-            margin: 20px auto;
-            display: block;
-        }
-    </style>
+    <title>Notification Sound</title>
 </head>
 <body>
+    <h1>Welcome to the website!</h1>
+    <audio id="page-load-sound" src="/public/notification.mp3"></audio>
 
-    <h1>HLS Video Player with HLS.js</h1>
-    <video id="video" controls></video>
-
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
-        // URL của video HLS (.m3u8)
-        const videoUrl = 'https://vip.opstream16.com/20230114/29210_45f6d896/index.m3u8';
-
-        // Lấy phần tử video
-        const video = document.getElementById('video');
-
-        // Kiểm tra nếu trình duyệt hỗ trợ native HLS (Safari)
-        if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = videoUrl;
-        } else if (Hls.isSupported()) {
-            // Trình duyệt không hỗ trợ HLS natively, dùng HLS.js
-            const hls = new Hls();
-            hls.loadSource(videoUrl);
-            hls.attachMedia(video);
-        } else {
-            console.error('HLS không được hỗ trợ trên trình duyệt này.');
-        }
+        // Phát âm thanh khi trang được tải xong
+        window.onload = function () {
+            const audioElement = document.getElementById('page-load-sound');
+            if (audioElement) {
+                audioElement.currentTime = 0; // Đặt lại về đầu
+                audioElement.play().catch(error => {
+                    console.warn('Trình duyệt đã chặn âm thanh tự động:', error);
+                });
+            }
+        };
     </script>
-
 </body>
 </html>
