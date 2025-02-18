@@ -68,8 +68,8 @@
 
                 <div class="main__title-wrap">
 
-                    {{-- <form action="{{ route('admin.leech.list') }}" method="get">
-                        <input type="text" name="apiUrl" id="" value="{{request()->apiUrl}}">
+                    <form action="{{ route('admin.leech.list',$leechUrl->slug) }}" method="get">
+                        {{-- <input type="text" name="apiUrl" id="" value="{{request()->apiUrl}}"> --}}
                         <select name="page" id=""  style="padding: 0 20px 0 20px; background-color:    #151f30; color:#fff; border: none; margin-right: 10px; height: 40px; border-radius: 16px;">
                             <option value="" > Select page number</option>
                             @for ($i = 1; $i <= $pagination['totalPages']; $i++)
@@ -79,9 +79,9 @@
                         <button type="submit">
                             <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#2f80ed" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>                                </button>
                     </form>
-                    <form action="{{ route('admin.leech.postByPage') }}" method="post">
+                     <form action="{{ route('admin.leech.postByPage',$leechUrl->slug) }}" method="post">
                         @csrf
-                        <input type="text" name="apiUrl" id="">
+                       
                         <select name="trangdau" id="">
                             @for ($i = 1; $i <= $pagination['totalPages']; $i++)
                                 <option value="{{ $i }}">{{ $i }}</option>
@@ -100,8 +100,8 @@
                     <!-- search -->
                     <form action="{{ route('admin.leech.slug') }}" method="POST" class="main__title-form">
                         @csrf
-                        <input type="text" placeholder="Find movie / description..." name="slug"
-                            value="{{ request()->search }}">
+                        <input type="text" placeholder="nhập api đến phim" name="slug"
+                            value="{{$leechUrl->url_detail.request()->search }}">
                         <button type="submit">
                             <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -111,7 +111,7 @@
                                     stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
                         </button>
-                    </form> --}}
+                    </form>
                     <!-- end search -->
                 </div>
             </div>
@@ -273,7 +273,11 @@
                                 </td>
                                 <td>
                                     <div class="main__table-text">
-                                        <a href="{{ $leechUrl->url_detail.$movie['slug'] }}">Thông tin</a>
+                                        <form action="{{route('admin.leech.info')}}" method="get">
+                                            <input type="hidden" name="leechUrl" value="{{$leechUrl->url_detail.$movie['slug']}}">
+                                            <button type="submit">Thông tin</button>
+                                        </form>
+                                        {{-- <a href="{{ route('admin.leech.info',$leechUrl->url_detail.$movie['slug'])  }}">Thông tin</a> --}}
                                     </div>
                                 </td>
                                 <td>
@@ -284,7 +288,7 @@
                                 </td>
                                 <td>
                                     <div class="main__table-text">
-                                        <a href="{{ route('admin.leech.bySlug', $movie['slug']) }}">leech all episode</a>
+                                        <a href="{{ route('admin.leech.bySlug', ['slug'=>$leechUrl->slug,'movie'=>$movie['slug']]) }}">leech all episode</a>
                                     </div>
                                 </td>
                             </tr>

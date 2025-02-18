@@ -1,6 +1,7 @@
 @extends('client_movie.layouts.default')
 @section('main')
     <!-- details -->
+
     <section class="section section--head section--head-fixed section--gradient section--details-bg">
         <div class="section__bg" data-bg="{{ asset('clients/img/details.jpg') }}"></div>
         <div class="container">
@@ -9,7 +10,7 @@
                 <div class="row">
                     <div class="col-12 col-xl-8">
                         <!-- trailer -->
-                        <a href="http://www.youtube.com/watch?v=0O2aH4XLbto" class="article__trailer open-video">
+                        <a href="{{$movie->trailer_url}}" class="article__trailer open-video">
                             <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -38,7 +39,7 @@
                                 <li>{{ $movie->age_rating }}+</li>
                             </ul>
 
-                            <p>{{ $movie->description }}</p>
+                            <p>{!! $movie->description !!}</p>
                         </div>
                         <!-- end article content -->
                     </div>
@@ -46,15 +47,16 @@
                     <!-- video player -->
                     <div class="col-12 col-xl-8">
 
-                        @if ($episode->link_video_internet!=null)
-                            <video id="player" data-watched-duration="{{ $watchedDuration }}"
-                                poster="{{ $movie->link_poster_internet!=null?$movie->link_poster_internet:Storage::url('public/images/' . $movie->poster_url) }}" controls>
+                        @if ($episode->link_video_internet != null)
+                            <video class="video" id="player" data-watched-duration="{{ $watchedDuration }}"
+                                {{-- poster="{{ $movie->link_poster_internet != null ? $movie->link_poster_internet : Storage::url('public/images/' . $movie->poster_url) }}" --}}
+                                controls>
 
                             </video>
                             <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
                             <script>
                                 // URL của video HLS (.m3u8)
-                                const videoUrl = '{{$episode->link_video_internet}}';
+                                const videoUrl = '{{ $episode->link_video_internet }}';
 
                                 // Lấy phần tử video
                                 const video = document.getElementById('player');
@@ -72,8 +74,10 @@
                                 }
                             </script>
                         @else
-                            <video data-watched-duration="{{ $watchedDuration }}" controls crossorigin playsinline
-                                poster="{{ $movie->link_poster_internet!=null?$movie->link_poster_internet:Storage::url('public/images/' . $movie->poster_url) }}" id="player">
+                            <video height="465px" data-watched-duration="{{ $watchedDuration }}" controls crossorigin
+                                playsinline
+                                {{-- poster="{{ $movie->link_poster_internet != null ? $movie->link_poster_internet : Storage::url('public/images/' . $movie->poster_url) }}" --}}
+                                id="player">
 
                                 <source src="{{ Storage::url('public/videos/' . $episode->video_url) }}" type="video/mp4">
 
@@ -92,8 +96,8 @@
                         <script>
                             const skipButton = document.getElementById('skipButton');
                             skipButton.addEventListener('click', () => {
-        video.currentTime += 10;
-    }); 
+                                video.currentTime += 10;
+                            });
                         </script>
                         <script>
                             document.addEventListener('DOMContentLoaded', () => {
@@ -310,9 +314,10 @@
                         @if (isset($movie->episodes))
                             <div class="categories">
                                 <h3 class="categories__title">Episodes</h3>
-                                @foreach ($movie->episodes as $episode)
-                                    <a href="{{ route('movie.show', ['movie_id' => $movie->id,'episode' => $episode->id]) }}"
-                                        class="categories__item">{{ $episode->episode_number }}</a>
+                                @foreach ($movie->episodes as $list)
+                                    <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $list->id]) }}"
+                                        @if ($episode->id == $list->id) style="background-color: #2f80ed" @endif
+                                        class="categories__item">{{ $list->episode_number }}</a>
                                 @endforeach
 
                                 {{-- <a href="category.html" class="categories__item">Thriller</a>
@@ -1398,8 +1403,8 @@
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const video = document.getElementById('player'); // Lấy thẻ video
-                const userId = {{ auth()->user()->id }}
-                const movieId = {{ $movie->id }}; // Lấy ID phim từ server (Laravel Blade)
+                const userId = {{ auth()->user()->id }};
+                const movieId = {{ $episode->id }}; // Lấy ID phim từ server (Laravel Blade)
                 const token = '{{ csrf_token() }}'; // CSRF token nếu cần
 
                 // Hàm để gửi dữ liệu lịch sử xem
@@ -1415,7 +1420,7 @@
                             },
                             body: JSON.stringify({
                                 user_id: userId,
-                                movie_id: movieId,
+                                episode_id: movieId,
                                 watched_duration: Math.floor(
                                     currentTime), // Lấy thời gian hiện tại (làm tròn)
                             })

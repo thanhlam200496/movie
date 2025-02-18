@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('duration');  // Thời gian phim (phút)
             $table->text('countries')->nullable();  // Nếu có thể nhiều quốc gia
             $table->string('director')->nullable();
-            $table->float('rating', 2, 1)->nullable();
+            $table->float('rating', 3, 1)->nullable();
             $table->enum('type_film', ['TV Show', 'Movie']);
             $table->string('poster_url')->nullable();
             $table->string('trailer_url')->nullable();

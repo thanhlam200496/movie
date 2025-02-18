@@ -12,7 +12,7 @@ class ViewHistory extends Model
 
     protected $fillable = [
         'user_id',
-        'movie_id',
+        'episode_id',
         'watched_duration',
     ];
 

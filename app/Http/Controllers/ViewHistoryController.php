@@ -20,7 +20,7 @@ class ViewHistoryController extends Controller
         $viewHistory = ViewHistory::updateOrCreate(
             [
                 'user_id' => $data['user_id'],
-                'movie_id' => $data['movie_id'],
+                'episode_id' => $data['episode_id'],
             ],
             [
                 'watched_duration' => $data['watched_duration'],

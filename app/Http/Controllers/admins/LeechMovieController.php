@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Http;
 
 class LeechMovieController extends Controller
 {
-    public function getMovies($id,Request $request)
+    public function getMovies($slug,Request $request)
     {
-        $leechUrl=LeechMovieUrl::where('slug',$id)->first();
+        $leechUrl=LeechMovieUrl::where('slug',$slug)->first();
         $client = new Client();
         $page = $request->page ?? 1;
         $apiUrl=$leechUrl->url_list_movie;
@@ -32,8 +32,28 @@ class LeechMovieController extends Controller
 
         return response()->json(['message' => 'Failed to fetch data'], 500);
     }
-    public function importAllMoviesWithEpisodes(Request $request)
+    public function getOneMovies(Request $request)
     {
+        // $leechUrl=LeechMovieUrl::where('slug',$slug)->first();
+        $client = new Client();
+        // $page = $request->page ?? 1;
+        // $apiUrl=$leechUrl->url_list_movie;
+        $response = $client->get($request->leechUrl);
+
+        // Kiểm tra nếu gọi thành công
+        if ($response->getStatusCode() === 200) {
+            $movies = json_decode($response->getBody(), true); // Chuyển JSON thành mảng PHP
+            // dd($movies);
+            // Trả về kết quả hoặc xử lý dữ liệu
+            // dd($movies);
+            return view('admin_movie.leech_movie.create', ['movies' => $movies['movie']]);
+        }
+
+        return response()->json(['message' => 'Failed to fetch data'], 500);
+    }
+    public function importAllMoviesWithEpisodes($slug, Request $request)
+    {
+        $leechUrl=LeechMovieUrl::where('slug',$slug)->first();
         $client = new Client();
         $trangdau = $request->trangdau;
         $trangcuoi = $request->trangcuoi;
@@ -45,7 +65,7 @@ class LeechMovieController extends Controller
         $page = $trangdau;
 
         do {
-            $response = $client->get("https://ophim1.com/danh-sach/phim-moi-cap-nhat?page=$page");
+            $response = $client->get($leechUrl->url_list_movie.$page);
 
             if ($response->getStatusCode() !== 200) {
                 return response()->json(['message' => "Failed to fetch data on page $page"], 500);
@@ -63,7 +83,7 @@ class LeechMovieController extends Controller
 
 
                     // Gọi API chi tiết phim
-                    $detailsResponse = Http::get("https://ophim1.com/phim/" . $movieDataNomal['slug']);
+                    $detailsResponse = Http::get($leechUrl->url_detail . $movieDataNomal['slug']);
                     if ($detailsResponse->successful()) {
                         $detailsData = $detailsResponse->json();
                         $episodesData = $detailsData['episodes'];
@@ -76,7 +96,7 @@ class LeechMovieController extends Controller
                                 'slug' => $movieDataNomal['slug'],
                                 'release_year' => $movieDataNomal['year'],
                                 // 'description' => $movieData['description'] ?? '',
-                                'link_poster_internet' => 'https://img.ophim.live/uploads/movies/' . ($movieDataNomal['thumb_url'] ?? ''),
+                                'link_poster_internet' =>  ($movieData['thumb_url'] ?? ''),
                                 // 'trailer_url' => $movieData['trailer_url'] ?? '',
                                 // 'rating' => 9, // Tuỳ chỉnh nếu cần
                                 // 'director' => isset($movieData['directors']) ? implode(', ', $movieData['directors']) : '',
@@ -87,7 +107,7 @@ class LeechMovieController extends Controller
                                 'description' => $movieData['content'] ?? '',
 
                                 'trailer_url' => $movieData['trailer_url'] ?? '',
-                                // 'rating' => $movieData['tmdb']['vote_average'], // Tuỳ chỉnh nếu cần
+                                'rating' => $movieData['tmdb']['vote_average'], // Tuỳ chỉnh nếu cần
                                 'views' => $movieData['view'],
                                 'countries' => $movieData['country'][0]['name'],
                                 'duration' => 100,
@@ -118,7 +138,7 @@ class LeechMovieController extends Controller
                                             'episode_number' => 'Full',
                                         ],
                                         [
-                                            'title' => "{$movie->title} - Tập {$ep['name']}",
+                                            'title' => "{$movie->title} - {$ep['name']}",
                                             'link_video_internet' => $ep['link_m3u8'] ?? null,
                                             // 'video_url' => $ep['link_m3u8'] ?? null,
                                         ]
@@ -130,7 +150,7 @@ class LeechMovieController extends Controller
                                             'episode_number' => $ep['name']
                                         ],
                                         [
-                                            'title' => "{$movie->title} - Tập {$ep['name']}",
+                                            'title' => "{$movie->title} - {$ep['name']}",
                                             'link_video_internet' => $ep['link_m3u8'] ?? null,
                                             // 'video_url' => $ep['link_m3u8'] ?? null,
                                         ]
@@ -157,9 +177,10 @@ class LeechMovieController extends Controller
     }
 
 
-    public function importMovieDetails($slug)
+    public function importMovieDetails($slug, $movie)
     {
-        $url = "https://ophim1.com/phim/" . $slug; // Thay bằng API chi tiết phim thực tế
+        $leechUrl=LeechMovieUrl::where('slug',$slug)->first();
+        $url =  $leechUrl->url_detail.$movie; // Thay bằng API chi tiết phim thực tế
         $response = Http::get($url);
 
         if ($response->successful()) {
@@ -241,6 +262,7 @@ class LeechMovieController extends Controller
     public function importMovieDetailsBySlug(Request $request)
     {
         $url =  $request->slug; // Thay bằng API chi tiết phim thực tế
+        
         $response = Http::get($url);
 
         if ($response->successful()) {
@@ -296,7 +318,7 @@ class LeechMovieController extends Controller
                         Episode::updateOrCreate(
                             [
                                 'movie_id' => $movie->id,
-                                'episode_number' => $ep['name']
+                                'episode_number' => preg_replace('/^0+/', '', preg_replace('/\D/', '', $ep['name']))
                             ],
                             [
                                 'title' => "{$movie->title} - Tập {$ep['name']}",

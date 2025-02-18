@@ -36,9 +36,10 @@ Route::group(['prefix' => 'favorite', 'as' => 'favorite.'], function () {
     Route::post('add', [FavoriteController::class, 'store'])->name('add');
 });
 Route::group(['prefix' => 'movie', 'as' => 'movie.'], function () {
-    Route::get('show/{movie_id}/{episode?}', [ClientsMovieController::class, 'show'])->name('show');
+    Route::get('show/{slug}/{episode?}', [ClientsMovieController::class, 'show'])->name('show');
 });
 
+Route::get('/fetch-movies', [ClientsCategoryController::class, 'fetchMovies'])->name('movies.fetch');
 
 Route::controller(GoogleController::class)->group(function () {
 
@@ -64,12 +65,13 @@ Route::group(
         Route::resource('episode', EpisodeController::class);
         Route::get('list-episode/{id}', [EpisodeController::class, 'index'])->name('episode.index');
 
-        Route::get('list-movie-api/{id}', [LeechMovieController::class, 'getMovies'])->name('leech.list');
+        Route::get('list-movie-api/{slug}', [LeechMovieController::class, 'getMovies'])->name('leech.list');
+        Route::get('info-movie-api', [LeechMovieController::class, 'getOneMovies'])->name('leech.info');
         Route::get('/fetch-all-movies', [LeechMovieController::class, 'importAllMoviesWithEpisodes'])->name('leech.postAll');
 
-        Route::post('/fetch-all-movies', [LeechMovieController::class, 'importAllMoviesWithEpisodes'])->name('leech.postByPage');
+        Route::post('/fetch-all-movies/{slug}', [LeechMovieController::class, 'importAllMoviesWithEpisodes'])->name('leech.postByPage');
         
-        Route::get('importMovieDetails/{slug}', [LeechMovieController::class, 'importMovieDetails'])->name('leech.bySlug');
+        Route::get('importMovieDetails/{slug}/{movie}', [LeechMovieController::class, 'importMovieDetails'])->name('leech.bySlug');
         Route::post('importMovieDetails', [LeechMovieController::class, 'importMovieDetailsBySlug'])->name('leech.slug');
         Route::get('create-episode/{id}', [EpisodeController::class, 'create'])->name('episode.create');
         Route::get('show-episode/{movie_id}/{episode_id}', [EpisodeController::class, 'show'])->name('episode.show');

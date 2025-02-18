@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class MovieController extends Controller
 {
-    function show($movie_id, $episode=null)
+    function show($slug, $episode=null)
     {
 // dd($request->all());
         // if (auth()->check()) {
@@ -45,12 +45,12 @@ class MovieController extends Controller
         // Lấy watched_duration từ bảng view_history mà không cần định nghĩa quan hệ
         $watchedDuration = DB::table('view_history')
             ->where('user_id', $userId)
-            ->where('movie_id', $movie_id)
+            ->where('episode_id', $episode)
             ->value('watched_duration') ?? 0;
 
         // Lấy movie với các liên kết categories và episodes
         $movie = Movie::with(['categories', 'episodes'])
-            ->findOrFail($movie_id);
+            ->where('slug',$slug)->first();
 
         if (isset($episode)) {
             // return 'Failed to fetch movie details.';
