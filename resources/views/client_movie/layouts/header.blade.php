@@ -9,7 +9,7 @@
                         <span></span>
                     </button>
 
-                    <a href="index.html" class="header__logo">
+                    <a href="{{ route('home') }}" class="header__logo">
                         <img src="{{ asset('clients/img/logo.svg') }}"
                             alt="Movies & TV Shows, Online cinema HTML Template">
                     </a>

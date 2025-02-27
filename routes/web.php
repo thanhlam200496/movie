@@ -7,6 +7,7 @@ use App\Http\Controllers\admins\LeechMovieController;
 use App\Http\Controllers\admins\LeechMovieUrlCOntroller;
 use App\Http\Controllers\admins\MovieController;
 use App\Http\Controllers\clients\CategoryController as ClientsCategoryController;
+use App\Http\Controllers\clients\CommentController;
 use App\Http\Controllers\clients\FavoriteController;
 use App\Http\Controllers\clients\HomeController;
 use App\Http\Controllers\clients\MovieController as ClientsMovieController;
@@ -54,6 +55,16 @@ Route::controller(UserController::class)->group(function () {
     Route::get('signup-form', 'signupForm')->name('signupForm');
     Route::post('signup', 'signup')->name('signup');
 });
+
+Route::controller(CommentController::class)->group(function ()  {
+    Route::post('add-comment','store')->name('comment');
+});
+
+
+
+Route::post('/comments', [CommentController::class, 'store'])->name('comment');
+Route::get('/comments/{episode_id}', [CommentController::class, 'index'])->name('comments.index');
+
 // routes/web.php
 Route::get('/movies/paginate', [MovieController::class, 'paginate'])->name('movies.paginate');
 
