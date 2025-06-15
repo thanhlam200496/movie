@@ -35,7 +35,7 @@
                                     </svg> {{ $movie->rating }}</li>
                                 <li>{{ $movie->countries }}</li>
                                 <li>{{ $movie->release_year }}</li>
-                                <li>{{ $movie->duration }} min</li>
+                                <li>{{ $movie->duration }}</li>
                                 <li>{{ $movie->age_rating }}+</li>
                             </ul>
 
@@ -96,6 +96,40 @@
                                 video.currentTime += 10;
                             });
                         </script>
+                          <script>
+                            // Định nghĩa các điều khiển tùy chỉnh
+                            const controls = [
+                              'play-large', // Nút phát lớn ở giữa
+                              'play', // Nút phát/tạm dừng
+                              'progress', // Thanh tiến trình
+                              'current-time', // Thời gian hiện tại
+                              'duration', // Thời lượng video
+                              'mute', // Tắt tiếng
+                              'volume', // Điều chỉnh âm lượng
+                              'captions', // Phụ đề
+                              'settings', // Cài đặt
+                              // Nút lùi 10 giây
+                              '<button type="button" class="plyr__control plyr__control--seek" id="seek-backward-10" aria-label="Seek backward 10 seconds"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-10 10h2a8 8 0 018-8v2l-4 4 4 4v2a8 8 0 01-8-8h2a10 10 0 0010 10v-2l4-4-4-4v-2a8 8 0 018 8h-2a10 10 0 00-10-10z"/><text x="9" y="16" font-size="8">-10s</text></svg></button>',
+                              // Nút tua 10 giây
+                              '<button type="button" class="plyr__control plyr__control--seek" id="seek-forward-10" aria-label="Seek forward 10 seconds"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 010 20h-2a8 8 0 00-8-8v-2l4-4-4-4v-2a8 8 0 008 8h-2a10 10 0 010-20v2l-4 4 4 4v2a8 8 0 008-8h2a10 10 0 010 20z"/><text x="9" y="16" font-size="8">+10s</text></svg></button>',
+                              'fullscreen', // Toàn màn hình
+                            ];
+
+                            // Khởi tạo Plyr
+                            const player = new Plyr('#player', {
+                              controls: controls,
+                            });
+
+                            // Gắn sự kiện cho nút lùi 10 giây
+                            document.getElementById('seek-backward-10').addEventListener('click', () => {
+                              player.currentTime = Math.max(0, player.currentTime - 10); // Lùi 10 giây, không nhỏ hơn 0
+                            });
+
+                            // Gắn sự kiện cho nút tua 10 giây
+                            document.getElementById('seek-forward-10').addEventListener('click', () => {
+                              player.currentTime = Math.min(player.duration, player.currentTime + 10); // Tua 10 giây, không vượt quá thời lượng video
+                            });
+                          </script>
                         <script>
                             document.addEventListener('DOMContentLoaded', () => {
                                 const video = document.getElementById('player'); // Lấy thẻ video

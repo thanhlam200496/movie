@@ -1,25 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notification Sound</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plyr with Embedded Seek Buttons</title>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <style>
+        .plyr__custom-button {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 14px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .plyr__custom-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .plyr__controls>.plyr__custom-button {
+            display: flex;
+            align-items: center;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Welcome to the website!</h1>
-    <audio id="page-load-sound" src="/public/notification.mp3"></audio>
+
+    <video id="player" controls>
+        <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" />
+    </video>
 
     <script>
-        // Phát âm thanh khi trang được tải xong
-        window.onload = function () {
-            const audioElement = document.getElementById('page-load-sound');
-            if (audioElement) {
-                audioElement.currentTime = 0; // Đặt lại về đầu
-                audioElement.play().catch(error => {
-                    console.warn('Trình duyệt đã chặn âm thanh tự động:', error);
-                });
+        const player = new Plyr('#player');
+
+        player.on('ready', () => {
+            const controls = document.querySelector('.plyr__controls');
+
+            // Tạo nút lùi 10s
+            const backBtn = document.createElement('button');
+            backBtn.className = 'plyr__custom-button';
+            backBtn.innerText = '⏪ 10s';
+            backBtn.title = 'Lùi 10 giây';
+            backBtn.addEventListener('click', () => {
+                player.currentTime = Math.max(player.currentTime - 10, 0);
+            });
+
+            // Tạo nút tua 10s
+            const forwardBtn = document.createElement('button');
+            forwardBtn.className = 'plyr__custom-button';
+            forwardBtn.innerText = '10s ⏩';
+            forwardBtn.title = 'Tua 10 giây';
+            forwardBtn.addEventListener('click', () => {
+                player.currentTime = Math.min(player.currentTime + 10, player.duration);
+            });
+
+            // Thêm nút vào thanh điều khiển (chèn sau nút play)
+            const playButton = controls.querySelector('.plyr__control--overlaid') || controls.querySelector('.plyr__control[aria-label="Play"]');
+            if (playButton && playButton.parentNode) {
+                controls.insertBefore(backBtn, playButton.nextSibling);
+                controls.insertBefore(forwardBtn, backBtn.nextSibling);
+            } else {
+                // Nếu không tìm được nút play, thêm cuối cùng
+                controls.appendChild(backBtn);
+                controls.appendChild(forwardBtn);
             }
-        };
+        });
     </script>
 </body>
+
 </html>

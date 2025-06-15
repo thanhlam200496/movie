@@ -88,7 +88,7 @@ class LeechMovieController extends Controller
                         $detailsData = $detailsResponse->json();
                         $episodesData = $detailsData['episodes'];
                         $movieData = $detailsData['movie'];
-                        
+
                         $movie = Movie::updateOrCreate(
                             ['slug' => $movieDataNomal['slug']],
                             [
@@ -110,7 +110,7 @@ class LeechMovieController extends Controller
                                 'rating' => $movieData['tmdb']['vote_average'], // Tuỳ chỉnh nếu cần
                                 'views' => $movieData['view'],
                                 'countries' => $movieData['country'][0]['name'],
-                                'duration' => 100,
+                                'duration' => $movieData['time'],
 
                                 'type_film' => $movieData['episode_current'] == 'Full' ? 'Movie' : 'TV Show',
                             ]
@@ -201,7 +201,7 @@ class LeechMovieController extends Controller
                     'rating' => $movieData['tmdb']['vote_average'],
                     'director' => isset($movieData['directors']) ? implode(', ', $movieData['directors']) : '',
                     'countries' => $movieData['country'][0]['name'],
-                    'duration' => 100,
+                    'duration' => $movieData['time'],
                     'status' => 'Public', // Có thể tuỳ chỉnh
                     'type_film' => $movieData['episode_current'] == 'Full' ? 'Movie' : 'TV Show',  // Tự đặt giá trị
                 ]
@@ -262,7 +262,7 @@ class LeechMovieController extends Controller
     public function importMovieDetailsBySlug(Request $request)
     {
         $url =  $request->slug; // Thay bằng API chi tiết phim thực tế
-        
+
         $response = Http::get($url);
 
         if ($response->successful()) {
@@ -283,7 +283,7 @@ class LeechMovieController extends Controller
                     'rating' => $movieData['tmdb']['vote_average'],
                     'director' => isset($movieData['directors']) ? implode(', ', $movieData['directors']) : '',
                     'countries' => $movieData['country'][0]['name'],
-                    'duration' => 100,
+                    'duration' => $movieData['time'],
                     'status' => 'Public', // Có thể tuỳ chỉnh
                     'type_film' => $movieData['episode_current'] == 'Full' ? 'Movie' : 'TV Show',  // Tự đặt giá trị
                 ]
