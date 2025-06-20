@@ -3,14 +3,14 @@
     <!-- details -->
 
     <section class="section section--head section--head-fixed section--gradient section--details-bg">
-        <div class="section__bg" data-bg="{{ asset('clients/img/details.jpg') }}"></div>
+        <div class="section__bg" data-bg="{{ $movie->link_poster_internet!=null?$movie->link_poster_internet:Storage::url('public/images/' . $movie->poster_url) }}"></div>
         <div class="container">
             <!-- article -->
             <div class="article">
                 <div class="row">
                     <div class="col-12 col-xl-8">
                         <!-- trailer -->
-                        <a href="{{ $movie->trailer_url }}" class="article__trailer open-video">
+                        {{-- <a href="{{ $movie->trailer_url }}" class="article__trailer open-video">
                             <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -21,7 +21,7 @@
                                     stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
                             Trailer
-                        </a>
+                        </a> --}}
                         <!-- end trailer -->
 
                         <!-- article content -->
@@ -48,8 +48,7 @@
                     <div class="col-12 col-xl-8">
 
                         @if ($episode->link_video_internet != null)
-                            <video class="video" id="player" data-watched-duration="{{ $watchedDuration }}"
-                                {{-- poster="{{ $movie->link_poster_internet != null ? $movie->link_poster_internet : Storage::url('public/images/' . $movie->poster_url) }}" --}} controls>
+                            <video id="player" data-watched-duration="{{ $watchedDuration }}">
 
                             </video>
                             <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -73,63 +72,65 @@
                                 }
                             </script>
                         @else
-                            <video height="465px" data-watched-duration="{{ $watchedDuration }}" controls crossorigin
-                                playsinline {{-- poster="{{ $movie->link_poster_internet != null ? $movie->link_poster_internet : Storage::url('public/images/' . $movie->poster_url) }}" --}} id="player">
+                            <video height="465px" data-watched-duration="{{ $watchedDuration }}" id="player">
 
                                 <source src="{{ Storage::url('public/videos/' . $episode->video_url) }}" type="video/mp4">
 
 
-                                <track kind="captions" label="English" srclang="en"
+                                {{-- <track kind="captions" label="English" srclang="en"
                                     src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt" default>
                                 <track kind="captions" label="Français" srclang="fr"
                                     src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">
 
 
                                 <a href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
-                                    download>Download</a>
+                                    download>Download</a> --}}
                             </video>
                         @endif
-                        <button class="button" id="skipButton">⏩</button>
+                        {{-- <button class="button" id="skipButton">⏩</button>
                         <script>
                             const skipButton = document.getElementById('skipButton');
                             skipButton.addEventListener('click', () => {
                                 video.currentTime += 10;
                             });
+                        </script> --}}
+                        <script>
+                            const player = new Plyr('#player');
+
+                            player.on('ready', () => {
+                                const controls = document.querySelector('.plyr__controls');
+
+                                // Tạo nút lùi 10s
+                                const backBtn = document.createElement('button');
+                                backBtn.className = 'plyr__custom-button';
+                                backBtn.innerText = '⏪';
+                                backBtn.title = 'Lùi 10 giây';
+                                backBtn.addEventListener('click', () => {
+                                    player.currentTime = Math.max(player.currentTime - 10, 0);
+                                });
+
+                                // Tạo nút tua 10s
+                                const forwardBtn = document.createElement('button');
+                                forwardBtn.className = 'plyr__custom-button';
+                                forwardBtn.innerText = '⏩';
+                                forwardBtn.title = 'Tua 10 giây';
+                                forwardBtn.addEventListener('click', () => {
+                                    player.currentTime = Math.min(player.currentTime + 10, player.duration);
+                                });
+
+                                // Thêm nút vào thanh điều khiển (chèn sau nút play)
+                                const playButton = controls.querySelector('.plyr__control--overlaid') || controls.querySelector(
+                                    '.plyr__control[aria-label="Play"]');
+                                if (playButton && playButton.parentNode) {
+                                    controls.insertBefore(backBtn, playButton); // Chèn lùi 10s trước nút play
+                                    controls.insertBefore(forwardBtn, playButton.nextSibling); // Chèn tua 10s sau nút play
+                                } else {
+                                    // Nếu không tìm được nút play, thêm cuối cùng
+                                    controls.appendChild(backBtn);
+                                    controls.appendChild(forwardBtn);
+                                }
+                            });
                         </script>
-                          <script>
-                            // Định nghĩa các điều khiển tùy chỉnh
-                            const controls = [
-                              'play-large', // Nút phát lớn ở giữa
-                              'play', // Nút phát/tạm dừng
-                              'progress', // Thanh tiến trình
-                              'current-time', // Thời gian hiện tại
-                              'duration', // Thời lượng video
-                              'mute', // Tắt tiếng
-                              'volume', // Điều chỉnh âm lượng
-                              'captions', // Phụ đề
-                              'settings', // Cài đặt
-                              // Nút lùi 10 giây
-                              '<button type="button" class="plyr__control plyr__control--seek" id="seek-backward-10" aria-label="Seek backward 10 seconds"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-10 10h2a8 8 0 018-8v2l-4 4 4 4v2a8 8 0 01-8-8h2a10 10 0 0010 10v-2l4-4-4-4v-2a8 8 0 018 8h-2a10 10 0 00-10-10z"/><text x="9" y="16" font-size="8">-10s</text></svg></button>',
-                              // Nút tua 10 giây
-                              '<button type="button" class="plyr__control plyr__control--seek" id="seek-forward-10" aria-label="Seek forward 10 seconds"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 010 20h-2a8 8 0 00-8-8v-2l4-4-4-4v-2a8 8 0 008 8h-2a10 10 0 010-20v2l-4 4 4 4v2a8 8 0 008-8h2a10 10 0 010 20z"/><text x="9" y="16" font-size="8">+10s</text></svg></button>',
-                              'fullscreen', // Toàn màn hình
-                            ];
-
-                            // Khởi tạo Plyr
-                            const player = new Plyr('#player', {
-                              controls: controls,
-                            });
-
-                            // Gắn sự kiện cho nút lùi 10 giây
-                            document.getElementById('seek-backward-10').addEventListener('click', () => {
-                              player.currentTime = Math.max(0, player.currentTime - 10); // Lùi 10 giây, không nhỏ hơn 0
-                            });
-
-                            // Gắn sự kiện cho nút tua 10 giây
-                            document.getElementById('seek-forward-10').addEventListener('click', () => {
-                              player.currentTime = Math.min(player.duration, player.currentTime + 10); // Tua 10 giây, không vượt quá thời lượng video
-                            });
-                          </script>
                         <script>
                             document.addEventListener('DOMContentLoaded', () => {
                                 const video = document.getElementById('player'); // Lấy thẻ video
@@ -334,7 +335,7 @@
                         <!-- categories -->
                         <div class="categories">
                             <h3 class="categories__title">Genres</h3>
-                            @foreach ($movie->categories as $category)
+                            @foreach ($movie->categories->unique('id') as $category)
                                 <a href="{{ route('category.filter', ['category' => $category->id]) }}"
                                     class="categories__item">{{ $category->name }}</a>
                             @endforeach
@@ -343,18 +344,35 @@
                             <a href="category.html" class="categories__item">Crime</a> --}}
                         </div>
                         @if (isset($movie->episodes))
-                            <div class="categories">
-                                <h3 class="categories__title">Episodes</h3>
-                                @foreach ($movie->episodes as $list)
-                                    <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $list->id]) }}"
-                                        @if ($episode->id == $list->id) style="background-color: #2f80ed" @endif
-                                        class="categories__item">{{ $list->episode_number }}</a>
-                                @endforeach
+    <div class="categories">
+        <h3 class="categories__title">Episodes</h3>
+        @foreach ($movie->episodes as $list)
+            @php
+                $style = '';
 
-                                {{-- <a href="category.html" class="categories__item">Thriller</a>
-                            <a href="category.html" class="categories__item">Crime</a> --}}
-                            </div>
-                        @endif
+                // Nếu là tập hiện tại
+                if (isset($episode) && $episode->id == $list->id) {
+                    $style = 'background-color: #2f80ed';
+                } else {
+                    // Nếu là tập đã xem
+                    foreach ($listWatched as $watched) {
+                        if ($watched->episode_id == $list->id) {
+                            $style = 'background-color: #333333';
+                            break;
+                        }
+                    }
+                }
+            @endphp
+
+            <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $list->id]) }}"
+               style="{{ $style }}"
+               class="categories__item">
+                {{ $list->episode_number }}
+            </a>
+        @endforeach
+    </div>
+@endif
+
 
                         <!-- end categories -->
 
@@ -409,15 +427,18 @@
                             <div class="tab-content">
                                 <div class="comments">
                                     <!-- tabs nav -->
-                                    <ul class="nav nav-tabs comments__title comments__title--tabs" id="comments__tabs" role="tablist">
+                                    <ul class="nav nav-tabs comments__title comments__title--tabs" id="comments__tabs"
+                                        role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true">
+                                            <a class="nav-link active" data-toggle="tab" href="#tab-1" role="tab"
+                                                aria-controls="tab-1" aria-selected="true">
                                                 <h4>Comments</h4>
                                                 <span id="total-comments">0</span> <!-- Thêm lại total-comments -->
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false">
+                                            <a class="nav-link" data-toggle="tab" href="#tab-2" role="tab"
+                                                aria-controls="tab-2" aria-selected="false">
                                                 <h4>Reviews</h4>
                                                 <span>3</span>
                                             </a>
@@ -432,18 +453,61 @@
                                                 @foreach ($comments as $comment)
                                                     <li class="comments__item">
                                                         <div class="comments__autor">
-                                                            <img class="comments__avatar" src="{{ asset('clients/img/avatar.svg') }}" alt="">
+                                                            <img class="comments__avatar"
+                                                                src="{{ asset('clients/img/avatar.svg') }}"
+                                                                alt="">
                                                             <span class="comments__name">{{ $comment->user->name }}</span>
                                                             <span class="comments__time">{{ $comment->created_at }}</span>
                                                         </div>
                                                         <p class="comments__text">{{ $comment->content }}</p>
                                                         <div class="comments__actions">
                                                             <div class="comments__rate">
-                                                                <button type="button"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 7.3273V14.6537" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14.6667 10.9905H7.33333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg> 12</button>
-                                                                <button type="button">7 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.6667 10.9905H7.33333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+                                                                <button type="button"><svg width="22" height="22"
+                                                                        viewBox="0 0 22 22" fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg">
+                                                                        <path d="M11 7.3273V14.6537" stroke-width="1.5"
+                                                                            stroke-linecap="round"
+                                                                            stroke-linejoin="round"></path>
+                                                                        <path d="M14.6667 10.9905H7.33333"
+                                                                            stroke-width="1.5" stroke-linecap="round"
+                                                                            stroke-linejoin="round"></path>
+                                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                            d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z"
+                                                                            stroke-width="1.5" stroke-linecap="round"
+                                                                            stroke-linejoin="round"></path>
+                                                                    </svg> 12</button>
+                                                                <button type="button">7 <svg width="22"
+                                                                        height="22" viewBox="0 0 22 22" fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg">
+                                                                        <path d="M14.6667 10.9905H7.33333"
+                                                                            stroke-width="1.5" stroke-linecap="round"
+                                                                            stroke-linejoin="round"></path>
+                                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                            d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z"
+                                                                            stroke-width="1.5" stroke-linecap="round"
+                                                                            stroke-linejoin="round"></path>
+                                                                    </svg></button>
                                                             </div>
-                                                            <button type="button" class="reply-btn" data-comment-id="{{ $comment->id }}"><svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><polyline points='400 160 464 224 400 288' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><path d='M448,224H154C95.24,224,48,273.33,48,332v20' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /></svg><span>Reply</span></button>
-                                                            <button type="button"><svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><polyline points='320 120 368 168 320 216' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><path d='M352,168H144a80.24,80.24,0,0,0-80,80v16' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><polyline points='192 392 144 344 192 296' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><path d='M160,344H368a80.24,80.24,0,0,0,80-80V248' style='fill:none;stroke-linecap:round;stroke-width:32px' /></svg><span>Quote</span></button>
+                                                            <button type="button" class="reply-btn"
+                                                                data-comment-id="{{ $comment->id }}"><svg
+                                                                    xmlns='http://www.w3.org/2000/svg' width='512'
+                                                                    height='512' viewBox='0 0 512 512'>
+                                                                    <polyline points='400 160 464 224 400 288'
+                                                                        style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' />
+                                                                    <path d='M448,224H154C95.24,224,48,273.33,48,332v20'
+                                                                        style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' />
+                                                                </svg><span>Reply</span></button>
+                                                            <button type="button"><svg xmlns='http://www.w3.org/2000/svg'
+                                                                    width='512' height='512' viewBox='0 0 512 512'>
+                                                                    <polyline points='320 120 368 168 320 216'
+                                                                        style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' />
+                                                                    <path d='M352,168H144a80.24,80.24,0,0,0-80,80v16'
+                                                                        style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' />
+                                                                    <polyline points='192 392 144 344 192 296'
+                                                                        style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' />
+                                                                    <path d='M160,344H368a80.24,80.24,0,0,0,80-80V248'
+                                                                        style='fill:none;stroke-linecap:round;stroke-width:32px' />
+                                                                </svg><span>Quote</span></button>
                                                         </div>
                                                     </li>
                                                 @endforeach
@@ -454,7 +518,8 @@
                                                 <ul class="catalog__paginator" id="paginator"></ul>
                                             </div>
 
-                                            <form action="{{ route('comment') }}" method="POST" class="comments__form" id="comment-form">
+                                            <form action="{{ route('comment') }}" method="POST" class="comments__form"
+                                                id="comment-form">
                                                 @csrf
                                                 <input type="hidden" name="episode_id" value="{{ $episode->id }}">
                                                 <div class="sign__group">
@@ -468,20 +533,34 @@
                                             </form>
 
                                             <!-- Popup form với overlay -->
-                                            <div id="reply-popup-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 999;"></div>
-                                            <div id="reply-popup" class="popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; background: #131720; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000;">
-                                                <h3 style="margin: 0 0 15px; font-size: 18px; font-weight: 600; color: #f1f1f1;">Reply to Comment</h3><span id="close-popup" style="float: right; cursor: pointer; font-size: 20px; color: #f1f1f1">×</span>
-                                                <p id="parent-content" style="color: #aaa; font-size: 14px; margin-bottom: 10px; font-style: italic;"></p>
-                                                <form action="{{ route('comment') }}" method="POST" style="background: #131720" class="comments__form" id="reply-form">
+                                            <div id="reply-popup-overlay"
+                                                style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 999;">
+                                            </div>
+                                            <div id="reply-popup" class="popup"
+                                                style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; background: #131720; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000;">
+                                                <h3
+                                                    style="margin: 0 0 15px; font-size: 18px; font-weight: 600; color: #f1f1f1;">
+                                                    Reply to Comment</h3><span id="close-popup"
+                                                    style="float: right; cursor: pointer; font-size: 20px; color: #f1f1f1">×</span>
+                                                <p id="parent-content"
+                                                    style="color: #aaa; font-size: 14px; margin-bottom: 10px; font-style: italic;">
+                                                </p>
+                                                <form action="{{ route('comment') }}" method="POST"
+                                                    style="background: #131720" class="comments__form" id="reply-form">
                                                     @csrf
                                                     <input type="hidden" name="episode_id" value="{{ $episode->id }}">
                                                     <input type="hidden" name="parent_id" id="parent_id">
                                                     <div class="sign__group">
-                                                        <textarea id="reply-text" name="content" class="sign__textarea" placeholder="Type your reply here..." style="background: #151f30; width: 100%; min-height: 100px; border-radius: 5px; padding: 10px; resize: vertical;"></textarea>
+                                                        <textarea id="reply-text" name="content" class="sign__textarea" placeholder="Type your reply here..."
+                                                            style="background: #151f30; width: 100%; min-height: 100px; border-radius: 5px; padding: 10px; resize: vertical;"></textarea>
                                                     </div>
-                                                    <div id="reply-error-message" style="color: #e74c3c; font-size: 14px; margin-bottom: 10px;"></div>
+                                                    <div id="reply-error-message"
+                                                        style="color: #e74c3c; font-size: 14px; margin-bottom: 10px;">
+                                                    </div>
                                                     <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                                                        <button type="submit" class="sign__btn" style="padding: 8px 15px; background: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s;">Send Reply</button>
+                                                        <button type="submit" class="sign__btn"
+                                                            style="padding: 8px 15px; background: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s;">Send
+                                                            Reply</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -658,7 +737,8 @@
                                                 $(document).on('click', '.reply-btn', function() {
                                                     let commentId = $(this).data('comment-id');
                                                     let parentContent = $(this).data('content');
-                                                    let shortParentContent = parentContent.length > 50 ? parentContent.substring(0, 50) + '...' : parentContent;
+                                                    let shortParentContent = parentContent.length > 50 ? parentContent.substring(0, 50) + '...' :
+                                                        parentContent;
                                                     $('#parent_id').val(commentId);
                                                     $('#reply-text').val('');
                                                     $('#parent-content').text(`Replying to: "${shortParentContent}"`);
@@ -746,32 +826,54 @@
                                                 .sign__btn:hover {
                                                     background: #0056b3;
                                                 }
+
                                                 #close-popup:hover {
                                                     background: #999;
                                                 }
+
                                                 .popup {
                                                     animation: fadeIn 0.3s ease-in-out;
                                                 }
+
                                                 #reply-popup-overlay {
                                                     animation: fadeInOverlay 0.3s ease-in-out;
                                                 }
+
                                                 @keyframes fadeIn {
-                                                    from { opacity: 0; transform: translate(-50%, -60%); }
-                                                    to { opacity: 1; transform: translate(-50%, -50%); }
+                                                    from {
+                                                        opacity: 0;
+                                                        transform: translate(-50%, -60%);
+                                                    }
+
+                                                    to {
+                                                        opacity: 1;
+                                                        transform: translate(-50%, -50%);
+                                                    }
                                                 }
+
                                                 @keyframes fadeInOverlay {
-                                                    from { opacity: 0; }
-                                                    to { opacity: 1; }
+                                                    from {
+                                                        opacity: 0;
+                                                    }
+
+                                                    to {
+                                                        opacity: 1;
+                                                    }
                                                 }
+
                                                 .comments__item--answer {
                                                     margin-left: 20px;
                                                     border-left: 2px solid #ddd;
                                                     padding-left: 15px;
                                                 }
+
                                                 .toggle-replies:hover {
                                                     text-decoration: underline;
                                                 }
-                                                .comments__text, .comments__quote, #parent-content {
+
+                                                .comments__text,
+                                                .comments__quote,
+                                                #parent-content {
                                                     word-wrap: break-word;
                                                     overflow-wrap: break-word;
                                                     white-space: normal;

@@ -13,7 +13,8 @@
 	<link rel="stylesheet" href="{{asset('clients/css/slider-radio.css')}}">
 	<link rel="stylesheet" href="{{asset('clients/css/select2.min.css')}}">
 	<link rel="stylesheet" href="{{asset('clients/css/magnific-popup.css')}}">
-	<link rel="stylesheet" href="{{asset('clients/css/plyr.css')}}">
+	<link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
 	<link rel="stylesheet" href="{{asset('clients/css/main.css')}}">
 
 	<!-- Favicons -->
@@ -27,21 +28,24 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* Tùy chỉnh giao diện nút tua và lùi */
-        .plyr__control--seek {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 8px;
-          font-size: 14px;
-          line-height: 1;
+        .plyr__custom-button {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 14px;
+            padding: 5px 10px;
+            cursor: pointer;
         }
-        .plyr__control--seek svg {
-          width: 16px;
-          height: 16px;
-          fill: currentColor;
+
+        .plyr__custom-button:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
-      </style>
+
+        .plyr__controls>.plyr__custom-button {
+            display: flex;
+            align-items: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -64,7 +68,7 @@
 	<script src="{{asset('clients/js/select2.min.js')}}"></script>
 	<script src="{{asset('clients/js/smooth-scrollbar.js')}}"></script>
 	<script src="{{asset('clients/js/jquery.magnific-popup.min.js')}}"></script>
-	<script src="{{asset('clients/js/plyr.min.js')}}"></script>
+	{{-- <script src="{{asset('clients/js/plyr.min.js')}}"></script> --}}
 	<script src="{{asset('clients/js/main.js')}}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 

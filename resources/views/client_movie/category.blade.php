@@ -55,7 +55,7 @@
                                     <option value="">All the type firm</option>
                                     <option value="TV Show">TV Show</option>
                                     <option value="Movie">Movie</option>
-                                   
+
                                 </select>
                                 <input type="text" style="padding: 0 0 0 20px; background-color:    #131720; color:#fff; border: none; margin-right: 10px; height: 40px; border-radius: 16px;"
                                     name="search" value="{{ request()->search }}"  placeholder="I'm looking for...">
@@ -78,7 +78,7 @@
                         @foreach ($movies as $movie)
                             <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
                                 <div class="card">
-                                    <a href="{{ route('movie.show', $movie->slug) }}" class="card__cover">
+                                    <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}" class="card__cover">
                                         <img src="{{ $movie->link_poster_internet!=null?$movie->link_poster_internet:Storage::url('public/images/' . $movie->poster_url) }}" alt="">
                                         <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -95,7 +95,7 @@
                                         <input type="hidden" name="movie_id" value="{{ $movie->id }}">
                                         <input type="hidden" name="user_id" value="{{ Auth::user()->id ?? null }}">
                                         <button class="card__add" type="submit">
-											
+
 											@if (auth()->check())
 											<?php $dem = 0; ?>
 											@foreach ($favorites as $item)
@@ -130,7 +130,7 @@
                                                 d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
                                         </svg> {{$movie->rating}}</span>
                                     <h3 class="card__title"><a
-                                            href="{{ route('movie.show', $movie->slug) }}">{{ $movie->title }}</a></h3>
+                                            href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">{{ $movie->title }}</a></h3>
                                     <ul class="card__list">
                                         {{-- <li>Free</li> --}}
                                         <li>{{ $movie->release_year }}</li>
@@ -141,7 +141,7 @@
                         @endforeach
 
 
-                      
+
                     </div>
                 </div>
             </div>

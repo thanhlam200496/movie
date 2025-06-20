@@ -24,7 +24,7 @@ Route::get('/movies/paginate', [MovieController::class, 'paginate']);
 // Route::post('/register', [UserController::class, 'register']);
 // Route::post('/login', [UserController::class, 'login']);
 // Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'logout']);
-Route::post('/view-history', [ViewHistoryController::class, 'store'])
+Route::middleware('auth:sanctum')->post('/view-history', [ViewHistoryController::class, 'store'])
 
 ;
 

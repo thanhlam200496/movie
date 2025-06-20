@@ -17,7 +17,7 @@ class CategoryController extends Controller
         // Tìm kiếm theo tiêu đề
         if ($request->has('search')&&$request->search!=null) {
             $moviesFilter->where('title', 'like', '%' . $request->search . '%');
-            
+
         }
         if ($request->has('type_film')&&$request->type_film!=null) {
             $moviesFilter->where('type_film', 'like', '%' . $request->type_film . '%');
@@ -49,12 +49,12 @@ public function fetchMovies(Request $request)
 {
     $page = $request->get('page', 1); // Lấy số trang hiện tại từ request
     $perPage = 12; // Số lượng phim trên mỗi trang
-    $favorites=Favorite::all();
-    
+    // $favorites=Favorite::all();
+
     // Lấy danh sách danh mục (categories)
-    $categories = Category::orderBy('name', 'ASC')->get();
+    // $categories = Category::orderBy('name', 'ASC')->get();
     // Lấy danh sách phim theo phân trang
-    $movies = Movie::query()->paginate($perPage, ['*'], 'page', $page);
+    $movies = Movie::query()->where(['status' => 'Public'])->paginate($perPage, ['*'], 'page', $page);
 
     return response()->json([
         'movies' => $movies->items(),

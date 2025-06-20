@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class MovieController extends Controller
 {
-    function show($slug, $episode=null)
+    function show($slug, $episode = null)
     {
 
         $userId = auth()->check() ? auth()->user()->id : 1;
@@ -24,25 +24,27 @@ class MovieController extends Controller
 
         // Lấy movie với các liên kết categories và episodes
         $movie = Movie::with(['categories', 'episodes'])
-            ->where('slug',$slug)->first();
+            ->where('slug', $slug)->first();
+        $listWatched = DB::table('view_history')
+            ->where('user_id', $userId)->get();
+        ;
+        $episodeId = $episode ?? null;
 
-        if (isset($episode)) {
-            // return 'Failed to fetch movie details.';
-            $episode = Episode::where(['movie_id' => $movie->id, 'id' => $episode])->first();
-            // dd($episode);
-        } else {
-            // dd($episode);
-            $episode = $movie->episodes[0];
-        }
+if ($episodeId) {
+    $episode = Episode::where(['movie_id' => $movie->id, 'id' => $episodeId])->first();
+} else {
+    $episode = $movie->episodes[0];
+}
 
-        $comments=Comment::where(['episode_id'=>$episode->id])->get();
-// dd($comments);
+        $comments = Comment::where(['episode_id' => $episode->id])->get();
+        // dd($comments);
         // dd($episode);
         return view('client_movie.detail', [
             'movie' => $movie,
             'episode' => $episode,
-            'comments'=>$comments,
-            'watchedDuration' => $watchedDuration
+            'comments' => $comments,
+            'watchedDuration' => $watchedDuration,
+            'listWatched' => $listWatched
         ]);
     }
 }

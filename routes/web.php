@@ -56,8 +56,8 @@ Route::controller(UserController::class)->group(function () {
     Route::post('signup', 'signup')->name('signup');
 });
 
-Route::controller(CommentController::class)->group(function ()  {
-    Route::post('add-comment','store')->name('comment');
+Route::controller(CommentController::class)->group(function () {
+    Route::post('add-comment', 'store')->name('comment');
 });
 
 
@@ -69,7 +69,7 @@ Route::get('/comments/{episode_id}', [CommentController::class, 'index'])->name(
 Route::get('/movies/paginate', [MovieController::class, 'paginate'])->name('movies.paginate');
 
 Route::group(
-    ['prefix' => 'admin', 'as' => 'admin.'],
+    ['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'admin']],
     function () {
         Route::get('/', [DashboardController::class, 'index']);
         Route::resource('category', CategoryController::class);
@@ -81,7 +81,7 @@ Route::group(
         Route::get('/fetch-all-movies', [LeechMovieController::class, 'importAllMoviesWithEpisodes'])->name('leech.postAll');
 
         Route::post('/fetch-all-movies/{slug}', [LeechMovieController::class, 'importAllMoviesWithEpisodes'])->name('leech.postByPage');
-        
+
         Route::get('importMovieDetails/{slug}/{movie}', [LeechMovieController::class, 'importMovieDetails'])->name('leech.bySlug');
         Route::post('importMovieDetails', [LeechMovieController::class, 'importMovieDetailsBySlug'])->name('leech.slug');
         Route::get('create-episode/{id}', [EpisodeController::class, 'create'])->name('episode.create');
