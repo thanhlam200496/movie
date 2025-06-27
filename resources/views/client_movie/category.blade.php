@@ -4,9 +4,7 @@
     <section class="section section--head">
         <div class="container">
             <div class="row">
-                <div class="col-12 col-xl-6">
-                    <h1 class="section__title section__title--head">Category</h1>
-                </div>
+
 
                 <div class="col-12 col-xl-6">
                     <ul class="breadcrumb">
@@ -31,7 +29,7 @@
 
 
                         <div class="catalog__select-wrap">
-                            <form action="{{ route('category.filter') }}" method="get">
+                            <form id="filter-form" action="{{ route('category.filter') }}" method="get">
                                 <select class="catalog__select" name="category">
                                     <option value="">All genres</option>
                                     @foreach ($categories as $category)
@@ -57,10 +55,15 @@
                                     <option value="Movie">Movie</option>
 
                                 </select>
-                                <input type="text" style="padding: 0 0 0 20px; background-color:    #131720; color:#fff; border: none; margin-right: 10px; height: 40px; border-radius: 16px;"
-                                    name="search" value="{{ request()->search }}"  placeholder="I'm looking for...">
+                                <input type="text"
+                                    style="padding: 0 0 0 20px; background-color:    #131720; color:#fff; border: none; margin-right: 10px; height: 40px; border-radius: 16px;"
+                                    name="search" value="{{ request()->search }}" placeholder="I'm looking for...">
                                 <button type="submit">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#2f80ed" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>                                </button>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20"
+                                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                        <path fill="#2f80ed"
+                                            d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                                    </svg> </button>
                             </form>
 
                         </div>
@@ -78,8 +81,10 @@
                         @foreach ($movies as $movie)
                             <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
                                 <div class="card">
-                                    <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}" class="card__cover">
-                                        <img src="{{ $movie->link_poster_internet!=null?$movie->link_poster_internet:Storage::url('public/images/' . $movie->poster_url) }}" alt="">
+                                    <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}"
+                                        class="card__cover">
+                                        <img src="{{ $movie->link_poster_internet != null ? $movie->link_poster_internet : Storage::url('public/images/' . $movie->poster_url) }}"
+                                            alt="">
                                         <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -96,41 +101,41 @@
                                         <input type="hidden" name="user_id" value="{{ Auth::user()->id ?? null }}">
                                         <button class="card__add" type="submit">
 
-											@if (auth()->check())
-											<?php $dem = 0; ?>
-											@foreach ($favorites as $item)
-												@if ($item->user_id == auth()->user()->id && $item->movie_id == $movie->id)
-													<?php $dem += 1; ?>
-												@endif
-											@endforeach
-											@if ($dem == 0)
-											<svg xmlns="http://www.w3.org/2000/svg"
-											viewBox="0 0 24 24">
-											<path
-												d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-										</svg>
-											@else
-												<svg xmlns="http://www.w3.org/2000/svg" height="6.5" width="7.5"
-													viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-													<path fill="#FFD43B"
-														d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z" />
-												</svg>
-											@endif
-										@else
-										<svg xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24">
-										<path
-											d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-									</svg>
-										@endif
-										</button>
+                                            @if (auth()->check())
+                                                <?php $dem = 0; ?>
+                                                @foreach ($favorites as $item)
+                                                    @if ($item->user_id == auth()->user()->id && $item->movie_id == $movie->id)
+                                                        <?php $dem += 1; ?>
+                                                    @endif
+                                                @endforeach
+                                                @if ($dem == 0)
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
+                                                    </svg>
+                                                @else
+                                                    <svg xmlns="http://www.w3.org/2000/svg" height="6.5" width="7.5"
+                                                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                                        <path fill="#FFD43B"
+                                                            d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z" />
+                                                    </svg>
+                                                @endif
+                                            @else
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
+                                                </svg>
+                                            @endif
+                                        </button>
                                     </form>
-                                    <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24">
                                             <path
                                                 d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                        </svg> {{$movie->rating}}</span>
+                                        </svg> {{ $movie->rating }}</span>
                                     <h3 class="card__title"><a
-                                            href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">{{ $movie->title }}</a></h3>
+                                            href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">{{ $movie->title }}</a>
+                                    </h3>
                                     <ul class="card__list">
                                         {{-- <li>Free</li> --}}
                                         <li>{{ $movie->release_year }}</li>
@@ -154,52 +159,82 @@
         </div>
     </div>
     <!-- end catalog -->
-<script>document.addEventListener('DOMContentLoaded', () => {
-    const loadMoreButton = document.getElementById('load-more');
-    const movieList = document.getElementById('movie-list');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadMoreButton = document.getElementById('load-more');
+            const movieList = document.getElementById('movie-list');
 
-    function fetchMovies(page) {
-        fetch(`/fetch-movies?page=${page}`)
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to fetch movies');
-                return response.json();
-            })
-            .then(data => {
-                // Thêm danh sách phim mới vào container
-                data.movies.forEach(movie => {
-                    const movieCard = `
-                        <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                            <div class="card">
-                                <a href="/movie/show/${movie.slug}" class="card__cover">
-                                    <img src="${movie.link_poster_internet || '/storage/images/' + movie.poster_url}" alt="${movie.title}">
-                                </a>
-                                <span class="card__rating">${movie.rating}</span>
-                                <h3 class="card__title">
-                                    <a href="/movie/show/${movie.slug}">${movie.title}</a>
-                                </h3>
-                            </div>
+            function fetchMovies(page) {
+    const form = document.getElementById('filter-form');
+    const formData = new FormData(form);
+    formData.append('page', page);
+
+    const params = new URLSearchParams(formData).toString();
+
+    fetch(`/fetch-movies?${params}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to fetch movies');
+            return response.json();
+        })
+        .then(data => {
+            data.movies.forEach(movie => {
+                const movieCard = `
+                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                        <div class="card">
+                            <a href="/movie/show/${movie.slug}" class="card__cover">
+                                <img src="${movie.link_poster_internet || '/storage/images/' + movie.poster_url}" alt="${movie.title}">
+                            </a>
+                            <span class="card__rating">${movie.rating}</span>
+                            <h3 class="card__title">
+                                <a href="/movie/show/${movie.slug}">${movie.title}</a>
+                            </h3>
                         </div>
-                    `;
-                    movieList.insertAdjacentHTML('beforeend', movieCard);
-                });
+                    </div>
+                `;
+                movieList.insertAdjacentHTML('beforeend', movieCard);
+            });
 
-                // Cập nhật số trang tiếp theo hoặc ẩn nút nếu không còn dữ liệu
-                if (data.nextPage) {
-                    loadMoreButton.setAttribute('data-page', data.nextPage);
-                } else {
-                    loadMoreButton.style.display = 'none';
-                }
-            })
-            .catch(error => console.error('Error fetching movies:', error));
-    }
+            if (data.nextPage) {
+                loadMoreButton.setAttribute('data-page', data.nextPage);
+            } else {
+                loadMoreButton.style.display = 'none';
+            }
+        })
+        .catch(error => console.error('Error fetching movies:', error));
+}
 
-    // Bắt sự kiện nhấn nút "Load more"
-    loadMoreButton.addEventListener('click', () => {
-        const nextPage = loadMoreButton.getAttribute('data-page');
-        fetchMovies(nextPage);
+            // Bắt sự kiện nhấn nút "Load more"
+            loadMoreButton.addEventListener('click', () => {
+                const nextPage = loadMoreButton.getAttribute('data-page');
+                fetchMovies(nextPage);
+            });
+        });
+    </script>
+    <script>
+        form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const params = new URLSearchParams(formData).toString();
+
+    fetch(form.action + '?' + params, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.text())
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newMovieList = doc.querySelector('#movie-list');
+        movieList.innerHTML = newMovieList.innerHTML;
+
+        // Reset lại nút load more
+        loadMoreButton.setAttribute('data-page', 2); // Trang tiếp theo sau khi lọc
+        loadMoreButton.style.display = 'inline-block';
     });
 });
-</script>
+    </script>
     <!-- subscriptions -->
     <section class="section">
         <div class="container">
@@ -527,5 +562,37 @@
             </div>
         </div>
     </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('filter-form');
+            const movieList = document.getElementById('movie-list');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); // chặn form submit mặc định
+
+                const formData = new FormData(form);
+                const params = new URLSearchParams(formData).toString();
+
+                fetch(form.action + '?' + params, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error("Network error");
+                        return response.text();
+                    })
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const newMovieList = doc.querySelector('#movie-list');
+                        movieList.innerHTML = newMovieList.innerHTML;
+                    })
+                    .catch(err => {
+                        console.error('Fetch error:', err);
+                    });
+            });
+        });
+    </script>
     <!-- end subscriptions -->
 @endsection

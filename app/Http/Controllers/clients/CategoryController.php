@@ -41,25 +41,40 @@ class CategoryController extends Controller
             // dd($movies);
         ;
         $favorites=Favorite::all();
+        if ($request->ajax()) {
+    return response()->view('client_movie.category', compact('movies', 'favorites', 'categories'))->header('Vary', 'X-Requested-With');
+}
         return view('client_movie.category', compact('movies', 'favorites','categories'));
     }
 
 
 public function fetchMovies(Request $request)
 {
-    $page = $request->get('page', 1); // Lấy số trang hiện tại từ request
-    $perPage = 12; // Số lượng phim trên mỗi trang
-    // $favorites=Favorite::all();
+    $page = $request->get('page', 1);
+    $perPage = 12;
 
-    // Lấy danh sách danh mục (categories)
-    // $categories = Category::orderBy('name', 'ASC')->get();
-    // Lấy danh sách phim theo phân trang
-    $movies = Movie::query()->where(['status' => 'Public'])->paginate($perPage, ['*'], 'page', $page);
+    $query = Movie::query()->with('categories')->where('status', 'Public');
+
+    // Giữ lại các bộ lọc như trong index()
+    if ($request->has('search') && $request->search != null) {
+        $query->where('title', 'like', '%' . $request->search . '%');
+    }
+
+    if ($request->has('type_film') && $request->type_film != null) {
+        $query->where('type_film', 'like', '%' . $request->type_film . '%');
+    }
+
+    if ($request->has('category') && $request->category != null) {
+        $categoryId = $request->input('category');
+        $query->whereHas('categories', function ($q) use ($categoryId) {
+            $q->where('categories.id', $categoryId);
+        });
+    }
+
+    $movies = $query->paginate($perPage, ['*'], 'page', $page);
 
     return response()->json([
         'movies' => $movies->items(),
-        // 'favorites' => $favorites->items(),
-        // 'categories' => $categories->items(),
         'nextPage' => $movies->currentPage() < $movies->lastPage() ? $movies->currentPage() + 1 : null,
     ]);
 }
