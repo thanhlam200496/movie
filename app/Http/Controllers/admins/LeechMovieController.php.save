@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\admins;
-use Illuminate\Support\Facades\Log;
+
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Episode;
@@ -11,7 +11,6 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Schema;
 
 class LeechMovieController extends Controller
 {
@@ -52,127 +51,130 @@ class LeechMovieController extends Controller
 
         return response()->json(['message' => 'Failed to fetch data'], 500);
     }
-
-
-
-
-
-public function importAllMoviesWithEpisodes($slug, Request $request)
-{
-ini_set('max_execution_time', 0); // 0 = không giới hạn
-$startTime = microtime(true);
-    $leechUrl = LeechMovieUrl::where('slug', $slug)->first();
-    $client = new Client();
-    $trangdau = $request->trangdau;
-    $trangcuoi = $request->trangcuoi;
-
-    // Đảm bảo trang đầu không lớn hơn trang cuối
-    if ($trangdau > $trangcuoi) {
-        $temp = $trangdau;
-        $trangdau = $trangcuoi;
-        $trangcuoi = $temp;
-    }
-
-    $page = $trangdau;
-
-    do {
-        $response = $client->get($leechUrl->url_list_movie . $page);
-
-        if ($response->getStatusCode() !== 200) {
-            return response()->json(['message' => "Failed to fetch data on page $page"], 500);
+   
+    {
+        $leechUrl=LeechMovieUrl::where('slug',$slug)->first();
+        $client = new Client();
+        $trangdau = $request->trangdau;
+        $trangcuoi = $request->trangcuoi;
+        if ($trangdau > $trangcuoi) {
+            $temp = $trangdau;
+            $trangdau = $trangcuoi;
+            $trangcuoi = $temp;
         }
+        $page = $trangdau;
 
-        $data = json_decode($response->getBody(), true);
-        $movies = $data['items'] ?? [];
-        $totalPages = $data['pagination']['totalPages'] ?? 1;
+        do {
+            $response = $client->get($leechUrl->url_list_movie.$page);
 
-        foreach ($movies as $movieDataNomal) {
-            DB::beginTransaction(); // Bắt đầu transaction cho mỗi phim
+            if ($response->getStatusCode() !== 200) {
+                return response()->json(['message' => "Failed to fetch data on page $page"], 500);
+            }
 
-            try {
-                // Gọi API chi tiết phim
-                $detailsResponse = Http::get($leechUrl->url_detail . $movieDataNomal['slug']);
-                
-                if ($detailsResponse->successful()) {
-                    $detailsData = $detailsResponse->json();
-                    $episodesData = $detailsData['episodes'] ?? [];
-                    $movieData = $detailsData['movie'] ?? null;
+            $data = json_decode($response->getBody(), true);
+            $movies = $data['items'];
+            $totalPages = $data['pagination']['totalPages'] ?? 1;
 
-                    if (!$movieData) {
-                        throw new \Exception("Movie data is missing for slug: {$movieDataNomal['slug']}");
-                    }
+            foreach ($movies as $movieDataNomal) {
+                DB::beginTransaction(); // Bắt đầu transaction cho mỗi phim
 
+                try {
                     // Lưu hoặc lấy phim từ cơ sở dữ liệu
-                    $movie = Movie::updateOrCreate(
-                        ['slug' => $movieDataNomal['slug']],
-                        [
-                            'title' => $movieDataNomal['name'],
-                            'slug' => $movieDataNomal['slug'],
-                            'release_year' => $movieDataNomal['year'],
-                            'link_poster_internet' => ($movieData['thumb_url'] ?? ''),
-                            'status' => 'Public',
-                            'description' => $movieData['content'] ?? '',
-                            'trailer_url' => $movieData['trailer_url'] ?? '',
-                            'rating' => $movieData['tmdb']['vote_average'] ?? null,
-                            'views' => $movieData['view'] ?? null,
-                            'countries' => $movieData['country']['name'] ?? null,
-                            'duration' => $movieData['time'] ?? null,
-                            'type_film' => $movieData['episode_current'] == 'Full' ? 'Movie' : 'TV Show',
-                        ]
-                    );
 
-                    // Tạo category nếu chưa có và liên kết đến phim
-                    foreach ($movieData['category'] as $category) {
-                        $categoryNew = Category::firstOrCreate(
-                            ['slug' => $category['slug']],
+
+                    // Gọi API chi tiết phim
+                    $detailsResponse = Http::get($leechUrl->url_detail . $movieDataNomal['slug']);
+                    if ($detailsResponse->successful()) {
+                        $detailsData = $detailsResponse->json();
+                        $episodesData = $detailsData['episodes'];
+                        $movieData = $detailsData['movie'];
+
+                        $movie = Movie::updateOrCreate(
+                            ['slug' => $movieDataNomal['slug']],
                             [
-                                'name' => $category['name']
+                                'title' => $movieDataNomal['name'],
+                                'slug' => $movieDataNomal['slug'],
+                                'release_year' => $movieDataNomal['year'],
+                                // 'description' => $movieData['description'] ?? '',
+                                'link_poster_internet' =>  ($movieData['thumb_url'] ?? ''),
+                                // 'trailer_url' => $movieData['trailer_url'] ?? '',
+                                // 'rating' => 9, // Tuỳ chỉnh nếu cần
+                                // 'director' => isset($movieData['directors']) ? implode(', ', $movieData['directors']) : '',
+                                // 'countries' => isset($movieData['countries']) ? implode(', ', $movieData['countries']) : '',
+
+                                'status' => 'Public',
+
+                                'description' => $movieData['content'] ?? '',
+
+                                'trailer_url' => $movieData['trailer_url'] ?? '',
+                                'rating' => $movieData['tmdb']['vote_average'], // Tuỳ chỉnh nếu cần
+                                'views' => $movieData['view'],
+                                'countries' => $movieData['country'][0]['name'],
+                                'duration' => $movieData['time'],
+
+                                'type_film' => $movieData['episode_current'] == 'Full' ? 'Movie' : 'TV Show',
                             ]
                         );
-                        $movie->categories()->attach($categoryNew->id);
-                    }
 
-                    // Lưu tập phim vào mảng tạm thời
-                    $episodesToInsert = [];
-                    foreach ($episodesData as $episode) {
-                        foreach ($episode['server_data'] as $ep) {
-                            // Xác định số tập phim
-                            $episodeNumber = (count($episode['server_data']) == 1) ? 'Full' : $ep['name'];
-                            $episodesToInsert[] = [
-                                'movie_id' => $movie->id,
-                                'episode_number' => $episodeNumber,
-                                'title' => "{$movie->title} - {$ep['name']}",
-                                'link_video_internet' => $ep['link_m3u8'] ?? null,
-                                'created_at' => now(),
-                                'updated_at' => now(),
-                            ];
+                        // tạo category nếu chưa có và liên kết đến phim
+
+                        foreach ($movieData['category'] as $category) {
+                            $categoryNew = Category::firstOrCreate(
+                                ['slug' => $category['slug']],
+                                [
+                                    'name' => $category['name']
+                                ]
+                            );
+                            // $movie_category_id = Movie::find($movie->id);
+                            $movie->categories()->attach($categoryNew->id);
+                        }
+                        // Lưu tập phim
+                        foreach ($episodesData as $episode) {
+                            foreach ($episode['server_data'] as $ep) {
+                                if (count($episode['server_data']) == 1) {
+                                    Episode::updateOrCreate(
+                                        [
+                                            'movie_id' => $movie->id,
+                                            'episode_number' => 'Full',
+                                        ],
+                                        [
+                                            'title' => "{$movie->title} - {$ep['name']}",
+                                            'link_video_internet' => $ep['link_m3u8'] ?? null,
+                                            // 'video_url' => $ep['link_m3u8'] ?? null,
+                                        ]
+                                    );
+                                } else {
+                                    Episode::updateOrCreate(
+                                        [
+                                            'movie_id' => $movie->id,
+                                            'episode_number' => $ep['name']
+                                        ],
+                                        [
+                                            'title' => "{$movie->title} - {$ep['name']}",
+                                            'link_video_internet' => $ep['link_m3u8'] ?? null,
+                                            // 'video_url' => $ep['link_m3u8'] ?? null,
+                                        ]
+                                    );
+                                }
+                            }
                         }
                     }
 
-                    // Thực hiện chèn tất cả các tập phim một lần
-                    if (!empty($episodesToInsert)) {
-                        Episode::insert($episodesToInsert);
-                    }
-                } else {
-                    throw new \Exception("Failed to fetch movie details for slug: {$movieDataNomal['slug']}");
+                    DB::commit(); // Commit dữ liệu
+                } catch (\Exception $e) {
+                    DB::rollback(); // Rollback nếu có lỗi
+                    return response()->json(['message' => "Failed to save movie {$movieData['name']}: {$e->getMessage()}"], 500);
                 }
-
-                DB::commit(); // Commit dữ liệu
-            } catch (\Exception $e) {
-                DB::rollback(); // Rollback nếu có lỗi
-                return response()->json(['message' => "Failed to save movie {$movieDataNomal['name']}: {$e->getMessage()}"], 500);
             }
-        }
 
-        $page++;
-    } while ($page <= $trangcuoi); // Có thể thay thế 6 bằng tổng số trang thực tế
+            $page++;
+        } while (
+            $page <=
+            $trangcuoi
+        ); // Có thể thay thế 6 bằng tổng số trang thực tế
 
-$endTime = microtime(true);
-$executionTime = $endTime - $startTime;
-
-Log::info("Execution time for importAllMoviesWithEpisodes: {$executionTime} seconds");
-    return redirect()->back()->with('success', 'Leech phim thành công, thời giam: '.$executionTime);
-}
+        return redirect()->back()->with('success', 'Leech phim thành công');
+    }
 
 
     public function importMovieDetails($slug, $movie)
