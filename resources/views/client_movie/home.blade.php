@@ -14,7 +14,7 @@
             @foreach ($moviesHotInYear as $movie)
                 <div class="home__card">
                     <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[count($movie->episodes) - 1]->id]) }}">
-                        <img src="{{ $movie->link_poster_internet!=null?$movie->link_poster_internet:Storage::url('public/images/' . $movie->poster_url) }}" alt="">
+                        <img src="{{ $movie->poster_url }}&w=100&h=100" alt="">
                     </a>
                     <div>
                         <h2>{{ $movie->title }}</h2>
@@ -86,7 +86,7 @@
                             @foreach ($moviesNew as $movie)
                                 <div class="card">
                                     <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[count($movie->episodes) - 1]->id]) }}" class="card__cover">
-                                        <img src="{{ $movie->link_poster_internet!=null?$movie->link_poster_internet:Storage::url('public/images/' . $movie->poster_url) }}"
+                                        <img src="/timthumb.php?src={{ $movie->link_poster_internet!=null?$movie->link_poster_internet:Storage::url('public/images/' . $movie->poster_url) }}&w=200&h=400"
                                             alt="">
                                         <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
