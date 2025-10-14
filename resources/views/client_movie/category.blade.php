@@ -94,7 +94,7 @@ xem phim online, phim mới, phim chiếu rạp
                                 <div class="card">
                                     <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}"
                                         class="card__cover">
-                                        <img src="{{ $movie->link_poster_internet != null ? $movie->link_poster_internet : Storage::url('public/images/' . $movie->poster_url) }}"
+                                        <img src="{{Storage::url('images/' . $movie->poster_url) }}"
                                             alt="">
                                         <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -566,7 +566,7 @@ xem phim online, phim mới, phim chiếu rạp
                     <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
                         <div class="card">
                             <a href="/movie/show/${movie.slug}" class="card__cover">
-                                <img src="${movie.link_poster_internet || '/storage/images/' + movie.poster_url}" alt="${movie.title}">
+                                <img src="${ '/storage/images/' + movie.poster_url}" alt="${movie.title}">
                             </a>
                             <span class="card__rating">${movie.rating}</span>
                             <h3 class="card__title">

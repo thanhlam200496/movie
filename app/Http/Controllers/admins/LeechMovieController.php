@@ -11,6 +11,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Response;
@@ -283,6 +284,9 @@ public function importAllMoviesWithEpisodes($slug, Request $request)
             $episodesData = $data['episodes'];
 
             // Lưu hoặc cập nhật thông tin phim
+		$posterFilm = file_get_contents($movieData['thumb_url']);
+		$fileName = basename($movieData['thumb_url']);
+		Storage::put('public/images/'.$fileName, $posterFilm);
             $movie = Movie::updateOrCreate(
                 ['slug' => $movieData['slug']], // Kiểm tra trùng lặp dựa trên slug
                 [
@@ -290,6 +294,7 @@ public function importAllMoviesWithEpisodes($slug, Request $request)
                     'slug' => $movieData['slug'],
                     'release_year' => $movieData['year'],
                     'description' => $movieData['content'] ?? '',
+			'poster_url'=>$fileName,
                     'link_poster_internet' =>  $movieData['thumb_url'] ?? '',
                     'trailer_url' => $movieData['trailer_url'] ?? '',
                     'rating' => $movieData['tmdb']['vote_average'],
@@ -300,6 +305,7 @@ public function importAllMoviesWithEpisodes($slug, Request $request)
                     'type_film' => $movieData['episode_current'] == 'Full' ? 'Movie' : 'TV Show',  // Tự đặt giá trị
                 ]
             );
+
             // Thêm danh mục và liên kết đến phim qua bảng Category_movie
             foreach ($movieData['category'] as $category) {
                 $categoryNew = Category::firstOrCreate(
