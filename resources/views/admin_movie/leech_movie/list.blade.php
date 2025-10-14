@@ -81,7 +81,7 @@
                     </form>
                      <form action="{{ route('admin.leech.postByPage',$leechUrl->slug) }}" method="post">
                         @csrf
-                       
+
                         <select name="trangdau" id="">
                             @for ($i = 1; $i <= $pagination['totalPages']; $i++)
                                 <option value="{{ $i }}">{{ $i }}</option>
@@ -238,7 +238,7 @@
                                                 </svg>
                                             </a>
                                         @endif
-                                       
+
                                         <a href="{{ route('admin.movie.show', $movie->id) }}"
                                             class="main__table-btn main__table-btn--edit">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -480,6 +480,6 @@
     }
 
     // Example usage: Display a toast for 10 seconds
-    showToast('{{ Session::get('success') }}', 10000);
+    showToast('{{ Session::get('success') }}', 1000000);
 </script>
 @endpush

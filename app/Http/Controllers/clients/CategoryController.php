@@ -36,7 +36,7 @@ class CategoryController extends Controller
         // Lấy danh sách phim (movies)
         $movies = $moviesFilter->where('status', 'Public')
             ->orderBy('created_at', 'DESC')
-            ->paginate(12);
+            ->paginate(30);
             // dd($movies);
         ;
         $favorites=Favorite::all();

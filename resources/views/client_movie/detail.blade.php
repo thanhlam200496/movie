@@ -26,8 +26,9 @@ Phim {{$movie->countries}}
 
     <section class="section section--head section--head-fixed section--gradient section--details-bg">
         <div class="section__bg"
-            data-bg="{{ $movie->link_poster_internet != null ? $movie->link_poster_internet : Storage::url('public/images/' . $movie->poster_url) }}">
+            data-bg="/timthumb.php?src={{ $movie->poster_url != null ? Storage::url('public/images/' . $movie->poster_url) : $movie->link_poster_internet }}&w=150&h=250">
         </div>
+
         <div class="container">
             <!-- article -->
             <div class="article">
@@ -241,7 +242,7 @@ Phim {{$movie->countries}}
                     <div class="col-12 col-xl-8">
                         <!-- comments and reviews -->
                         <div class="comments">
-                           
+
 
                             <!-- tabs -->
                             <div class="tab-content">
