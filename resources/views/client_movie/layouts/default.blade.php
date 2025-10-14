@@ -20,11 +20,15 @@
 	<!-- Favicons -->
 	<link rel="icon" type="image/png" href="{{asset('clients/icon/favicon-32x32.png')}}" sizes="32x32">
 	<link rel="apple-touch-icon" href="{{asset('clients/icon/favicon-32x32.png')}}">
+    <link rel="canonical" href="{{ url()->current() }}" />
+
 {{-- <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" /> --}}
-	<meta name="description" content="">
-	<meta name="keywords" content="">
+	<meta name="description" content="@yield('description')">
+	<meta name="keywords" content="@yield('keywords')">
 	<meta name="author" content="Dmitry Volkov">
-	<title>FlixTV – Movies & TV Shows, Online cinema HTML Template</title>
+	<title>
+	@yield('title')
+</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>

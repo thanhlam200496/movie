@@ -1,4 +1,15 @@
 @extends('client_movie.layouts.default')
+@section('title')
+Capy Phim | Danh mục phim - xem phim hay, miễn phí, phim gì cũng có.
+@endsection
+
+@section('description')
+    Xem phim online chất lượng cao, cập nhật mỗi ngày, tốc độ nhanh. Kho phim mới nhất, đầy đủ thể loại: hành động, tình cảm, hoạt hình, kinh dị...!
+
+@endsection
+@section('keywords')
+xem phim online, phim mới, phim chiếu rạp
+@endsection
 @section('main')
     <!-- head -->
     <section class="section section--head">
@@ -316,7 +327,7 @@
 								</div>
 							</div>
 						</div>
-						
+
 						<div class="col-12 col-md-6 col-xl-4">
 							<div class="card card--big">
 								<a href="details.html" class="card__cover">
@@ -502,7 +513,7 @@
 						</div>
 					</div>
 				</div>
-			</div>		
+			</div>
 
 			<div class="row">
 				<div class="col-12">

@@ -1,4 +1,14 @@
 @extends('client_movie.layouts.default')
+@section('title')
+Capy Phim | xem phim hay, miễn phí, phim gì cũng có.
+@endsection
+@section('description')
+    Xem phim online chất lượng cao, cập nhật mỗi ngày, tốc độ nhanh. Kho phim mới nhất, đầy đủ thể loại: hành động, tình cảm, hoạt hình, kinh dị...!
+
+@endsection
+@section('keywords')
+xem phim online, phim mới, phim chiếu rạp
+@endsection
 @section('main')
     <!-- home -->
     <div class="home home--title">
