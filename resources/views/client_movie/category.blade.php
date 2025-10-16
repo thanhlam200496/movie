@@ -94,9 +94,9 @@
                                 <div class="card">
                                     <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}"
                                         class="card__cover">
-                                        <img src="/timthumb.php?src={{ $movie->poster_url != null ? Storage::url('public/images/' . $movie->poster_url) : $movie->link_poster_internet }}&w=190&h=290"
+                                        <img src="/timthumb.php?src={{ $movie->poster_url != null ? Storage::url('images/' . $movie->poster_url) : $movie->link_poster_internet }}&w=190&h=290"
                                             alt="">
-                                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
+ <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd" clip-rule="evenodd"
                                                 d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
@@ -153,8 +153,10 @@
                                         <li>{{ $movie->categories->first()->name ?? null }}</li>
                                     </ul>
                                 </div>
+
                             </div>
                         @endforeach
+
 
 
 
