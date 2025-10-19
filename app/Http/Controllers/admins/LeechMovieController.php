@@ -72,7 +72,7 @@ class LeechMovieController extends Controller
 
 
 
-// hàm gốc
+    // hàm gốc
     public function importAllMoviesWithEpisodes($slug, Request $request)
     {
         ini_set('max_execution_time', 0);
@@ -201,221 +201,220 @@ class LeechMovieController extends Controller
 
 
 
-// hàm của AI
-// public function importAllMoviesWithEpisodes($slug, Request $request)
-// {
-//     ini_set('max_execution_time', 0);
-//     $startTime = microtime(true);
+    // hàm của AI, chưa tự tạo category
+    // public function importAllMoviesWithEpisodes($slug, Request $request)
+    // {
+    //     ini_set('max_execution_time', 0);
+    //     $startTime = microtime(true);
 
-//     $leechUrl = LeechMovieUrl::where('slug', $slug)->firstOrFail();
+    //     $leechUrl = LeechMovieUrl::where('slug', $slug)->firstOrFail();
 
-//     // Tạo client với retry middleware để đảm bảo dữ liệu
-//     $handlerStack = HandlerStack::create();
-//     $handlerStack->push(\GuzzleHttp\Middleware::retry(function ($retries, $request, $response, $exception) {
-//         return $retries < 3 && ($exception || ($response && $response->getStatusCode() !== 200));
-//     }));
-//     $client = new Client([
-//         'timeout' => 15,
-//         'handler' => $handlerStack,
-//     ]);
+    //     // Tạo client với retry middleware để đảm bảo dữ liệu
+    //     $handlerStack = HandlerStack::create();
+    //     $handlerStack->push(\GuzzleHttp\Middleware::retry(function ($retries, $request, $response, $exception) {
+    //         return $retries < 3 && ($exception || ($response && $response->getStatusCode() !== 200));
+    //     }));
+    //     $client = new Client([
+    //         'timeout' => 15,
+    //         'handler' => $handlerStack,
+    //     ]);
 
-//     $trangdau = $request->trangdau;
-//     $trangcuoi = $request->trangcuoi;
+    //     $trangdau = $request->trangdau;
+    //     $trangcuoi = $request->trangcuoi;
 
-//     if ($trangdau > $trangcuoi) {
-//         [$trangdau, $trangcuoi] = [$trangcuoi, $trangdau];
-//     }
+    //     if ($trangdau > $trangcuoi) {
+    //         [$trangdau, $trangcuoi] = [$trangcuoi, $trangdau];
+    //     }
 
-//     // Checkpoint: Lưu tiến độ trong Cache
-//     $cacheKey = "crawl_progress_{$slug}";
-//     $progress = Cache::get($cacheKey, ['last_page' => $trangdau - 1, 'processed_movies' => 0]);
-//     $startPage = max($trangdau, $progress['last_page'] + 1);
-//     $processedMovies = $progress['processed_movies'];
+    //     // Checkpoint: Lưu tiến độ trong Cache
+    //     $cacheKey = "crawl_progress_{$slug}";
+    //     $progress = Cache::get($cacheKey, ['last_page' => $trangdau - 1, 'processed_movies' => 0]);
+    //     $startPage = max($trangdau, $progress['last_page'] + 1);
+    //     $processedMovies = $progress['processed_movies'];
 
-//     $allMovies = [];
-//     $concurrencyPages = 10; // Song song lấy danh sách trang
+    //     $allMovies = [];
+    //     $concurrencyPages = 10; // Song song lấy danh sách trang
 
-//     // 🔹 Bước 1: Lấy danh sách phim song song từ các trang
-//     $pageMap = []; // Lưu ánh xạ index => page
-//     $requestsPages = function ($startPage, $trangcuoi) use ($client, $leechUrl, &$pageMap) {
-//         $index = 0;
-//         for ($page = $startPage; $page <= $trangcuoi; $page++) {
-//             $pageMap[$index] = $page; // Lưu page cho index
-//             yield function () use ($client, $leechUrl, $page) {
-//                 return $client->getAsync($leechUrl->url_list_movie . $page);
-//             };
-//             $index++;
-//         }
-//     };
+    //     // 🔹 Bước 1: Lấy danh sách phim song song từ các trang
+    //     $pageMap = []; // Lưu ánh xạ index => page
+    //     $requestsPages = function ($startPage, $trangcuoi) use ($client, $leechUrl, &$pageMap) {
+    //         $index = 0;
+    //         for ($page = $startPage; $page <= $trangcuoi; $page++) {
+    //             $pageMap[$index] = $page; // Lưu page cho index
+    //             yield function () use ($client, $leechUrl, $page) {
+    //                 return $client->getAsync($leechUrl->url_list_movie . $page);
+    //             };
+    //             $index++;
+    //         }
+    //     };
 
-//     $poolPages = new Pool($client, $requestsPages($startPage, $trangcuoi), [
-//         'concurrency' => $concurrencyPages,
-//         'fulfilled' => function (Response $response, $index) use (&$allMovies, $pageMap, $cacheKey) {
-//             $page = isset($pageMap[$index]) ? $pageMap[$index] : 'unknown'; // Kiểm tra index tồn tại
-//             try {
-//                 $data = json_decode($response->getBody(), true);
-//                 $movies = $data['items'] ?? [];
-//                 $allMovies = array_merge($allMovies, $movies);
-//                 Cache::put($cacheKey, ['last_page' => $page, 'processed_movies' => count($allMovies)], now()->addHours(24));
-//                 Log::info("Đã lấy danh sách phim từ trang {$page}");
-//             } catch (\Throwable $e) {
-//                 Log::error("Lỗi xử lý dữ liệu trang {$page}: {$e->getMessage()}");
-//             }
-//         },
-//         'rejected' => function ($reason, $index) use ($pageMap) {
-//             $page = isset($pageMap[$index]) ? $pageMap[$index] : 'unknown';
-//             Log::error("Lấy danh sách trang {$page} thất bại: " . $reason->getMessage());
-//         },
-//     ]);
+    //     $poolPages = new Pool($client, $requestsPages($startPage, $trangcuoi), [
+    //         'concurrency' => $concurrencyPages,
+    //         'fulfilled' => function (Response $response, $index) use (&$allMovies, $pageMap, $cacheKey) {
+    //             $page = isset($pageMap[$index]) ? $pageMap[$index] : 'unknown'; // Kiểm tra index tồn tại
+    //             try {
+    //                 $data = json_decode($response->getBody(), true);
+    //                 $movies = $data['items'] ?? [];
+    //                 $allMovies = array_merge($allMovies, $movies);
+    //                 Cache::put($cacheKey, ['last_page' => $page, 'processed_movies' => count($allMovies)], now()->addHours(24));
+    //                 Log::info("Đã lấy danh sách phim từ trang {$page}");
+    //             } catch (\Throwable $e) {
+    //                 Log::error("Lỗi xử lý dữ liệu trang {$page}: {$e->getMessage()}");
+    //             }
+    //         },
+    //         'rejected' => function ($reason, $index) use ($pageMap) {
+    //             $page = isset($pageMap[$index]) ? $pageMap[$index] : 'unknown';
+    //             Log::error("Lấy danh sách trang {$page} thất bại: " . $reason->getMessage());
+    //         },
+    //     ]);
 
-//     $poolPages->promise()->wait();
+    //     $poolPages->promise()->wait();
 
-//     if (empty($allMovies)) {
-//         return redirect()->back()->with('error', 'Không lấy được danh sách phim.');
-//     }
+    //     if (empty($allMovies)) {
+    //         return redirect()->back()->with('error', 'Không lấy được danh sách phim.');
+    //     }
 
-//     // 🔹 Bước 2: Thu thập categories trước để giảm query
-//     $allCategories = collect($allMovies)->flatMap(function ($movie) {
-//         return $movie['category'] ?? [];
-//     })->unique('slug')->map(function ($cat) {
-//         return Category::firstOrCreate(['slug' => $cat['slug']], ['name' => $cat['name']]);
-//     })->keyBy('slug');
+    //     // 🔹 Bước 2: Thu thập categories trước để giảm query
+    //     $allCategories = collect($allMovies)->flatMap(function ($movie) {
+    //         return $movie['category'] ?? [];
+    //     })->unique('slug')->map(function ($cat) {
+    //         return Category::firstOrCreate(['slug' => $cat['slug']], ['name' => $cat['name']]);
+    //     })->keyBy('slug');
 
-//     // 🔹 Bước 3: Xử lý phim theo lô để giảm bộ nhớ
-//     $batchSize = 1000;
-//     $concurrencyDetails = 20;
-//     $totalMovies = count($allMovies);
-//     $movieCategoryRelations = []; // Thu thập quan hệ category để insert hàng loạt
+    //     // 🔹 Bước 3: Xử lý phim theo lô để giảm bộ nhớ
+    //     $batchSize = 1000;
+    //     $concurrencyDetails = 20;
+    //     $totalMovies = count($allMovies);
+    //     $movieCategoryRelations = []; // Thu thập quan hệ category để insert hàng loạt
 
-//     for ($i = $processedMovies; $i < $totalMovies; $i += $batchSize) {
-//         $batch = array_slice($allMovies, $i, $batchSize);
+    //     for ($i = $processedMovies; $i < $totalMovies; $i += $batchSize) {
+    //         $batch = array_slice($allMovies, $i, $batchSize);
 
-//         // Chuẩn bị request song song cho chi tiết phim
-//         $requestsDetails = function ($batch) use ($client, $leechUrl) {
-//             foreach ($batch as $index => $movieDataNomal) {
-//                 yield function () use ($client, $leechUrl, $movieDataNomal) {
-//                     return $client->getAsync($leechUrl->url_detail . $movieDataNomal['slug'], [
-//                         'meta' => ['movie_basic' => $movieDataNomal]
-//                     ]);
-//                 };
-//             }
-//         };
+    //         // Chuẩn bị request song song cho chi tiết phim
+    //         $requestsDetails = function ($batch) use ($client, $leechUrl) {
+    //             foreach ($batch as $index => $movieDataNomal) {
+    //                 yield function () use ($client, $leechUrl, $movieDataNomal) {
+    //                     return $client->getAsync($leechUrl->url_detail . $movieDataNomal['slug'], [
+    //                         'meta' => ['movie_basic' => $movieDataNomal]
+    //                     ]);
+    //                 };
+    //             }
+    //         };
 
-//         $poolDetails = new Pool($client, $requestsDetails($batch), [
-//             'concurrency' => $concurrencyDetails,
-//             'fulfilled' => function (Response $response, $index) use ($batch, $allCategories, &$movieCategoryRelations, $client, $cacheKey) { // Thêm $cacheKey vào use
-//                 try {
-//                     $movieDataNomal = $batch[$index];
-//                     $detailsData = json_decode($response->getBody(), true);
-//                     $episodesData = $detailsData['episodes'] ?? [];
-//                     $movieData = $detailsData['movie'] ?? null;
+    //         $poolDetails = new Pool($client, $requestsDetails($batch), [
+    //             'concurrency' => $concurrencyDetails,
+    //             'fulfilled' => function (Response $response, $index) use ($batch, $allCategories, &$movieCategoryRelations, $client, $cacheKey) { // Thêm $cacheKey vào use
+    //                 try {
+    //                     $movieDataNomal = $batch[$index];
+    //                     $detailsData = json_decode($response->getBody(), true);
+    //                     $episodesData = $detailsData['episodes'] ?? [];
+    //                     $movieData = $detailsData['movie'] ?? null;
 
-//                     if (!$movieData) {
-//                         Log::warning("Thiếu dữ liệu phim: {$movieDataNomal['slug']}");
-//                         return;
-//                     }
+    //                     if (!$movieData) {
+    //                         Log::warning("Thiếu dữ liệu phim: {$movieDataNomal['slug']}");
+    //                         return;
+    //                     }
 
-//                     DB::beginTransaction();
+    //                     DB::beginTransaction();
 
-//                     // Tải ảnh bất đồng bộ để giảm thời gian blocking
-//                     $fileName = '';
-//                     if (!empty($movieData['thumb_url'])) {
-//                         try {
-//                             $posterResponse = $client->get($movieData['thumb_url']);
-//                             $fileName = md5($movieData['thumb_url']) . '_' . basename($movieData['thumb_url']);
-//                             $posterFilm = $posterResponse->getBody()->getContents();
-//                             Storage::put('public/images/' . $fileName, $posterFilm);
-//                         } catch (\Throwable $e) {
-//                             Log::warning("Lỗi tải ảnh cho phim {$movieDataNomal['slug']}: {$e->getMessage()}");
-//                             $fileName = 'default.jpg'; // Đảm bảo toàn vẹn bằng ảnh mặc định
-//                         }
-//                     } else {
-//                         $fileName = 'default.jpg'; // Ảnh mặc định nếu không có thumb_url
-//                     }
+    //                     // Tải ảnh bất đồng bộ để giảm thời gian blocking
+    //                     $fileName = '';
+    //                     if (!empty($movieData['thumb_url'])) {
+    //                         try {
+    //                             $posterResponse = $client->get($movieData['thumb_url']);
+    //                             $fileName = md5($movieData['thumb_url']) . '_' . basename($movieData['thumb_url']);
+    //                             $posterFilm = $posterResponse->getBody()->getContents();
+    //                             Storage::put('public/images/' . $fileName, $posterFilm);
+    //                         } catch (\Throwable $e) {
+    //                             Log::warning("Lỗi tải ảnh cho phim {$movieDataNomal['slug']}: {$e->getMessage()}");
+    //                             $fileName = 'default.jpg'; // Đảm bảo toàn vẹn bằng ảnh mặc định
+    //                         }
+    //                     } else {
+    //                         $fileName = 'default.jpg'; // Ảnh mặc định nếu không có thumb_url
+    //                     }
 
-//                     // Lưu phim
-//                     $movie = Movie::updateOrCreate(
-//                         ['slug' => $movieDataNomal['slug']],
-//                         [
-//                             'title' => $movieDataNomal['name'],
-//                             'slug' => $movieDataNomal['slug'],
-//                             'release_year' => $movieDataNomal['year'],
-//                             'poster_url' => $fileName,
-//                             'link_poster_internet' => $movieData['thumb_url'] ?? '',
-//                             'status' => 'Public',
-//                             'description' => $movieData['content'] ?? '',
-//                             'trailer_url' => $movieData['trailer_url'] ?? '',
-//                             'rating' => $movieData['tmdb']['vote_average'] ?? null,
-//                             'views' => $movieData['view'] ?? null,
-//                             'countries' => $movieData['country'][0]['name'] ?? null,
-//                             'duration' => $movieData['time'] ?? null,
-//                             'type_film' => $movieData['episode_current'] == 'Full' ? 'Movie' : 'TV Show',
-//                         ]
-//                     );
+    //                     // Lưu phim
+    //                     $movie = Movie::updateOrCreate(
+    //                         ['slug' => $movieDataNomal['slug']],
+    //                         [
+    //                             'title' => $movieDataNomal['name'],
+    //                             'slug' => $movieDataNomal['slug'],
+    //                             'release_year' => $movieDataNomal['year'],
+    //                             'poster_url' => $fileName,
+    //                             'link_poster_internet' => $movieData['thumb_url'] ?? '',
+    //                             'status' => 'Public',
+    //                             'description' => $movieData['content'] ?? '',
+    //                             'trailer_url' => $movieData['trailer_url'] ?? '',
+    //                             'rating' => $movieData['tmdb']['vote_average'] ?? null,
+    //                             'views' => $movieData['view'] ?? null,
+    //                             'countries' => $movieData['country'][0]['name'] ?? null,
+    //                             'duration' => $movieData['time'] ?? null,
+    //                             'type_film' => $movieData['episode_current'] == 'Full' ? 'Movie' : 'TV Show',
+    //                         ]
+    //                     );
 
-//                     // Thu thập quan hệ category
-//                     foreach ($movieData['category'] as $category) {
-//                         if (isset($allCategories[$category['slug']])) {
-//                             $movieCategoryRelations[] = [
-//                                 'movie_id' => $movie->id,
-//                                 'category_id' => $allCategories[$category['slug']]->id,
-//                             ];
-//                         }
-//                     }
+    //                     // Thu thập quan hệ category
+    //                     foreach ($movieData['category'] as $category) {
+    //                         if (isset($allCategories[$category['slug']])) {
+    //                             $movieCategoryRelations[] = [
+    //                                 'movie_id' => $movie->id,
+    //                                 'category_id' => $allCategories[$category['slug']]->id,
+    //                             ];
+    //                         }
+    //                     }
 
-//                     // Lưu tập phim ngay để giảm bộ nhớ
-//                     $episodesToInsert = [];
-//                     foreach ($episodesData as $episode) {
-//                         foreach ($episode['server_data'] as $ep) {
-//                             $episodeNumber = (count($episode['server_data']) == 1) ? 'Full' : $ep['name'];
-//                             $episodesToInsert[] = [
-//                                 'movie_id' => $movie->id,
-//                                 'episode_number' => $episodeNumber,
-//                                 'title' => "{$movie->title} - {$ep['name']}",
-//                                 'link_video_internet' => $ep['link_m3u8'] ?? null,
-//                                 'created_at' => now(),
-//                                 'updated_at' => now(),
-//                             ];
-//                         }
-//                     }
+    //                     // Lưu tập phim ngay để giảm bộ nhớ
+    //                     $episodesToInsert = [];
+    //                     foreach ($episodesData as $episode) {
+    //                         foreach ($episode['server_data'] as $ep) {
+    //                             $episodeNumber = (count($episode['server_data']) == 1) ? 'Full' : $ep['name'];
+    //                             $episodesToInsert[] = [
+    //                                 'movie_id' => $movie->id,
+    //                                 'episode_number' => $episodeNumber,
+    //                                 'title' => "{$movie->title} - {$ep['name']}",
+    //                                 'link_video_internet' => $ep['link_m3u8'] ?? null,
+    //                                 'created_at' => now(),
+    //                                 'updated_at' => now(),
+    //                             ];
+    //                         }
+    //                     }
 
-//                     if (!empty($episodesToInsert)) {
-//                         Episode::insert($episodesToInsert);
-//                     }
+    //                     if (!empty($episodesToInsert)) {
+    //                         Episode::insert($episodesToInsert);
+    //                     }
 
-//                     DB::commit();
+    //                     DB::commit();
 
-//                     // Cập nhật tiến độ
-//                     Cache::increment($cacheKey . '_processed_movies');
-//                     Log::info("Đã xử lý phim: {$movieDataNomal['slug']} ({$index}/" . count($batch) . " trong lô)");
+    //                     // Cập nhật tiến độ
+    //                     Cache::increment($cacheKey . '_processed_movies');
+    //                     Log::info("Đã xử lý phim: {$movieDataNomal['slug']} ({$index}/" . count($batch) . " trong lô)");
+    //                 } catch (\Throwable $e) {
+    //                     DB::rollBack();
+    //                     Log::error("Lỗi khi lưu phim {$movieDataNomal['slug']}: {$e->getMessage()}");
+    //                 }
+    //             },
+    //             'rejected' => function ($reason, $index) use ($batch) {
+    //                 $movieDataNomal = $batch[$index] ?? ['slug' => 'unknown'];
+    //                 Log::error("Request chi tiết phim thất bại cho {$movieDataNomal['slug']}: " . $reason->getMessage());
+    //             },
+    //         ]);
 
-//                 } catch (\Throwable $e) {
-//                     DB::rollBack();
-//                     Log::error("Lỗi khi lưu phim {$movieDataNomal['slug']}: {$e->getMessage()}");
-//                 }
-//             },
-//             'rejected' => function ($reason, $index) use ($batch) {
-//                 $movieDataNomal = $batch[$index] ?? ['slug' => 'unknown'];
-//                 Log::error("Request chi tiết phim thất bại cho {$movieDataNomal['slug']}: " . $reason->getMessage());
-//             },
-//         ]);
+    //         $poolDetails->promise()->wait();
+    //     }
 
-//         $poolDetails->promise()->wait();
-//     }
+    //     // 🔹 Bước 4: Insert hàng loạt quan hệ movie-category
+    //     if (!empty($movieCategoryRelations)) {
+    //         DB::table('movie_category')->insertOrIgnore($movieCategoryRelations); // Giả sử bảng pivot là movie_category
+    //     }
 
-//     // 🔹 Bước 4: Insert hàng loạt quan hệ movie-category
-//     if (!empty($movieCategoryRelations)) {
-//         DB::table('movie_category')->insertOrIgnore($movieCategoryRelations); // Giả sử bảng pivot là movie_category
-//     }
+    //     // Xóa checkpoint sau khi hoàn tất
+    //     Cache::forget($cacheKey);
 
-//     // Xóa checkpoint sau khi hoàn tất
-//     Cache::forget($cacheKey);
+    //     $executionTime = round(microtime(true) - $startTime, 2);
+    //     Log::info("Import xong {$executionTime}s cho {$totalMovies} phim");
 
-//     $executionTime = round(microtime(true) - $startTime, 2);
-//     Log::info("Import xong {$executionTime}s cho {$totalMovies} phim");
-
-//     return redirect()->back()->with('success', "Leech thành công {$executionTime}s cho {$totalMovies} phim");
-// }
+    //     return redirect()->back()->with('success', "Leech thành công {$executionTime}s cho {$totalMovies} phim");
+    // }
 
 
 

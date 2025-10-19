@@ -1,0 +1,42 @@
+@font-face {
+    font-family: 'Metropolitano';
+    src: url('Metropolitano-Regular.eot');
+    src: url('Metropolitano-Regulard41d.eot?#iefix') format('embedded-opentype'),
+        url('Metropolitano-Regular.woff2') format('woff2'),
+        url('Metropolitano-Regular.woff') format('woff'),
+        url('Metropolitano-Regular.ttf') format('truetype'),
+        url('Metropolitano-Regular.svg#Metropolitano-Regular') format('svg');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+@font-face {
+    font-family: 'Metropolitano';
+    src: url('Metropolitano-Bold.eot');
+    src: url('Metropolitano-Boldd41d.eot?#iefix') format('embedded-opentype'),
+        url('Metropolitano-Bold.woff2') format('woff2'),
+        url('Metropolitano-Bold.woff') format('woff'),
+        url('Metropolitano-Bold.ttf') format('truetype'),
+        url('Metropolitano-Bold.svg#Metropolitano-Bold') format('svg');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Metropolitano';
+    src: url('Metropolitano-Medium.eot');
+    src: url('Metropolitano-Mediumd41d.eot?#iefix') format('embedded-opentype'),
+        url('Metropolitano-Medium.woff2') format('woff2'),
+        url('Metropolitano-Medium.woff') format('woff'),
+        url('Metropolitano-Medium.ttf') format('truetype'),
+        url('Metropolitano-Medium.svg#Metropolitano-Medium') format('svg');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+

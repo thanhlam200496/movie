@@ -69,7 +69,9 @@ Route::get('/comments/{episode_id}', [CommentController::class, 'index'])->name(
 Route::get('/movies/paginate', [MovieController::class, 'paginate'])->name('movies.paginate');
 
 Route::group(
-    ['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'admin']],
+    ['prefix' => 'admin', 'as' => 'admin.'
+    // , 'middleware' => ['auth', 'admin']
+],
     function () {
         Route::get('/', [DashboardController::class, 'index']);
         Route::resource('category', CategoryController::class);
@@ -96,4 +98,7 @@ Route::group(
         // });
     }
 );
-// Route::post('/api/view-history', [ViewHistoryController::class, 'store']);
+
+
+Route::get('/test', [HomeController::class, 'test']);
+
