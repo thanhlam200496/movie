@@ -39,7 +39,9 @@ Route::group(['prefix' => 'favorite', 'as' => 'favorite.'], function () {
 Route::group(['prefix' => 'movie', 'as' => 'movie.'], function () {
     Route::get('show/{slug}/{episode?}', [ClientsMovieController::class, 'show'])->name('show');
 });
-
+Route::group(['prefix' => 'phim', 'as' => 'movie.'], function () {
+    Route::get('{slug}/{episode?}', [ClientsMovieController::class, 'show'])->name('Chi-tiet-phim');
+});
 Route::get('/fetch-movies', [ClientsCategoryController::class, 'fetchMovies'])->name('movies.fetch');
 
 Route::controller(GoogleController::class)->group(function () {

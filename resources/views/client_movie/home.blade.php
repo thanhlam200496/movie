@@ -57,7 +57,7 @@
 
                                                                                     </div>
                                                                                     <h3 class="video_title h1">
-                                                                                        <a href="../detail/index.html">
+                                                                                        <a href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
                                                                                             {{ $movie->title }} </a>
                                                                                     </h3>
                                                                                     <div class="video-meta">
@@ -78,12 +78,12 @@
                                                                                         now, cancel anytime. </div>
                                                                                     <div class="video-play">
                                                                                         <a class="btn-main button-default btn-left"
-                                                                                            href="../detail/index.html">Play
+                                                                                            href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">Play
                                                                                             Now <i
                                                                                                 class="jws-icon-play-circle"></i>
                                                                                         </a>
                                                                                         <a class="btn-right watchlist-add layout1"
-                                                                                            href="../detail/index.html"
+                                                                                            href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}"
                                                                                             data-post-id="9053">
                                                                                             <span>Watch
                                                                                                 Later</span><span
@@ -194,7 +194,7 @@
 
                                                                         <div class="post-media"
                                                                             data-trailer="{{ $movie->trailer_url }}">
-                                                                            <a href="../detail/index.html">
+                                                                            <a href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
                                                                                 <img class='attachment-630x400 size-630x400'
                                                                                     alt=''
                                                                                     src="/timthumb.php?src={{ Storage::url('images/' . $movie->poster_url) }}&w=488&h=680">
@@ -203,7 +203,7 @@
                                                                         </div>
                                                                         <div class="videos-content">
                                                                             <h6 class="video_title">
-                                                                                <a href="../detail/index.html">
+                                                                                <a href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
                                                                                     {{ $movie->title }}
                                                                             </h6>
 
@@ -218,7 +218,7 @@
                                                                         </div>
                                                                         <div class="popup-detail">
                                                                             <h6 class="video_title">
-                                                                                <a href="../detail/index.html">
+                                                                                <a href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
                                                                                     {{ $movie->title }} </a>
                                                                             </h6>
 
@@ -239,14 +239,14 @@
 
                                                                             </div>
                                                                             <div class="video-play">
-                                                                                <a class="btn-main button-default jws-popup-detail"
-                                                                                    href="../detail/index.html"
-                                                                                    data-post-id="9053">
+                                                                                <a class="btn-main button-default"
+                                                                                    href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}"
+                                                                                    >
                                                                                     <span>View Detail</span>
                                                                                     <i class="jws-icon-info-light"></i>
                                                                                 </a>
                                                                                 <a class="btn-main button-custom watchlist-add"
-                                                                                    href="../detail/index.html"
+                                                                                    href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}"
                                                                                     data-post-id="9053">
                                                                                     <span class="added">Watchlisted</span>
                                                                                     <span>Watch Later</span>
@@ -347,18 +347,18 @@
 
                                                                         <div class="post-media"
                                                                             data-trailer="{{ $movie->trailer_url }}">
-                                                                            <a href="../detail/index.html">
+                                                                            <a href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
                                                                                 <img class='attachment-488x680 size-488x680'
                                                                                     alt=''
                                                                                     src="/timthumb.php?src={{ Storage::url('images/' . $movie->poster_url) }}&w=488&h=680">
                                                                             </a>
                                                                             <div class="media-play">
-                                                                                <a href="../detail/index.html">
+                                                                                <a href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
                                                                                     <i class="jws-icon-play-circle"></i>
                                                                                 </a>
                                                                             </div>
                                                                             <a class="btn-right watchlist-add"
-                                                                                href="../detail/index.html"
+                                                                                href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}"
                                                                                 data-post-id="8586">
                                                                                 <span class="added">Added to My
                                                                                     List</span>
@@ -367,7 +367,7 @@
                                                                         </div>
                                                                         <div class="movies-content">
                                                                             <h6 class="video_title">
-                                                                                <a href="../detail/index.html">
+                                                                                <a href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
                                                                                     {{ $movie->title }} </a>
                                                                             </h6>
                                                                             <div class="video-meta">
@@ -381,7 +381,7 @@
                                                                                     <a href="../movies_cat/action/index.html"
                                                                                         rel="tag">{{ $category->name }}</a>
                                                                                 @endforeach
-                                                                               
+
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -768,14 +768,14 @@
                                                                             alt=''
                                                                             src={{ asset('clients/wp-content/uploads/2023/06/8Vt6mWEReuy4Of61Lnj5Xj704m8-288x400.jpg') }}>
                                                                         <h6 class="video_title">
-                                                                            <a href="../detail/index.html">
+                                                                            <a href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
                                                                                 Spider Man Memo </a>
                                                                         </h6>
                                                                     </div>
 
                                                                     <div class="content-back">
                                                                         <h6 class="video_title">
-                                                                            <a href="../detail/index.html">
+                                                                            <a href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
                                                                                 Spider Man Memo </a>
                                                                         </h6>
                                                                         <div class="video-meta">
@@ -789,7 +789,7 @@
                                                                             120z/month. Watch now, cancel anytime.
                                                                         </div>
                                                                         <a class="watchlist-add"
-                                                                            href="../detail/index.html"
+                                                                            href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}"
                                                                             data-post-id="8586">
                                                                             <i class="jws-icon-plus"></i>
                                                                             <span class="added">Added to My
@@ -882,14 +882,14 @@
                                                                             alt=''
                                                                             src={{ asset('clients/wp-content/uploads/2023/06/6TeIVKPw7nXXWy2zKmDmlnSwzb7-scaled-288x400.jpg') }}>
                                                                         <h6 class="video_title">
-                                                                            <a href="../detail/index.html">
+                                                                            <a href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
                                                                                 The White House </a>
                                                                         </h6>
                                                                     </div>
 
                                                                     <div class="content-back">
                                                                         <h6 class="video_title">
-                                                                            <a href="../detail/index.html">
+                                                                            <a href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
                                                                                 The White House </a>
                                                                         </h6>
                                                                         <div class="video-meta">
@@ -903,7 +903,7 @@
                                                                             120z/month. Watch now, cancel anytime.
                                                                         </div>
                                                                         <a class="watchlist-add"
-                                                                            href="../detail/index.html"
+                                                                            href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}"
                                                                             data-post-id="205">
                                                                             <i class="jws-icon-plus"></i>
                                                                             <span class="added">Added to My
@@ -1035,14 +1035,14 @@
                                                                             alt=''
                                                                             src={{ asset('clients/wp-content/uploads/2023/06/the_post-288x400.jpg') }}>
                                                                         <h6 class="video_title">
-                                                                            <a href="../detail/index.html">
+                                                                            <a href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
                                                                                 The Post </a>
                                                                         </h6>
                                                                     </div>
 
                                                                     <div class="content-back">
                                                                         <h6 class="video_title">
-                                                                            <a href="../detail/index.html">
+                                                                            <a href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
                                                                                 The Post </a>
                                                                         </h6>
                                                                         <div class="video-meta">
@@ -1056,7 +1056,7 @@
                                                                             finibus ipsum, eget aliquet elit
                                                                             scelerisque non. In... </div>
                                                                         <a class="watchlist-add"
-                                                                            href="../detail/index.html"
+                                                                            href="{{ route('movie.Chi-tiet-phim', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}"
                                                                             data-post-id="8583">
                                                                             <i class="jws-icon-plus"></i>
                                                                             <span class="added">Added to My
