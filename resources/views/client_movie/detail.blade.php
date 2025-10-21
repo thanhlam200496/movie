@@ -31,7 +31,7 @@ Phim {{$movie->countries}}
 
                             <video id="videos_player" class="jws_player video-js vjs-default-skin" data-playerid="9053"
                                 data-player='{"controls":true,"muted":false,"autoplay":true,"preload":"auto","playbackRates":[0.5,1,1.5,2],"logo":{"url":"https:\/\/streamvid.jwsuperthemes.com\/wp-content\/uploads\/2023\/02\/logo_sin.svg"},"sources":[{"src":"dmlkZW8gaGlkZGVu","type":"application\/x-mpegURL"}],"poster":"https:\/\/streamvid.jwsuperthemes.com\/wp-content\/uploads\/2024\/12\/7I6VUdPj6tQECNHdviJkUHD2u89-scaled.jpg","current_time":""}'
-                                poster="../wp-content/uploads/2024/12/7I6VUdPj6tQECNHdviJkUHD2u89-scaled.jpg">
+                                poster="/timthumb.php?src={{Storage::url('images/'.$movie->poster_url)}}">
                                 <track label="Enligh" kind="subtitles" srclang="Enligh"
                                     src="../wp-content/uploads/2023/06/English-John-Wick_-Chapter-4-2023-Movie-Official-Trailer-%e2%80%93-Keanu-Reeves-Donnie-Yen-Bill-Skarsgard-DownSub.com_.vtt.txt"
                                     default />
