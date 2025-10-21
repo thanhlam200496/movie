@@ -64,7 +64,7 @@ Phim {{$movie->countries}}
                                 <div class="jws_sticky_move">
                                     <div class="jws-images">
                                         <img class='attachment-full' alt=''
-                                            src=../wp-content/uploads/2024/12/vZloFAK7NmvMGKE7VkF5UHaz0I-scaled.jpg>
+                                            src="/timthumb.php?src={{Storage::url('/images/'.$movie->poster_url)}}">
                                         <div class="jws-tool">
 
                                             <div class="jws-likes">
@@ -107,7 +107,7 @@ Phim {{$movie->countries}}
                             <div class="col-xl-9 col-lg-8">
 
                                 <h1 class="jws-title">
-                                    John Wick 4 </h1>
+                                  {{$movie->title}}</h1>
 
                                 <div class="jws-meta-info">
 
@@ -132,22 +132,19 @@ Phim {{$movie->countries}}
                                 </div>
 
                                 <div class="jws-meta-info2">
-                                    <span class="video-years">2023</span><span class="video-time">170 mins</span><span
-                                        class="video-badge">TV-MA</span>
+                                    <span class="video-years">{{$movie->release_year}}</span><span class="video-time"> - {{$movie->duration}} - </span><span
+                                        class="video-badge">{{$movie->type_film}}</span>
                                 </div>
 
                                 <div class="jws-category">
-                                    <a href="../../movies_cat/action/index.html" rel="tag">Action</a> <a
-                                        href="../../movies_cat/crime/index.html" rel="tag">Crime</a> <a
-                                        href="../../movies_cat/thriller/index.html" rel="tag">Thriller</a>
-                                </div>
+					@foreach($movie->categories->unique('id') as $category)
+<a href="../../movies_cat/action/index.html" rel="tag">{{$category->name}}</a
+@endforeach                                </div>
                                 <div class="js-content-container">
                                     <div class="js-content">
-                                        <p>Suspendisse eu porta quam, sit amet tristique sem. Maecenas tincidunt finibus
-                                            ipsum, eget aliquet elit scelerisque non. In aliquet dapibus odio, ut
-                                            gravida mauris elementum sit amet. Nulla viverra magna eget rutrum ultrices.
-                                            Vestibulum suscipit neque sed sem dignissim, tincidunt efficitur urna
-                                            faucibus.</p>
+{!!$movie->description!!}                                        <p>
+
+</p>
                                     </div><button class="view-more-content reset-button fs-small fw-700 cl-heading">Show
                                         More<i class="jws-icon-caret-down"></i></button>
                                 </div>
