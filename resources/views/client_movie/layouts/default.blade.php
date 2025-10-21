@@ -5526,6 +5526,7 @@
     </script>
     <script data-no-minify="1" async src="{{ asset('clients/wp-content/plugins/wp-rocket/assets/js/lazyload/17.8.3/lazyload.min.js') }}">
     </script>
+<script src="{{asset('client/plyr.min.js')}}"></script>
 </body>
 
 <!-- Mirrored from streamvid.jwsuperthemes.com/home/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Oct 2025 12:01:12 GMT -->
