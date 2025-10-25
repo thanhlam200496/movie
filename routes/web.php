@@ -62,6 +62,7 @@ Route::controller(CommentController::class)->group(function () {
     Route::post('add-comment', 'store')->name('comment');
 });
 
+Route::get('/test-group-season', [MovieController::class, 'groupMoviesBySeason']);
 
 
 Route::post('/comments', [CommentController::class, 'store'])->name('comment');

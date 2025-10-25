@@ -4,6 +4,8 @@ namespace App\Http\Controllers\admins;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Season;
+use Illuminate\Support\Str;
 use App\Models\Episode;
 use App\Models\Movie;
 use Carbon\Carbon;
@@ -228,4 +230,72 @@ class MovieController extends Controller
         $movie->save();
         return redirect()->route('admin.movie.index')->with('success', 'Cập nhật phim ' . $movie->title . ' thành công');
     }
+public function groupMoviesBySeason()
+{
+    ini_set('max_execution_time', 0);
+    $movies = Movie::all();
+    $seasonMap = []; // Lưu map tên gốc => season_id
+
+    foreach ($movies as $movie) {
+        // 1️⃣ Làm sạch tên phim
+        $originalName = $this->normalizeName($movie->title);
+
+        // 2️⃣ Kiểm tra season có tồn tại chưa (theo độ giống nhau)
+        $matchedSeasonId = null;
+        foreach ($seasonMap as $existingName => $seasonId) {
+            // So sánh tương đồng
+            similar_text($originalName, $existingName, $percent);
+            if ($percent >= 70) { // Ngưỡng khớp — có thể điều chỉnh (65–80)
+                $matchedSeasonId = $seasonId;
+                break;
+            }
+        }
+
+        // 3️⃣ Nếu chưa có season nào tương đồng → tạo mới
+        if (!$matchedSeasonId) {
+            $season = Season::firstOrCreate(['name' => $originalName]);
+            $seasonMap[$originalName] = $season->id;
+            $matchedSeasonId = $season->id;
+        }
+
+        // 4️⃣ Gán season_id cho phim
+        $movie->season_id = $matchedSeasonId;
+        $movie->save();
+    }
+
+    return response()->json(['message' => 'Đã nhóm season thành công!']);
 }
+private function normalizeName($name)
+    {
+        // Chuyển về chữ thường
+        $name = Str::lower($name);
+
+        // Xóa khoảng trắng thừa
+        $name = preg_replace('/\s+/', ' ', trim($name));
+
+        // Xóa phần sau dấu ":" hoặc "-" hoặc "|"
+        $name = preg_replace('/[:\-\|].*/', '', $name);
+
+// 4. Remove common descriptors (OVA, OAD, ngoại truyện, phần, season, part, special, movie, tập, bản, etc.)
+    $stopwords = [
+        'ovа','ova','oad','special','movie','sp','episode','episod','tập','phần','phần','season','part',
+        'ngoại truyện','ngoại-truyện','ngoại_truyện','bản','phiên bản','ss'
+    ];
+foreach($stopwords as $word){
+$name = str_replace($word, '', $name);
+}
+
+
+        // Xóa các số (1, 2, 3...) trong tên
+        $name = preg_replace('/\d+/', '', $name);
+
+        // Xóa khoảng trắng lần nữa nếu có dư
+        $name = trim($name);
+
+        return $name;
+    }
+
+    }
+
+
+

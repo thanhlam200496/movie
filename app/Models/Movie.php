@@ -32,4 +32,8 @@ class Movie extends Model
     {
         return $this->hasMany(Favorite::class);
     }
+public function season()
+{
+    return $this->belongsTo(Season::class);
+}
 }
