@@ -12,1319 +12,897 @@
     @else
         {!! $movie->description !!}
     @endif
-
 @endsection
 @section('keywords')
-Phim {{$movie->countries}}
-@foreach ($movie->categories->unique('id') as $category)
-, {{ $category->name }}
-                            @endforeach
+    Phim {{ $movie->countries }}
+    @foreach ($movie->categories->unique('id') as $category)
+        , {{ $category->name }}
+    @endforeach
 @endsection
-@section('main')
+@section('content')
     <!-- details -->
 
 
-    <section class="section section--head section--head-fixed section--gradient section--details-bg">
-        <div class="section__bg"
-            data-bg="/timthumb.php?src={{ $movie->poster_url != null ? Storage::url('public/images/' . $movie->poster_url) : $movie->link_poster_internet }}&w=150&h=250">
-        </div>
+    <div id="content" class="site-content">
+        <div id="primary" class="content-area">
+            <main id="main" class="site-main version-v2">
 
-        <div class="container">
-            <!-- article -->
-            <div class="article">
-                <div class="row">
-                    <div class="col-12 col-xl-8">
-
-
-                        <!-- article content -->
-                        <div class="article__content">
-                            <h1>{{ $movie->title }}</h1>
-
-                            <ul class="list">
-                                <li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> {{ $movie->rating }}</li>
-                                <li>{{ $movie->countries }}</li>
-                                <li>{{ $movie->release_year }}</li>
-                                <li>{{ $movie->duration }}</li>
-                                <li>{{ $movie->age_rating }}+</li>
-                            </ul>
-
-                            <p>{!! $movie->description !!}</p>
-                        </div>
-                        <!-- end article content -->
-                    </div>
-
-                    <!-- video player -->
-                    <div class="col-12 col-xl-8">
-
-                        @if ($episode->link_video_internet != null)
-                            <video id="player" data-watched-duration="{{ $watchedDuration }}">
-
-                            </video>
-                            <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-                            <script>
-                                // URL của video HLS (.m3u8)
-                                const videoUrl = '{{ $episode->link_video_internet }}';
-
-                                // Lấy phần tử video
-                                const video = document.getElementById('player');
-
-                                // Kiểm tra nếu trình duyệt hỗ trợ native HLS (Safari)
-                                if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                                    video.src = videoUrl;
-                                } else if (Hls.isSupported()) {
-                                    // Trình duyệt không hỗ trợ HLS natively, dùng HLS.js
-                                    const hls = new Hls();
-                                    hls.loadSource(videoUrl);
-                                    hls.attachMedia(video);
-                                } else {
-                                    console.error('HLS không được hỗ trợ trên trình duyệt này.');
-                                }
-                            </script>
-                        @else
-                            <video height="465px" data-watched-duration="{{ $watchedDuration }}" id="player">
-
-                                <source src="{{ Storage::url('public/videos/' . $episode->video_url) }}" type="video/mp4">
+                <div class="container">
+                    <div class="episodes-top">
+                        <div class="row">
+                            <div class="col-xl-9">
 
 
 
-                            </video>
-                        @endif
+                                @if ($episode->link_video_internet != null)
+                                    <video id="player" data-watched-duration="{{ $watchedDuration }}">
 
-                        <script>
-                            const player = new Plyr('#player');
+                                    </video>
+                                    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+                                    <script>
+                                        // URL của video HLS (.m3u8)
+                                        const videoUrl = '{{ $episode->link_video_internet }}';
 
-                            player.on('ready', () => {
-                                const controls = document.querySelector('.plyr__controls');
+                                        // Lấy phần tử video
+                                        const video = document.getElementById('player');
 
-                                // Tạo nút lùi 10s
-                                const backBtn = document.createElement('button');
-                                backBtn.className = 'plyr__custom-button';
-                                backBtn.innerText = '⏪';
-                                backBtn.title = 'Lùi 10 giây';
-                                backBtn.addEventListener('click', () => {
-                                    player.currentTime = Math.max(player.currentTime - 10, 0);
-                                });
+                                        // Kiểm tra nếu trình duyệt hỗ trợ native HLS (Safari)
+                                        if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                                            video.src = videoUrl;
+                                        } else if (Hls.isSupported()) {
+                                            // Trình duyệt không hỗ trợ HLS natively, dùng HLS.js
+                                            const hls = new Hls();
+                                            hls.loadSource(videoUrl);
+                                            hls.attachMedia(video);
+                                        } else {
+                                            console.error('HLS không được hỗ trợ trên trình duyệt này.');
+                                        }
+                                    </script>
+                                @else
+                                    <video height="465px" data-watched-duration="{{ $watchedDuration }}" id="player">
 
-                                // Tạo nút tua 10s
-                                const forwardBtn = document.createElement('button');
-                                forwardBtn.className = 'plyr__custom-button';
-                                forwardBtn.innerText = '⏩';
-                                forwardBtn.title = 'Tua 10 giây';
-                                forwardBtn.addEventListener('click', () => {
-                                    player.currentTime = Math.min(player.currentTime + 10, player.duration);
-                                });
+                                        <source src="{{ Storage::url('public/videos/' . $episode->video_url) }}"
+                                            type="video/mp4">
 
-                                // Thêm nút vào thanh điều khiển (chèn sau nút play)
-                                const playButton = controls.querySelector('.plyr__control--overlaid') || controls.querySelector(
-                                    '.plyr__control[aria-label="Play"]');
-                                if (playButton && playButton.parentNode) {
-                                    controls.insertBefore(backBtn, playButton); // Chèn lùi 10s trước nút play
-                                    controls.insertBefore(forwardBtn, playButton.nextSibling); // Chèn tua 10s sau nút play
-                                } else {
-                                    // Nếu không tìm được nút play, thêm cuối cùng
-                                    controls.appendChild(backBtn);
-                                    controls.appendChild(forwardBtn);
-                                }
-                            });
-                        </script>
-                        <script>
-                            document.addEventListener('DOMContentLoaded', () => {
-                                const video = document.getElementById('player'); // Lấy thẻ video
-                                const watchedDuration = parseInt(video.getAttribute('data-watched-duration'), 10) ||
-                                    0; // Lấy watchedDuration từ data-watched-duration
 
-                                // Set thời gian bắt đầu cho video
-                                video.currentTime = watchedDuration;
 
-                                console.log("Video starts at:", watchedDuration);
+                                    </video>
+                                @endif
 
-                                // Xử lý các sự kiện khác như lưu lịch sử xem
-                            });
-                        </script>
+                                <script>
+                                    const player = new Plyr('#player');
 
-                        <div class="article__actions article__actions--details">
-                            <div class="article__download">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path
-                                        d="M21,14a1,1,0,0,0-1,1v4a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V15a1,1,0,0,0-2,0v4a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V15A1,1,0,0,0,21,14Zm-9.71,1.71a1,1,0,0,0,.33.21.94.94,0,0,0,.76,0,1,1,0,0,0,.33-.21l4-4a1,1,0,0,0-1.42-1.42L13,12.59V3a1,1,0,0,0-2,0v9.59l-2.29-2.3a1,1,0,1,0-1.42,1.42Z" />
-                                </svg>
-                                Download:
-                                <a href="#" download="#">480p</a>
-                                <a href="#" download="#">720p</a>
-                                <a href="#" download="#">1080p</a>
-                                <a href="#" download="#">4k</a>
+                                    player.on('ready', () => {
+                                        const controls = document.querySelector('.plyr__controls');
+
+                                        // Tạo nút lùi 10s
+                                        const backBtn = document.createElement('button');
+                                        backBtn.className = 'plyr__custom-button';
+                                        backBtn.innerText = '⏪';
+                                        backBtn.title = 'Lùi 10 giây';
+                                        backBtn.addEventListener('click', () => {
+                                            player.currentTime = Math.max(player.currentTime - 10, 0);
+                                        });
+
+                                        // Tạo nút tua 10s
+                                        const forwardBtn = document.createElement('button');
+                                        forwardBtn.className = 'plyr__custom-button';
+                                        forwardBtn.innerText = '⏩';
+                                        forwardBtn.title = 'Tua 10 giây';
+                                        forwardBtn.addEventListener('click', () => {
+                                            player.currentTime = Math.min(player.currentTime + 10, player.duration);
+                                        });
+
+                                        // Thêm nút vào thanh điều khiển (chèn sau nút play)
+                                        const playButton = controls.querySelector('.plyr__control--overlaid') || controls.querySelector(
+                                            '.plyr__control[aria-label="Play"]');
+                                        if (playButton && playButton.parentNode) {
+                                            controls.insertBefore(backBtn, playButton); // Chèn lùi 10s trước nút play
+                                            controls.insertBefore(forwardBtn, playButton.nextSibling); // Chèn tua 10s sau nút play
+                                        } else {
+                                            // Nếu không tìm được nút play, thêm cuối cùng
+                                            controls.appendChild(backBtn);
+                                            controls.appendChild(forwardBtn);
+                                        }
+                                    });
+                                </script>
+                                <div class="vjs-loading-spinner"></div>
+
+
+
+
                             </div>
 
-                            <!-- add .active class -->
-                            <button class="article__favorites" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z">
-                                    </path>
-                                </svg> Add to favorites</button>
-                        </div>
-                    </div>
-                    <!-- end video player -->
+                            <div class="col-xl-3">
+
+                                <div class="sidebar-list list">
+                                    <div class="tv-shows-info">
+                                        <h5><a target="_blank"
+                                                href="../tv_shows/political-animal/index.html">{{ $movie->title }}</a></h5>
+                                        <div class="dropdown select-seasion" data-id="4017">
+                                            <button class="dropdown-toggle" type="button" data-display="episodes_version2">
+                                                Season 1
+                                            </button>
+                                            <ul class="dropdown-menu jws-scrollbar" aria-labelledby="dropdownMenuButton">
+
+                                                <li>
+                                                    <a class="dropdown-item active" href="#" data-index="0"
+                                                        data-value="Season 1">
+                                                        Season 1 </a>
+                                                </li>
 
 
+                                                <li>
+                                                    <a class="dropdown-item" href="#" data-index="1"
+                                                        data-value="Season 2">
+                                                        Season 2 </a>
+                                                </li>
 
-                    <div class="col-12 col-xl-8">
-                        <!-- categories -->
-                        <div class="categories">
-                            <h3 class="categories__title">Genres</h3>
-                            @foreach ($movie->categories->unique('id') as $category)
-                                <a href="{{ route('category.filter', ['category' => $category->id]) }}"
-                                    class="categories__item">{{ $category->name }}</a>
-                            @endforeach
 
-                            {{-- <a href="category.html" class="categories__item">Thriller</a>
-                            <a href="category.html" class="categories__item">Crime</a> --}}
-                        </div>
-                        @if (isset($movie->episodes))
-                            <div class="categories">
-                                <h3 class="categories__title">Episodes</h3>
-                                @foreach ($movie->episodes as $list)
-                                    @php
+                                                <li>
+                                                    <a class="dropdown-item" href="#" data-index="2"
+                                                        data-value="Season 3">
+                                                        Season 3 </a>
+                                                </li>
+
+
+                                            </ul>
+                                        </div>
+
+
+                                        <div class="jws-list-top">
+
+                                            <div class="total-number">
+                                                Episodes 1-7 </div>
+                                            <a href="javascript:void(0)" class="change-layout"></a>
+                                        </div>
+                                    </div>
+                                    <div class="jws-episodes_advanced-element layout-list">
+                                        <div class="episodes-content layout4 jws-scrollbar">
+
+                                            @if (isset($movie->episodes))
+
+                                                @foreach ($movie->episodes as $list)
+                                                 @php
                                         $style = '';
 
                                         // Nếu là tập hiện tại
                                         if (isset($episode) && $episode->id == $list->id) {
-                                            $style = 'background-color: #2f80ed';
+                                            $style = 'active';
                                         } else {
                                             // Nếu là tập đã xem
                                             foreach ($listWatched as $watched) {
                                                 if ($watched->episode_id == $list->id) {
-                                                    $style = 'background-color: #333333';
+                                                    $style = 'active';
                                                     break;
                                                 }
                                             }
                                         }
                                     @endphp
-
-                                    <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $list->id]) }}"
-                                        style="{{ $style }}" class="categories__item">
-                                        {{ $list->episode_number }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        @endif
+                                                    <div class="jws-pisodes_advanced-item {{ $style }}">
 
 
-                        <!-- end categories -->
+                                                        <div class="post-inner">
+                                                            <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $list->id]) }}">
+                                                                <div class="post-media">
 
-                        <!-- share -->
-                        <div class="share">
-                            <h3 class="share__title">Share</h3>
-                            <a href="#" class="share__link share__link--fb"><svg width="9" height="17"
-                                    viewBox="0 0 9 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M5.56341 16.8197V8.65888H7.81615L8.11468 5.84663H5.56341L5.56724 4.43907C5.56724 3.70559 5.63693 3.31257 6.69042 3.31257H8.09873V0.5H5.84568C3.1394 0.5 2.18686 1.86425 2.18686 4.15848V5.84695H0.499939V8.6592H2.18686V16.8197H5.56341Z" />
-                                </svg> share</a>
-                            <a href="#" class="share__link share__link--tw"><svg width="16" height="12"
-                                    viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M7.55075 3.19219L7.58223 3.71122L7.05762 3.64767C5.14804 3.40404 3.47978 2.57782 2.06334 1.1902L1.37085 0.501686L1.19248 1.01013C0.814766 2.14353 1.05609 3.34048 1.843 4.14552C2.26269 4.5904 2.16826 4.65396 1.4443 4.38914C1.19248 4.3044 0.972149 4.24085 0.951164 4.27263C0.877719 4.34677 1.12953 5.31069 1.32888 5.69202C1.60168 6.22165 2.15777 6.74068 2.76631 7.04787L3.28043 7.2915L2.67188 7.30209C2.08432 7.30209 2.06334 7.31268 2.12629 7.53512C2.33613 8.22364 3.16502 8.95452 4.08833 9.2723L4.73884 9.49474L4.17227 9.8337C3.33289 10.321 2.34663 10.5964 1.36036 10.6175C0.888211 10.6281 0.5 10.6705 0.5 10.7023C0.5 10.8082 1.78005 11.4014 2.52499 11.6344C4.75983 12.3229 7.41435 12.0264 9.40787 10.8506C10.8243 10.0138 12.2408 8.35075 12.9018 6.74068C13.2585 5.88269 13.6152 4.315 13.6152 3.56293C13.6152 3.07567 13.6467 3.01212 14.2343 2.42953C14.5805 2.09056 14.9058 1.71983 14.9687 1.6139C15.0737 1.41264 15.0632 1.41264 14.5281 1.59272C13.6362 1.91049 13.5103 1.86812 13.951 1.39146C14.2762 1.0525 14.6645 0.438131 14.6645 0.258058C14.6645 0.22628 14.5071 0.279243 14.3287 0.374576C14.1398 0.480501 13.7202 0.639389 13.4054 0.734722L12.8388 0.914795L12.3247 0.565241C12.0414 0.374576 11.6427 0.162725 11.4329 0.0991699C10.8978 -0.0491255 10.0794 -0.0279404 9.59673 0.14154C8.2852 0.618204 7.45632 1.84694 7.55075 3.19219Z" />
-                                </svg> tweet</a>
-                            <a href="#" class="share__link share__link--vk"><svg width="16" height="9"
-                                    viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M8.78479 8.92255C8.78479 8.92255 9.07355 8.89106 9.22145 8.73512C9.35684 8.59224 9.35214 8.32262 9.35214 8.32262C9.35214 8.32262 9.33414 7.06361 9.92967 6.87771C10.5166 6.69489 11.2702 8.09524 12.07 8.63372C12.6741 9.04085 13.1327 8.95174 13.1327 8.95174L15.2699 8.92255C15.2699 8.92255 16.3874 8.85495 15.8576 7.99231C15.8137 7.92164 15.5485 7.35397 14.269 6.1879C12.9284 4.9673 13.1084 5.16472 14.7221 3.05305C15.705 1.76715 16.0978 0.982093 15.975 0.646407C15.8584 0.325317 15.1353 0.410582 15.1353 0.410582L12.7297 0.425177C12.7297 0.425177 12.5513 0.401365 12.419 0.478949C12.2899 0.554996 12.2061 0.732441 12.2061 0.732441C12.2061 0.732441 11.8258 1.72721 11.3179 2.57372C10.2466 4.35892 9.81855 4.4534 9.64326 4.34279C9.23554 4.08392 9.33727 3.30424 9.33727 2.75039C9.33727 1.01973 9.60491 0.298431 8.81687 0.111769C8.5555 0.0495478 8.36299 0.00883541 7.6939 0.00192196C6.83543 -0.00652779 6.10921 0.00499461 5.69758 0.202411C5.42369 0.333767 5.2124 0.627203 5.34152 0.644103C5.50038 0.664843 5.86036 0.739354 6.0513 0.994383C6.29781 1.32392 6.2892 2.06289 6.2892 2.06289C6.2892 2.06289 6.43084 4.10005 5.95818 4.35277C5.6342 4.52638 5.1897 4.17226 4.2342 2.55221C3.7451 1.7226 3.37573 0.805416 3.37573 0.805416C3.37573 0.805416 3.30451 0.634117 3.17696 0.541938C3.02279 0.430555 2.80759 0.395987 2.80759 0.395987L0.521729 0.410582C0.521729 0.410582 0.178185 0.4198 0.0521924 0.566519C-0.0597138 0.696338 0.0435842 0.965961 0.0435842 0.965961C0.0435842 0.965961 1.8333 5.07638 3.86013 7.1481C5.71871 9.04699 7.8285 8.92255 7.8285 8.92255H8.78479Z" />
-                                </svg> share</a>
-                        </div>
-                        <!-- end share -->
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12 col-xl-8">
-                        <!-- comments and reviews -->
-                        <div class="comments">
-
-
-                            <!-- tabs -->
-                            <div class="tab-content">
-                                <div class="comments">
-                                    <!-- tabs nav -->
-                                    <ul class="nav nav-tabs comments__title comments__title--tabs" id="comments__tabs"
-                                        role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" data-toggle="tab" href="#tab-1" role="tab"
-                                                aria-controls="tab-1" aria-selected="true">
-                                                <h4>Comments</h4>
-                                                <span id="total-comments">0</span> <!-- Thêm lại total-comments -->
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" data-toggle="tab" href="#tab-2" role="tab"
-                                                aria-controls="tab-2" aria-selected="false">
-                                                <h4>Reviews</h4>
-                                                <span>3</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    <!-- end tabs nav -->
-
-                                    <!-- tabs -->
-                                    <div class="tab-content">
-                                        <div class="tab-pane fade show active" id="tab-1" role="tabpanel">
-                                            <ul class="comments__list" id="comment-list">
-                                                @foreach ($comments as $comment)
-                                                    <li class="comments__item">
-                                                        <div class="comments__autor">
-                                                            <img class="comments__avatar"
-                                                                src="{{ asset('clients/img/avatar.svg') }}"
-                                                                alt="">
-                                                            <span class="comments__name">{{ $comment->user->name }}</span>
-                                                            <span class="comments__time">{{ $comment->created_at }}</span>
-                                                        </div>
-                                                        <p class="comments__text">{{ $comment->content }}</p>
-                                                        <div class="comments__actions">
-                                                            <div class="comments__rate">
-                                                                <button type="button"><svg width="22" height="22"
-                                                                        viewBox="0 0 22 22" fill="none"
-                                                                        xmlns="http://www.w3.org/2000/svg">
-                                                                        <path d="M11 7.3273V14.6537" stroke-width="1.5"
-                                                                            stroke-linecap="round"
-                                                                            stroke-linejoin="round"></path>
-                                                                        <path d="M14.6667 10.9905H7.33333"
-                                                                            stroke-width="1.5" stroke-linecap="round"
-                                                                            stroke-linejoin="round"></path>
-                                                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                            d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z"
-                                                                            stroke-width="1.5" stroke-linecap="round"
-                                                                            stroke-linejoin="round"></path>
-                                                                    </svg> 12</button>
-                                                                <button type="button">7 <svg width="22"
-                                                                        height="22" viewBox="0 0 22 22" fill="none"
-                                                                        xmlns="http://www.w3.org/2000/svg">
-                                                                        <path d="M14.6667 10.9905H7.33333"
-                                                                            stroke-width="1.5" stroke-linecap="round"
-                                                                            stroke-linejoin="round"></path>
-                                                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                            d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z"
-                                                                            stroke-width="1.5" stroke-linecap="round"
-                                                                            stroke-linejoin="round"></path>
-                                                                    </svg></button>
-                                                            </div>
-                                                            <button type="button" class="reply-btn"
-                                                                data-comment-id="{{ $comment->id }}"><svg
-                                                                    xmlns='http://www.w3.org/2000/svg' width='512'
-                                                                    height='512' viewBox='0 0 512 512'>
-                                                                    <polyline points='400 160 464 224 400 288'
-                                                                        style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' />
-                                                                    <path d='M448,224H154C95.24,224,48,273.33,48,332v20'
-                                                                        style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' />
-                                                                </svg><span>Reply</span></button>
-                                                            <button type="button"><svg xmlns='http://www.w3.org/2000/svg'
-                                                                    width='512' height='512' viewBox='0 0 512 512'>
-                                                                    <polyline points='320 120 368 168 320 216'
-                                                                        style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' />
-                                                                    <path d='M352,168H144a80.24,80.24,0,0,0-80,80v16'
-                                                                        style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' />
-                                                                    <polyline points='192 392 144 344 192 296'
-                                                                        style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' />
-                                                                    <path d='M160,344H368a80.24,80.24,0,0,0,80-80V248'
-                                                                        style='fill:none;stroke-linecap:round;stroke-width:32px' />
-                                                                </svg><span>Quote</span></button>
-                                                        </div>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-
-                                            <div class="catalog__paginator-wrap catalog__paginator-wrap--comments">
-                                                <span class="catalog__pages" id="page-info"></span>
-                                                <ul class="catalog__paginator" id="paginator"></ul>
-                                            </div>
-
-                                            <form action="{{ route('comment') }}" method="POST" class="comments__form"
-                                                id="comment-form">
-                                                @csrf
-                                                <input type="hidden" name="episode_id" value="{{ $episode->id }}">
-                                                <div class="sign__group">
-                                                    <textarea id="text" name="content" class="sign__textarea" placeholder="Add comment"></textarea>
-                                                </div>
-                                                <div id="error-message" style="color: red;"></div>
-                                                @error('content')
-                                                    <p style="color: red">{{ $message }}</p>
-                                                @enderror
-                                                <button type="submit" class="sign__btn">Send</button>
-                                            </form>
-
-                                            <!-- Popup form với overlay -->
-                                            <div id="reply-popup-overlay"
-                                                style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 999;">
-                                            </div>
-                                            <div id="reply-popup" class="popup"
-                                                style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; background: #131720; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000;">
-                                                <h3
-                                                    style="margin: 0 0 15px; font-size: 18px; font-weight: 600; color: #f1f1f1;">
-                                                    Reply to Comment</h3><span id="close-popup"
-                                                    style="float: right; cursor: pointer; font-size: 20px; color: #f1f1f1">×</span>
-                                                <p id="parent-content"
-                                                    style="color: #aaa; font-size: 14px; margin-bottom: 10px; font-style: italic;">
-                                                </p>
-                                                <form action="{{ route('comment') }}" method="POST"
-                                                    style="background: #131720" class="comments__form" id="reply-form">
-                                                    @csrf
-                                                    <input type="hidden" name="episode_id" value="{{ $episode->id }}">
-                                                    <input type="hidden" name="parent_id" id="parent_id">
-                                                    <div class="sign__group">
-                                                        <textarea id="reply-text" name="content" class="sign__textarea" placeholder="Type your reply here..."
-                                                            style="background: #151f30; width: 100%; min-height: 100px; border-radius: 5px; padding: 10px; resize: vertical;"></textarea>
-                                                    </div>
-                                                    <div id="reply-error-message"
-                                                        style="color: #e74c3c; font-size: 14px; margin-bottom: 10px;">
-                                                    </div>
-                                                    <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                                                        <button type="submit" class="sign__btn"
-                                                            style="padding: 8px 15px; background: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s;">Send
-                                                            Reply</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-
-                                            <!-- Thêm jQuery và script Ajax -->
-                                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                                            <script>
-                                                let currentPage = 1;
-                                                let shownReplies = {};
-
-                                                // Hàm tạo HTML cho bình luận
-                                                function renderComment(comment, parentContent = '') {
-                                                    let itemClass = comment.parent_id ? 'comments__item comments__item--answer' : 'comments__item';
-                                                    let hasReplies = comment.replies && comment.replies.length > 0;
-                                                    let isShown = shownReplies[comment.id] || false;
-                                                    let displayStyle = comment.parent_id && !isShown ? 'display: none;' : '';
-                                                    let html = `
-                                                        <li class="${itemClass}" data-comment-id="${comment.id}" data-parent-id="${comment.parent_id || ''}" style="${displayStyle}">
-                                                            <div class="comments__autor">
-                                                                <img class="comments__avatar" src="{{ asset('clients/img/avatar.svg') }}" alt="">
-                                                                <span class="comments__name">${comment.user.name}</span>
-                                                                <span class="comments__time">${new Date(comment.created_at).toLocaleString()}</span>
-                                                            </div>
-                                                    `;
-
-                                                    if (comment.parent_id && parentContent) {
-                                                        let shortParentContent = parentContent.length > 50 ? parentContent.substring(0, 50) + '...' : parentContent;
-                                                        html += `
-                                                            <p class="comments__quote">"${shortParentContent}"</p>
-                                                        `;
-                                                    }
-
-                                                    html += `
-                                                            <p class="comments__text">${comment.content}</p>
-                                                            <div class="comments__actions">
-                                                                <div class="comments__rate">
-                                                                    <button type="button"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 7.3273V14.6537" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14.6667 10.9905H7.33333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg> 10</button>
-                                                                    <button type="button">0 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.6667 10.9905H7.33333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+                                                                    <img class='attachment-630x400 size-630x400'
+                                                                        alt=''
+                                                                        src="{{ asset('/clients/wp-content/uploads/2023/03/zoltan-tasi-0khu-rgbjzo-unsplash-630x400.jpg') }}">
+                                                                    <span class="time"><i
+                                                                            class="jws-icon-play-circle"></i>21:00</span>
                                                                 </div>
-                                                                <button type="button" class="reply-btn" data-comment-id="${comment.id}" data-content="${comment.content.replace(/"/g, '"')}"><svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><polyline points='400 160 464 224 400 288' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><path d='M448,224H154C95.24,224,48,273.33,48,332v20' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /></svg><span>Reply</span></button>
-                                                                <button type="button"><svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><polyline points='320 120 368 168 320 216' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><path d='M352,168H144a80.24,80.24,0,0,0-80,80v16' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><polyline points='192 392 144 344 192 296' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><path d='M160,344H368a80.24,80.24,0,0,0,80-80V248' style='fill:none;stroke-linecap:round;stroke-width:32px' /></svg><span>Quote</span></button>
-                                                    `;
 
-                                                    if (hasReplies) {
-                                                        html += `
-                                                                <button type="button" class="toggle-replies" data-comment-id="${comment.id}" style="margin-left: 10px; color: #007bff; background: none; border: none; cursor: pointer;">${isShown ? 'Show less' : `Show more (${comment.replies.length})`}</button>
+                                                                <div class="episodes-info">
+                                                                    <span class="episodes-number">S01E01</span>
+                                                                    <h6>{{ $list->title}}</h6>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                        <div class="number-item">
+                                                            <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $list->id]) }}">
+                                                                {{ $list->episode_number }}
+                                                            </a>
+                                                        </div>
+
+                                                    </div>
+                                                @endforeach
+                                            @endif
+
+
+
+
+
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="episodes-bottom row">
+                        <div class="col-xl-9">
+                            <div class="jws-breadcrumb"><a href="../index.html">Home</a><span class="delimiter"><span
+                                        class="delimiter">/</span></span><a href="../tv_shows/index.html">Tv
+                                    Shows</a><span class="delimiter">/</span><a href="../tv_shows_cat/music/index.html"
+                                    rel="tag">Music</a>, <a href="../tv_shows_cat/reality/index.html"
+                                    rel="tag">Reality</a><span class="delimiter">/</span><a
+                                    href="../tv_shows/political-animal/index.html" class="tv-shows-link">Political
+                                    Animal</a><span class="delimiter">/</span><a
+                                    href="../tv_shows/political-animal/episodes/indexce5e.html?season=1"
+                                    class="tv-shows-link">Season 1</a><span class="delimiter">/</span><span
+                                    class="current">All or Nothing</span></div>
+                            <div class="jws-title clear-both">
+                                <h1 class="h3"><a href="../tv_shows/political-animal/index.html">Political
+                                        Animal</a></h1>
+                                <h6 class="season"><a
+                                        href="../tv_shows/political-animal/episodes/indexce5e.html?season=1">Season
+                                        1</a></h6>
+                                <h6>All or Nothing</h6>
+                            </div>
+                            <div class="jws-meta-info clear-both">
+
+                                <div class="jws-raring-number">
+                                    <i class="fas fa-star"></i>0
+                                </div>
+
+                                <div class="jws-view">
+
+                                    <i class="jws-icon-eye"></i>1911 Views
+                                </div>
+
+                                <div class="jws-comment-number">
+
+                                    <i class="jws-icon-chat-dots"></i>0
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="jws-description"></div>
+
+                            <div class="jws-tags">
+                                <label>Tags:</label>
+                                <a href="../tv_shows_tag/beautiful/index.html" rel="tag">Beautiful</a>, <a
+                                    href="../tv_shows_tag/love/index.html" rel="tag">Love</a>
+                            </div>
+
+                            <div class="jws-tool">
+
+                                <div class="jws-likes">
+                                    <a href="#" class="like-button" data-type="tv_shows" data-post-id="4049">
+                                        <i class="jws-icon-thumbs-up"></i>
+                                        <span class="likes-count">2</span> <span>likes</span>
+                                    </a>
+                                </div>
+                                <div class="jws-watchlist">
+                                    <a class="watchlist-add" href="index.html" data-post-id="4049">
+                                        <i class="jws-icon-plus"></i>
+                                        <span>Watchlist</span>
+                                        <span class="added">Watchlisted</span>
+                                    </a>
+                                </div>
+
+                                <div class="jws-share">
+                                    <a href="#" data-modal-jws="#share-videos">
+                                        <i class="jws-icon-share-network"></i>
+                                        <span>Share</span>
+                                    </a>
+                                </div>
+
+                            </div>
+                            <style id="elementor-post-4054">
+                                .elementor-4054 .elementor-element.elementor-element-6ce9446 .post-inner {
+                                    width: 280px;
+                                }
+
+                                .elementor-4054 .elementor-element.elementor-element-6ce9446 .jws-post-item {
+                                    padding-right: calc(20px/2);
+                                    padding-left: calc(20px/2);
+                                }
+
+                                .elementor-4054 .elementor-element.elementor-element-6ce9446 .tv_shows_advanced_content.row {
+                                    margin-left: calc(-20px/2);
+                                    margin-right: calc(-20px/2);
+                                }
+
+                                @media(max-width:767px) {
+                                    .elementor-4054 .elementor-element.elementor-element-6ce9446 .post-inner {
+                                        width: 205px;
+                                    }
+                                }
+                            </style>
+                            <div class="jws-related">
+                                <style>
+                                    .elementor-4054 .elementor-element.elementor-element-6ce9446 .post-inner {
+                                        width: 280px;
+                                    }
+
+                                    .elementor-4054 .elementor-element.elementor-element-6ce9446 .jws-post-item {
+                                        padding-right: calc(20px/2);
+                                        padding-left: calc(20px/2);
+                                    }
+
+                                    .elementor-4054 .elementor-element.elementor-element-6ce9446 .tv_shows_advanced_content.row {
+                                        margin-left: calc(-20px/2);
+                                        margin-right: calc(-20px/2);
+                                    }
+
+                                    @media(max-width:767px) {
+                                        .elementor-4054 .elementor-element.elementor-element-6ce9446 .post-inner {
+                                            width: 205px;
+                                        }
+                                    }
+                                </style>
+                                <div data-elementor-type="wp-post" data-elementor-id="4054"
+                                    class="elementor elementor-4054">
+                                    <section
+                                        class="elementor-section elementor-top-section elementor-element elementor-element-da548a8 elementor-section-full_width elementor-section-height-default elementor-section-height-default"
+                                        data-id="da548a8" data-element_type="section">
+                                        <div class="elementor-container elementor-column-gap-no jws_section_">
+                                            <div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-a9ae5f9"
+                                                data-id="a9ae5f9" data-element_type="column">
+                                                <div class="elementor-widget-wrap elementor-element-populated">
+                                                    <div class="elementor-element elementor-element-6ce9446 elementor-widget elementor-widget-jws_tv_shows_advanced"
+                                                        data-id="6ce9446" data-element_type="widget"
+                                                        data-widget_type="jws_tv_shows_advanced.default">
+                                                        <div class="elementor-widget-container">
+
+
+                                                            <div class="jws-tv-shows-advanced-element">
+                                                                <h5 class="title-related">More Shows like this</h5>
+
+                                                                <div class="row tv-shows-advanced-content layout2 tv-shows-advanced-ajax-6ce9446 jws_has_pagination owl-carousel jws-tv-shows-advanced-slider"
+                                                                    data-owl-option='{"autoplay": false,                "nav": true,                "dots":false,                "autoplayTimeout": 5000,                "autoplayHoverPause":true,                "loop":false,                "autoWidth":true,                "smartSpeed": 500,                "responsive":{        "1500":{"items": 1,"slideBy": 1},        "1024":{"items": 1,"slideBy": 1},        "768":{"items": 1,"slideBy": 1},        "0":{"items": 1,"slideBy": 1}    }}'>
+                                                                    <div class="jws-post-item slider-item no_format">
+                                                                        <div class="post-inner">
+                                                                            <div class="post-media">
+                                                                                <a class="videos-play fs-small fw-500"
+                                                                                    href="../tv_shows/the-unstoppable-soldier/index.html">
+                                                                                    <i class="jws-icon-play-circle"></i>
+                                                                                    Play Now </a>
+                                                                                <img class='attachment-280x176 size-280x176'
+                                                                                    alt=''
+                                                                                    src=../wp-content/uploads/2023/02/Slide-2-av-280x176.jpg>
+                                                                            </div>
+                                                                            <div class="tv-shows-content">
+                                                                                <h6 class="title">
+                                                                                    <a
+                                                                                        href="../tv_shows/the-unstoppable-soldier/index.html">
+                                                                                        The Unstoppable Soldier </a>
+                                                                                </h6>
+                                                                                <div class="tv-shows-cat fs-small">
+                                                                                    <a href="../tv_shows_cat/drama/index.html"
+                                                                                        rel="tag">Drama</a>, <a
+                                                                                        href="../tv_shows_cat/reality/index.html"
+                                                                                        rel="tag">Reality</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="jws-post-item slider-item no_format">
+                                                                        <div class="post-inner">
+                                                                            <div class="post-media">
+                                                                                <a class="videos-play fs-small fw-500"
+                                                                                    href="../tv_shows/the-brady-bunch/index.html">
+                                                                                    <i class="jws-icon-play-circle"></i>
+                                                                                    Play Now </a>
+                                                                                <img class='attachment-280x176 size-280x176'
+                                                                                    alt=''
+                                                                                    src=../wp-content/uploads/2023/06/The-Brady-Bunch-280x176.jpg>
+                                                                            </div>
+                                                                            <div class="tv-shows-content">
+                                                                                <h6 class="title">
+                                                                                    <a
+                                                                                        href="../tv_shows/the-brady-bunch/index.html">
+                                                                                        The Brady Bunch </a>
+                                                                                </h6>
+                                                                                <div class="tv-shows-cat fs-small">
+                                                                                    <a href="../tv_shows_cat/family/index.html"
+                                                                                        rel="tag">Family</a>, <a
+                                                                                        href="../tv_shows_cat/reality/index.html"
+                                                                                        rel="tag">Reality</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="jws-post-item slider-item no_format">
+                                                                        <div class="post-inner">
+                                                                            <div class="post-media">
+                                                                                <a class="videos-play fs-small fw-500"
+                                                                                    href="../tv_shows/love-and-war/index.html">
+                                                                                    <i class="jws-icon-play-circle"></i>
+                                                                                    Play Now </a>
+                                                                                <img class='attachment-280x176 size-280x176'
+                                                                                    alt=''
+                                                                                    src=../wp-content/uploads/2023/06/Love-and-War-280x176.jpg>
+                                                                            </div>
+                                                                            <div class="tv-shows-content">
+                                                                                <h6 class="title">
+                                                                                    <a
+                                                                                        href="../tv_shows/love-and-war/index.html">
+                                                                                        Love and War </a>
+                                                                                </h6>
+                                                                                <div class="tv-shows-cat fs-small">
+                                                                                    <a href="../tv_shows_cat/music/index.html"
+                                                                                        rel="tag">Music</a>, <a
+                                                                                        href="../tv_shows_cat/romance/index.html"
+                                                                                        rel="tag">Romance</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="jws-post-item slider-item no_format">
+                                                                        <div class="post-inner">
+                                                                            <div class="post-media">
+                                                                                <a class="videos-play fs-small fw-500"
+                                                                                    href="../tv_shows/falling-water/index.html">
+                                                                                    <i class="jws-icon-play-circle"></i>
+                                                                                    Play Now </a>
+                                                                                <img class='attachment-280x176 size-280x176'
+                                                                                    alt=''
+                                                                                    src=../wp-content/uploads/2023/04/Falling-Water-280x176.jpg>
+                                                                            </div>
+                                                                            <div class="tv-shows-content">
+                                                                                <h6 class="title">
+                                                                                    <a
+                                                                                        href="../tv_shows/falling-water/index.html">
+                                                                                        Falling Water </a>
+                                                                                </h6>
+                                                                                <div class="tv-shows-cat fs-small">
+                                                                                    <a href="../tv_shows_cat/international/index.html"
+                                                                                        rel="tag">International</a>,
+                                                                                    <a href="../tv_shows_cat/reality/index.html"
+                                                                                        rel="tag">Reality</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="jws-post-item slider-item no_format">
+                                                                        <div class="post-inner">
+                                                                            <div class="post-media">
+                                                                                <a class="videos-play fs-small fw-500"
+                                                                                    href="../tv_shows/day-dreamers/index.html">
+                                                                                    <i class="jws-icon-play-circle"></i>
+                                                                                    Play Now </a>
+                                                                                <img class='attachment-280x176 size-280x176'
+                                                                                    alt=''
+                                                                                    src=../wp-content/uploads/2023/06/Day-Dreamers-280x176.jpg>
+                                                                            </div>
+                                                                            <div class="tv-shows-content">
+                                                                                <h6 class="title">
+                                                                                    <a
+                                                                                        href="../tv_shows/day-dreamers/index.html">
+                                                                                        Day Dreamers </a>
+                                                                                </h6>
+                                                                                <div class="tv-shows-cat fs-small">
+                                                                                    <a href="../tv_shows_cat/international/index.html"
+                                                                                        rel="tag">International</a>,
+                                                                                    <a href="../tv_shows_cat/music/index.html"
+                                                                                        rel="tag">Music</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="jws-post-item slider-item no_format">
+                                                                        <div class="post-inner">
+                                                                            <div class="post-media">
+                                                                                <a class="videos-play fs-small fw-500"
+                                                                                    href="../tv_shows/american-nightmare/index.html">
+                                                                                    <i class="jws-icon-play-circle"></i>
+                                                                                    Play Now </a>
+                                                                                <img class='attachment-280x176 size-280x176'
+                                                                                    alt=''
+                                                                                    src=../wp-content/uploads/2023/06/American-Nightmare-280x176.jpg>
+                                                                            </div>
+                                                                            <div class="tv-shows-content">
+                                                                                <h6 class="title">
+                                                                                    <a
+                                                                                        href="../tv_shows/american-nightmare/index.html">
+                                                                                        American Nightmare </a>
+                                                                                </h6>
+                                                                                <div class="tv-shows-cat fs-small">
+                                                                                    <a href="../tv_shows_cat/drama/index.html"
+                                                                                        rel="tag">Drama</a>, <a
+                                                                                        href="../tv_shows_cat/reality/index.html"
+                                                                                        rel="tag">Reality</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="jws-post-item slider-item no_format">
+                                                                        <div class="post-inner">
+                                                                            <div class="post-media">
+                                                                                <a class="videos-play fs-small fw-500"
+                                                                                    href="../tv_shows/about-a-boy/index.html">
+                                                                                    <i class="jws-icon-play-circle"></i>
+                                                                                    Play Now </a>
+                                                                                <img class='attachment-280x176 size-280x176'
+                                                                                    alt=''
+                                                                                    src=../wp-content/uploads/2023/06/About-a-Boy-280x176.jpg>
+                                                                            </div>
+                                                                            <div class="tv-shows-content">
+                                                                                <h6 class="title">
+                                                                                    <a
+                                                                                        href="../tv_shows/about-a-boy/index.html">
+                                                                                        About a Boy </a>
+                                                                                </h6>
+                                                                                <div class="tv-shows-cat fs-small">
+                                                                                    <a href="../tv_shows_cat/music/index.html"
+                                                                                        rel="tag">Music</a>, <a
+                                                                                        href="../tv_shows_cat/reality/index.html"
+                                                                                        rel="tag">Reality</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        `;
-                                                    } else {
-                                                        html += `</div>`;
-                                                    }
 
-                                                    html += `</li>`;
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                                    if (hasReplies) {
-                                                        comment.replies.forEach(reply => {
-                                                            html += renderComment(reply, comment.content);
-                                                        });
-                                                    }
 
-                                                    return html;
-                                                }
 
-                                                // Load bình luận và phân trang
-                                                function loadComments(page = 1) {
-                                                    let episodeId = $('input[name="episode_id"]').val();
-                                                    $.get('/comments/' + episodeId + '?page=' + page, function(data) {
-                                                        $('#comment-list').empty();
-                                                        data.comments.forEach(comment => {
-                                                            $('#comment-list').append(renderComment(comment));
-                                                        });
 
-                                                        // Cập nhật tổng số bình luận
-                                                        $('#total-comments').text(data.total);
 
-                                                        Object.keys(shownReplies).forEach(commentId => {
-                                                            if (shownReplies[commentId]) {
-                                                                $(`#comment-list li[data-parent-id="${commentId}"]`).show();
-                                                            }
-                                                        });
-
-                                                        let perPage = 5;
-                                                        let from = (data.current_page - 1) * perPage + 1;
-                                                        let to = Math.min(data.current_page * perPage, data.total);
-                                                        $('#page-info').text(`${from} - ${to} from ${data.total}`);
-
-                                                        updatePagination(data.current_page, data.last_page);
-                                                    });
-                                                }
-
-                                                // Tạo phân trang động
-                                                function updatePagination(currentPage, lastPage) {
-                                                    $('#paginator').empty();
-                                                    if (currentPage > 1) {
-                                                        $('#paginator').append(`
-                                                            <li>
-                                                                <a href="#" class="page-link" data-page="${currentPage - 1}">
-                                                                    <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path d="M0.75 5.36475L13.1992 5.36475" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                                                                        <path d="M5.771 10.1271L0.749878 5.36496L5.771 0.602051" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                                                                    </svg>
-                                                                </a>
-                                                            </li>
-                                                        `);
-                                                    }
-
-                                                    let startPage = Math.max(1, currentPage - 2);
-                                                    let endPage = Math.min(lastPage, currentPage + 2);
-                                                    for (let i = startPage; i <= endPage; i++) {
-                                                        $('#paginator').append(`
-                                                            <li class="${i === currentPage ? 'active' : ''}">
-                                                                <a href="#" class="page-link" data-page="${i}">${i}</a>
-                                                            </li>
-                                                        `);
-                                                    }
-
-                                                    if (currentPage < lastPage) {
-                                                        $('#paginator').append(`
-                                                            <li>
-                                                                <a href="#" class="page-link" data-page="${currentPage + 1}">
-                                                                    <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path d="M13.1992 5.3645L0.75 5.3645" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                                                                        <path d="M8.17822 0.602051L13.1993 5.36417L8.17822 10.1271" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                                                                    </svg>
-                                                                </a>
-                                                            </li>
-                                                        `);
-                                                    }
-
-                                                    $('.page-link').click(function(e) {
-                                                        e.preventDefault();
-                                                        let page = $(this).data('page');
-                                                        currentPage = page;
-                                                        loadComments(page);
-                                                    });
-                                                }
-
-                                                // Gửi bình luận chính qua Ajax
-                                                $(document).on('submit', '#comment-form', function(e) {
-                                                    e.preventDefault();
-                                                    let content = $('#text').val();
-                                                    let episodeId = $('input[name="episode_id"]').val();
-
-                                                    $.ajax({
-                                                        url: '{{ route('comment') }}',
-                                                        method: 'POST',
-                                                        data: {
-                                                            content: content,
-                                                            episode_id: episodeId,
-                                                            _token: $('input[name="_token"]').val()
-                                                        },
-                                                        success: function(response) {
-                                                            if (response.success) {
-                                                                $('#text').val('');
-                                                                $('#error-message').empty();
-                                                                loadComments(currentPage);
-                                                            }
-                                                        },
-                                                        error: function(xhr) {
-                                                            if (xhr.status === 422) {
-                                                                let errors = xhr.responseJSON.errors;
-                                                                $('#error-message').empty();
-                                                                if (errors.content) {
-                                                                    $('#error-message').text(errors.content[0]);
-                                                                }
-                                                            } else {
-                                                                console.log('Lỗi khác:', xhr.responseText);
-                                                            }
-                                                        }
-                                                    });
-                                                });
-
-                                                // Hiển thị popup và nội dung bình luận cha
-                                                $(document).on('click', '.reply-btn', function() {
-                                                    let commentId = $(this).data('comment-id');
-                                                    let parentContent = $(this).data('content');
-                                                    let shortParentContent = parentContent.length > 50 ? parentContent.substring(0, 50) + '...' :
-                                                        parentContent;
-                                                    $('#parent_id').val(commentId);
-                                                    $('#reply-text').val('');
-                                                    $('#parent-content').text(`Replying to: "${shortParentContent}"`);
-                                                    $('#reply-popup-overlay').show();
-                                                    $('#reply-popup').show();
-                                                });
-
-                                                // Đóng popup
-                                                $(document).on('click', '#close-popup, #reply-popup-overlay', function() {
-                                                    $('#reply-popup-overlay').hide();
-                                                    $('#reply-popup').hide();
-                                                    $('#reply-text').val('');
-                                                    $('#reply-error-message').empty();
-                                                    $('#parent-content').text('');
-                                                });
-
-                                                // Ngăn sự kiện click trong popup lan ra overlay
-                                                $(document).on('click', '#reply-popup', function(e) {
-                                                    e.stopPropagation();
-                                                });
-
-                                                // Gửi reply qua Ajax
-                                                $(document).on('submit', '#reply-form', function(e) {
-                                                    e.preventDefault();
-                                                    let content = $('#reply-text').val();
-                                                    let episodeId = $('input[name="episode_id"]').val();
-                                                    let parentId = $('#parent_id').val();
-
-                                                    $.ajax({
-                                                        url: '{{ route('comment') }}',
-                                                        method: 'POST',
-                                                        data: {
-                                                            content: content,
-                                                            episode_id: episodeId,
-                                                            parent_id: parentId,
-                                                            _token: $('input[name="_token"]').val()
-                                                        },
-                                                        success: function(response) {
-                                                            if (response.success) {
-                                                                $('#reply-text').val('');
-                                                                $('#reply-error-message').empty();
-                                                                $('#parent-content').text('');
-                                                                $('#reply-popup-overlay').hide();
-                                                                $('#reply-popup').hide();
-                                                                loadComments(currentPage);
-                                                            }
-                                                        },
-                                                        error: function(xhr) {
-                                                            if (xhr.status === 422) {
-                                                                let errors = xhr.responseJSON.errors;
-                                                                $('#reply-error-message').empty();
-                                                                if (errors.content) {
-                                                                    $('#reply-error-message').text(errors.content[0]);
-                                                                }
-                                                            } else {
-                                                                console.log('Lỗi khác:', xhr.responseText);
-                                                            }
-                                                        }
-                                                    });
-                                                });
-
-                                                // Xử lý nút "Show more"/"Show less"
-                                                $(document).on('click', '.toggle-replies', function() {
-                                                    let commentId = $(this).data('comment-id');
-                                                    let $replies = $(`#comment-list li[data-parent-id="${commentId}"]`);
-                                                    if ($replies.is(':visible')) {
-                                                        $replies.hide();
-                                                        $(this).text(`Show more (${$replies.length})`);
-                                                        shownReplies[commentId] = false;
-                                                    } else {
-                                                        $replies.show();
-                                                        $(this).text('Show less');
-                                                        shownReplies[commentId] = true;
-                                                    }
-                                                });
-
-                                                // Gọi loadComments khi trang được tải
-                                                $(document).ready(function() {
-                                                    loadComments();
-                                                });
-                                            </script>
-
-                                            <!-- CSS tùy chỉnh -->
-                                            <style>
-                                                .sign__btn:hover {
-                                                    background: #0056b3;
-                                                }
-
-                                                #close-popup:hover {
-                                                    background: #999;
-                                                }
-
-                                                .popup {
-                                                    animation: fadeIn 0.3s ease-in-out;
-                                                }
-
-                                                #reply-popup-overlay {
-                                                    animation: fadeInOverlay 0.3s ease-in-out;
-                                                }
-
-                                                @keyframes fadeIn {
-                                                    from {
-                                                        opacity: 0;
-                                                        transform: translate(-50%, -60%);
-                                                    }
-
-                                                    to {
-                                                        opacity: 1;
-                                                        transform: translate(-50%, -50%);
-                                                    }
-                                                }
-
-                                                @keyframes fadeInOverlay {
-                                                    from {
-                                                        opacity: 0;
-                                                    }
-
-                                                    to {
-                                                        opacity: 1;
-                                                    }
-                                                }
-
-                                                .comments__item--answer {
-                                                    margin-left: 20px;
-                                                    border-left: 2px solid #ddd;
-                                                    padding-left: 15px;
-                                                }
-
-                                                .toggle-replies:hover {
-                                                    text-decoration: underline;
-                                                }
-
-                                                .comments__text,
-                                                .comments__quote,
-                                                #parent-content {
-                                                    word-wrap: break-word;
-                                                    overflow-wrap: break-word;
-                                                    white-space: normal;
-                                                    max-width: 100%;
-                                                }
-                                            </style>
                                         </div>
-                                    </div>
-                                </div>
-                                <!-- Các phần còn lại của tab-content giữ nguyên -->
-                            </div>
-                        </div>
-                        <!-- end comments and reviews -->
-                    </div>
-
-                    <div class="col-12 col-xl-4">
-                        <div class="sidebar sidebar--mt">
-                            <!-- subscribe -->
-                            <div class="row">
-                                <div class="col-12">
-                                    <form action="#" class="subscribe">
-                                        <div class="subscribe__img">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                <path
-                                                    d="M13.64,9.74l-.29,1.73A1.55,1.55,0,0,0,14,13a1.46,1.46,0,0,0,1.58.09L17,12.28l1.44.79A1.46,1.46,0,0,0,20,13a1.55,1.55,0,0,0,.63-1.51l-.29-1.73,1.2-1.22a1.54,1.54,0,0,0-.85-2.6l-1.62-.24-.73-1.55a1.5,1.5,0,0,0-2.72,0l-.73,1.55-1.62.24a1.54,1.54,0,0,0-.85,2.6Zm1.83-2.13a1.51,1.51,0,0,0,1.14-.85L17,5.93l.39.83a1.55,1.55,0,0,0,1.14.86l1,.14-.73.74a1.57,1.57,0,0,0-.42,1.34l.16,1-.79-.43a1.48,1.48,0,0,0-1.44,0l-.79.43.16-1a1.54,1.54,0,0,0-.42-1.33l-.73-.75ZM21,15.26a1,1,0,0,0-1,1v3a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V9.67l5.88,5.88a2.94,2.94,0,0,0,2.1.88l.27,0a1,1,0,0,0,.91-1.08,1,1,0,0,0-1.09-.91.94.94,0,0,1-.77-.28L5.41,8.26H9a1,1,0,0,0,0-2H5a3,3,0,0,0-3,3v10a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3v-3A1,1,0,0,0,21,15.26Z" />
-                                            </svg>
-                                        </div>
-                                        <h4 class="subscribe__title">Notifications</h4>
-                                        <p class="subscribe__text">Subscribe to notifications about new episodes</p>
-                                        <div class="sign__group">
-                                            <input type="text" class="sign__input" placeholder="Email">
-                                        </div>
-                                        <button type="button" class="sign__btn">Send</button>
-                                    </form>
+                                    </section>
                                 </div>
                             </div>
-                            <!-- end subscribe -->
+                            <div id="reviews" class="jws-Reviews comments-area">
 
-                            <!-- new items -->
-                            <div class="row row--grid">
-                                <div class="col-12">
-                                    <h5 class="sidebar__title">New items</h5>
-                                </div>
-
-                                <div class="col-6 col-sm-4 col-md-3 col-xl-6">
-                                    <div class="card">
-                                        <a href="details.html" class="card__cover">
-                                            <img src="{{ asset('clients/img/card/1.png') }}" alt="">
-                                            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                        </a>
-                                        <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24">
-                                                <path
-                                                    d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                            </svg></button>
-                                        <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24">
-                                                <path
-                                                    d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                            </svg> 8.3</span>
-                                        <h3 class="card__title"><a href="details.html">The Good Lord Bird</a></h3>
-                                        <ul class="card__list">
-                                            <li>Free</li>
-                                            <li>Action</li>
-                                            <li>2019</li>
-                                        </ul>
+                                <div id="review_form_wrapper">
+                                    <div id="review_form">
+                                        <div id="respond" class="comment-respond">
+                                            <h5 id="reply-title" class="comment-reply-title">Be the first to review
+                                                &ldquo;Political Animal&rdquo; <small><a rel="nofollow"
+                                                        id="cancel-comment-reply-link" href="index.html#respond"
+                                                        style="display:none;">Cancel reply</a></small></h5>
+                                            <form action="https://streamvid.jwsuperthemes.com/wp-comments-post.php"
+                                                method="post" id="commentform" class="comment-form" novalidate>
+                                                <p class="comment-notes"><span id="email-notes">Your email address
+                                                        will not be published.</span> <span
+                                                        class="required-field-message">Required fields are marked
+                                                        <span class="required">*</span></span></p>
+                                                <div class="comment-rating-field">
+                                                    <label>Your rating</label>
+                                                    <div id="comment_rating_stars">
+                                                        <i class="fa fa-star" data-rating="1"></i>
+                                                        <i class="fa fa-star" data-rating="2"></i>
+                                                        <i class="fa fa-star" data-rating="3"></i>
+                                                        <i class="fa fa-star" data-rating="4"></i>
+                                                        <i class="fa fa-star" data-rating="5"></i>
+                                                    </div>
+                                                    <input type="hidden" name="comment_rating" id="comment_rating"
+                                                        required>
+                                                </div><input type="hidden" name="redirect_to" value="index.html">
+                                                <p class="comment-form-comment"><label class="form-label"
+                                                        for="comment">Your review&nbsp;<span
+                                                            class="required">*</span></label>
+                                                    <textarea id="comment" name="comment" cols="45" rows="8" required></textarea>
+                                                </p>
+                                                <p class="comment-form-author col-xl-6 col-12"><label
+                                                        class="form-label">Name *</label><input id="author"
+                                                        name="author" type="text" value="" size="30"
+                                                        aria-required="true" /></p>
+                                                <p class="comment-form-email col-xl-6 col-12"><label
+                                                        class="form-label">Email *</label><input id="email"
+                                                        name="email" type="text" value="" size="30"
+                                                        aria-required="true" /></p>
+                                                <p class="comment-form-cookies-consent"><input
+                                                        id="wp-comment-cookies-consent" name="wp-comment-cookies-consent"
+                                                        type="checkbox" value="yes" /> <label
+                                                        for="wp-comment-cookies-consent">Save
+                                                        my name, email, and website in this browser for the next
+                                                        time I comment.</label></p>
+                                                <p class="form-submit"><input name="submit" type="submit"
+                                                        id="submit" class="submit" value="Submit" /> <input
+                                                        type='hidden' name='comment_post_ID' value='4017'
+                                                        id='comment_post_ID' />
+                                                    <input type='hidden' name='comment_parent' id='comment_parent'
+                                                        value='0' />
+                                                </p>
+                                            </form>
+                                        </div><!-- #respond -->
                                     </div>
                                 </div>
 
-                                <div class="col-6 col-sm-4 col-md-3 col-xl-6">
-                                    <div class="card">
-                                        <a href="details.html" class="card__cover">
-                                            <img src="{{ asset('clients/img/card/2.png') }}" alt="">
-                                            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                        </a>
-                                        <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24">
-                                                <path
-                                                    d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                            </svg></button>
-                                        <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24">
-                                                <path
-                                                    d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                            </svg> 8.1</span>
-                                        <h3 class="card__title"><a href="details.html">The Dictator</a></h3>
-                                        <ul class="card__list">
-                                            <li>Free</li>
-                                            <li>Comedy</li>
-                                            <li>2012</li>
-                                        </ul>
-                                    </div>
+                                <div id="comments" class="comment_top">
+
+                                    <p class="jws-noreviews">There are no reviews yet.</p>
+
                                 </div>
 
-                                <div class="col-6 col-sm-4 col-md-3 col-xl-6">
-                                    <div class="card">
-                                        <a href="details.html" class="card__cover">
-                                            <img src="{{ asset('clients/img/card/3.png') }}" alt="">
-                                            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                        </a>
-                                        <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24">
-                                                <path
-                                                    d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                            </svg></button>
-                                        <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24">
-                                                <path
-                                                    d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                            </svg> 7.9</span>
-                                        <h3 class="card__title"><a href="details.html">12 Years a Slave</a></h3>
-                                        <ul class="card__list">
-                                            <li>Free</li>
-                                            <li>History</li>
-                                            <li>2013</li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <div class="col-6 col-sm-4 col-md-3 col-xl-6">
-                                    <div class="card">
-                                        <a href="details.html" class="card__cover">
-                                            <img src="{{ asset('clients/img/card/4.png') }}" alt="">
-                                            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                        </a>
-                                        <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24">
-                                                <path
-                                                    d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                            </svg></button>
-                                        <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24">
-                                                <path
-                                                    d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                            </svg> 8.8</span>
-                                        <h3 class="card__title"><a href="details.html">Get On Up</a></h3>
-                                        <ul class="card__list">
-                                            <li>Free</li>
-                                            <li>Biography</li>
-                                            <li>2014</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end new items -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end article -->
-        </div>
-    </section>
-    <!-- end details -->
-
-    <!-- similar -->
-    <section class="section">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="section__title"><a href="category.html">Similar movies and TV series</a></h2>
-                </div>
-
-                <div class="col-12">
-                    <div class="section__carousel-wrap">
-                        <div class="section__carousel owl-carousel" id="similar">
-                            <div class="card">
-                                <a href="details.html" class="card__cover">
-                                    <img src="{{ asset('clients/img/card/1.png') }}" alt="">
-                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </a>
-                                <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                    </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> 8.3</span>
-                                <h3 class="card__title"><a href="details.html">The Good Lord Bird</a></h3>
-                                <ul class="card__list">
-                                    <li>Free</li>
-                                    <li>Action</li>
-                                    <li>2019</li>
-                                </ul>
-                            </div>
-
-                            <div class="card">
-                                <a href="details.html" class="card__cover">
-                                    <img src="{{ asset('clients/img/card/2.png') }}" alt="">
-                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </a>
-                                <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                    </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> 8.1</span>
-                                <h3 class="card__title"><a href="details.html">The Dictator</a></h3>
-                                <ul class="card__list">
-                                    <li>Free</li>
-                                    <li>Comedy</li>
-                                    <li>2012</li>
-                                </ul>
-                            </div>
-
-                            <div class="card">
-                                <a href="details.html" class="card__cover">
-                                    <img src="{{ asset('clients/img/card/3.png') }}" alt="">
-                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </a>
-                                <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                    </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> 7.9</span>
-                                <h3 class="card__title"><a href="details.html">12 Years a Slave</a></h3>
-                                <ul class="card__list">
-                                    <li>Free</li>
-                                    <li>History</li>
-                                    <li>2013</li>
-                                </ul>
-                            </div>
-
-                            <div class="card">
-                                <a href="details.html" class="card__cover">
-                                    <img src="{{ asset('clients/img/card/4.png') }}" alt="">
-                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </a>
-                                <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                    </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> 8.8</span>
-                                <h3 class="card__title"><a href="details.html">Get On Up</a></h3>
-                                <ul class="card__list">
-                                    <li>Free</li>
-                                    <li>Biography</li>
-                                    <li>2014</li>
-                                </ul>
-                            </div>
-
-                            <div class="card">
-                                <a href="details.html" class="card__cover">
-                                    <img src="{{ asset('clients/img/card/5.png') }}" alt="">
-                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </a>
-                                <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                    </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> 7.1</span>
-                                <h3 class="card__title"><a href="details.html">Interview With the Vampire</a></h3>
-                                <ul class="card__list">
-                                    <li>Free</li>
-                                    <li>Horror</li>
-                                    <li>1994</li>
-                                </ul>
-                            </div>
-
-                            <div class="card">
-                                <a href="details.html" class="card__cover">
-                                    <img src="{{ asset('clients/img/card/6.png') }}" alt="">
-                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </a>
-                                <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                    </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> 8.6</span>
-                                <h3 class="card__title"><a href="details.html">Pawn Sacrifice</a></h3>
-                                <ul class="card__list">
-                                    <li>Free</li>
-                                    <li>History</li>
-                                    <li>2015</li>
-                                </ul>
-                            </div>
-
-                            <div class="card">
-                                <a href="details.html" class="card__cover">
-                                    <img src="{{ asset('clients/img/card/7.png') }}" alt="">
-                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </a>
-                                <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                    </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> 7.0</span>
-                                <h3 class="card__title"><a href="details.html">Operation Finale</a></h3>
-                                <ul class="card__list">
-                                    <li>Free</li>
-                                    <li>Drama</li>
-                                    <li>2018</li>
-                                </ul>
-                            </div>
-
-                            <div class="card">
-                                <a href="details.html" class="card__cover">
-                                    <img src="{{ asset('clients/img/card/8.png') }}" alt="">
-                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </a>
-                                <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                    </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> 7.5</span>
-                                <h3 class="card__title"><a href="details.html">Denial</a></h3>
-                                <ul class="card__list">
-                                    <li>Free</li>
-                                    <li>Drama</li>
-                                    <li>2016</li>
-                                </ul>
-                            </div>
-
-                            <div class="card">
-                                <a href="details.html" class="card__cover">
-                                    <img src="{{ asset('clients/img/card/9.png') }}" alt="">
-                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </a>
-                                <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                    </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> 7.2</span>
-                                <h3 class="card__title"><a href="details.html">Luce</a></h3>
-                                <ul class="card__list">
-                                    <li>Free</li>
-                                    <li>Drama</li>
-                                    <li>2019</li>
-                                </ul>
-                            </div>
-
-                            <div class="card">
-                                <a href="details.html" class="card__cover">
-                                    <img src="{{ asset('clients/img/card/13.png') }}" alt="">
-                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </a>
-                                <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                    </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> 7.1</span>
-                                <h3 class="card__title"><a href="details.html">Infamous</a></h3>
-                                <ul class="card__list">
-                                    <li>Free</li>
-                                    <li>Thriller</li>
-                                    <li>2020</li>
-                                </ul>
-                            </div>
-
-                            <div class="card">
-                                <a href="details.html" class="card__cover">
-                                    <img src="{{ asset('clients/img/card/14.png') }}" alt="">
-                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </a>
-                                <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                    </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> 7.2</span>
-                                <h3 class="card__title"><a href="details.html">Above the Shadows</a></h3>
-                                <ul class="card__list">
-                                    <li>Free</li>
-                                    <li>Science Fiction</li>
-                                    <li>2019</li>
-                                </ul>
-                            </div>
-
-                            <div class="card">
-                                <a href="details.html" class="card__cover">
-                                    <img src="{{ asset('clients/img/card/17.png') }}" alt="">
-                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </a>
-                                <button class="card__add" type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                    </svg></button>
-                                <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path
-                                            d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                    </svg> 8.5</span>
-                                <h3 class="card__title"><a href="details.html">The Midnight Man</a></h3>
-                                <ul class="card__list">
-                                    <li>Free</li>
-                                    <li>Thriller</li>
-                                    <li>2018</li>
-                                </ul>
+                                <div class="clear"></div>
                             </div>
                         </div>
 
-                        <button class="section__nav section__nav--cards section__nav--prev" data-nav="#similar"
-                            type="button"><svg width="17" height="15" viewBox="0 0 17 15" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1.25 7.72559L16.25 7.72559" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                                <path d="M7.2998 1.70124L1.2498 7.72524L7.2998 13.7502" stroke-width="1.5"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                            </svg></button>
-                        <button class="section__nav section__nav--cards section__nav--next" data-nav="#similar"
-                            type="button"><svg width="17" height="15" viewBox="0 0 17 15" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M15.75 7.72559L0.75 7.72559" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                                <path d="M9.7002 1.70124L15.7502 7.72524L9.7002 13.7502" stroke-width="1.5"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                            </svg></button>
+                        <div class="col-xl-3">
+                            <div class="jws_sticky_move">
+                                <style id="elementor-post-4078">
+                                    .elementor-widget-heading .elementor-heading-title {
+                                        font-family: var(--e-global-typography-primary-font-family), Sans-serif;
+                                        font-weight: var(--e-global-typography-primary-font-weight);
+                                        color: var(--e-global-color-primary);
+                                    }
+
+                                    .elementor-4078 .elementor-element.elementor-element-9def3cf>.elementor-widget-container {
+                                        margin: 0px 0px 5px 0px;
+                                        padding: 0px 0px 15px 0px;
+                                        border-style: solid;
+                                        border-width: 0px 0px 1px 0px;
+                                        border-color: #FFFFFF1A;
+                                    }
+
+                                    .elementor-4078 .elementor-element.elementor-element-9def3cf .elementor-heading-title {
+                                        font-family: var(--e-global-typography-secondary-font-family), Sans-serif;
+                                        font-weight: var(--e-global-typography-secondary-font-weight);
+                                        color: var(--e-global-color-secondary);
+                                    }
+                                </style>
+                                <style>
+                                    .elementor-widget-heading .elementor-heading-title {
+                                        font-family: var(--e-global-typography-primary-font-family), Sans-serif;
+                                        font-weight: var(--e-global-typography-primary-font-weight);
+                                        color: var(--e-global-color-primary);
+                                    }
+
+                                    .elementor-4078 .elementor-element.elementor-element-9def3cf>.elementor-widget-container {
+                                        margin: 0px 0px 5px 0px;
+                                        padding: 0px 0px 15px 0px;
+                                        border-style: solid;
+                                        border-width: 0px 0px 1px 0px;
+                                        border-color: #FFFFFF1A;
+                                    }
+
+                                    .elementor-4078 .elementor-element.elementor-element-9def3cf .elementor-heading-title {
+                                        font-family: var(--e-global-typography-secondary-font-family), Sans-serif;
+                                        font-weight: var(--e-global-typography-secondary-font-weight);
+                                        color: var(--e-global-color-secondary);
+                                    }
+                                </style>
+                                <div data-elementor-type="wp-post" data-elementor-id="4078"
+                                    class="elementor elementor-4078">
+                                    <section
+                                        class="elementor-section elementor-top-section elementor-element elementor-element-6115c3a elementor-section-boxed elementor-section-height-default elementor-section-height-default"
+                                        data-id="6115c3a" data-element_type="section">
+                                        <div class="elementor-container elementor-column-gap-no jws_section_">
+                                            <div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-51db0ec"
+                                                data-id="51db0ec" data-element_type="column">
+                                                <div class="elementor-widget-wrap elementor-element-populated">
+                                                    <div class="elementor-element elementor-element-9def3cf elementor-widget elementor-widget-heading"
+                                                        data-id="9def3cf" data-element_type="widget"
+                                                        data-widget_type="heading.default">
+                                                        <div class="elementor-widget-container">
+                                                            <h5 class="elementor-heading-title elementor-size-default">
+                                                                Popular TV Shows</h5>
+                                                        </div>
+                                                    </div>
+                                                    <div class="elementor-element elementor-element-5eea66e elementor-widget elementor-widget-jws_top_videos"
+                                                        data-id="5eea66e" data-element_type="widget"
+                                                        data-widget_type="jws_top_videos.default">
+                                                        <div class="elementor-widget-container">
+                                                            <div class="jws-top-videos-tabs-element">
+
+                                                                <div class="top-videos-content row layout2">
+
+                                                                    <div
+                                                                        class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                        <div class="top-videos-inner">
+
+                                                                            <div class="top-number h5">
+
+                                                                                1
+                                                                            </div>
+                                                                            <div class="top-images">
+
+                                                                                <a
+                                                                                    href="../tv_shows/shark-hunters/index.html">
+                                                                                    <img class='attachment-50x70 size-50x70'
+                                                                                        alt=''
+                                                                                        src=../wp-content/uploads/2023/02/sahark-e1676001886337-50x70.jpg>
+                                                                                </a>
+
+                                                                            </div>
+                                                                            <div class="top-content">
+                                                                                <div class="video-years">2018</div>
+                                                                                <h6>
+                                                                                    <a
+                                                                                        href="../tv_shows/shark-hunters/index.html">Shark
+                                                                                        Hunters</a>
+                                                                                </h6>
+                                                                                <div class="video-cat">
+                                                                                    <a href="../tv_shows_cat/action/index.html"
+                                                                                        rel="tag">Action</a>
+                                                                                </div>
+
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                        <div class="top-videos-inner">
+
+                                                                            <div class="top-number h5">
+
+                                                                                2
+                                                                            </div>
+                                                                            <div class="top-images">
+
+                                                                                <a
+                                                                                    href="../tv_shows/the-wasted-times/index.html">
+                                                                                    <img class='attachment-50x70 size-50x70'
+                                                                                        alt=''
+                                                                                        src=../wp-content/uploads/2023/02/The-Wasted-Times-50x70.jpg>
+                                                                                </a>
+
+                                                                            </div>
+                                                                            <div class="top-content">
+                                                                                <div class="video-years">2028</div>
+                                                                                <h6>
+                                                                                    <a
+                                                                                        href="../tv_shows/the-wasted-times/index.html">The
+                                                                                        Wasted Times</a>
+                                                                                </h6>
+                                                                                <div class="video-cat">
+                                                                                    <a href="../tv_shows_cat/drama/index.html"
+                                                                                        rel="tag">Drama</a> <a
+                                                                                        href="../tv_shows_cat/school/index.html"
+                                                                                        rel="tag">School</a>
+                                                                                </div>
+
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                        <div class="top-videos-inner">
+
+                                                                            <div class="top-number h5">
+
+                                                                                3
+                                                                            </div>
+                                                                            <div class="top-images">
+
+                                                                                <a
+                                                                                    href="../tv_shows/political-animal/index.html">
+                                                                                    <img class='attachment-50x70 size-50x70'
+                                                                                        alt=''
+                                                                                        src=../wp-content/uploads/2023/03/Political-Animal-50x70.jpg>
+                                                                                </a>
+
+                                                                            </div>
+                                                                            <div class="top-content">
+                                                                                <div class="video-years">2019</div>
+                                                                                <h6>
+                                                                                    <a
+                                                                                        href="../tv_shows/political-animal/index.html">Political
+                                                                                        Animal</a>
+                                                                                </h6>
+                                                                                <div class="video-cat">
+                                                                                    <a href="../tv_shows_cat/music/index.html"
+                                                                                        rel="tag">Music</a> <a
+                                                                                        href="../tv_shows_cat/reality/index.html"
+                                                                                        rel="tag">Reality</a>
+                                                                                </div>
+
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                        <div class="top-videos-inner">
+
+                                                                            <div class="top-number h5">
+
+                                                                                4
+                                                                            </div>
+                                                                            <div class="top-images">
+
+                                                                                <a
+                                                                                    href="../tv_shows/the-unstoppable-soldier/index.html">
+                                                                                    <img class='attachment-50x70 size-50x70'
+                                                                                        alt=''
+                                                                                        src=../wp-content/uploads/2023/03/israel-palacio-IprD0z0zqss-unsplash-50x70.jpg>
+                                                                                </a>
+
+                                                                            </div>
+                                                                            <div class="top-content">
+                                                                                <div class="video-years">2020</div>
+                                                                                <h6>
+                                                                                    <a
+                                                                                        href="../tv_shows/the-unstoppable-soldier/index.html">The
+                                                                                        Unstoppable Soldier</a>
+                                                                                </h6>
+                                                                                <div class="video-cat">
+                                                                                    <a href="../tv_shows_cat/drama/index.html"
+                                                                                        rel="tag">Drama</a> <a
+                                                                                        href="../tv_shows_cat/reality/index.html"
+                                                                                        rel="tag">Reality</a>
+                                                                                </div>
+
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                        <div class="top-videos-inner">
+
+                                                                            <div class="top-number h5">
+
+                                                                                5
+                                                                            </div>
+                                                                            <div class="top-images">
+
+                                                                                <a
+                                                                                    href="../tv_shows/fireworks-wednesday/index.html">
+                                                                                    <img class='attachment-50x70 size-50x70'
+                                                                                        alt=''
+                                                                                        src=../wp-content/uploads/2023/02/Fireworks-Wednesday-50x70.jpg>
+                                                                                </a>
+
+                                                                            </div>
+                                                                            <div class="top-content">
+                                                                                <div class="video-years">2019</div>
+                                                                                <h6>
+                                                                                    <a
+                                                                                        href="../tv_shows/fireworks-wednesday/index.html">Fireworks
+                                                                                        Wednesday</a>
+                                                                                </h6>
+                                                                                <div class="video-cat">
+                                                                                    <a href="../tv_shows_cat/family/index.html"
+                                                                                        rel="tag">Family</a> <a
+                                                                                        href="../tv_shows_cat/international/index.html"
+                                                                                        rel="tag">International</a>
+                                                                                </div>
+
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+
+
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+
                 </div>
-            </div>
-        </div>
-    </section>
-    @if (!empty(Auth::user()))
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const video = document.getElementById('player'); // Lấy thẻ video
-                const userId = {{ auth()->user()->id }};
-                const movieId = {{ $episode->id }}; // Lấy ID phim từ server (Laravel Blade)
-                const token = '{{ csrf_token() }}'; // CSRF token nếu cần
 
-                // Hàm để gửi dữ liệu lịch sử xem
-                function saveViewHistory() {
-                    const currentTime = video.currentTime; // Thời gian hiện tại của video
-
-                    // Gửi dữ liệu đến server bằng fetch
-                    fetch('/api/view-history', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer <YOUR_ACCESS_TOKEN>` // Thay YOUR_ACCESS_TOKEN bằng token thực tế nếu cần
-                            },
-                            body: JSON.stringify({
-                                user_id: userId,
-                                episode_id: movieId,
-                                watched_duration: Math.floor(
-                                    currentTime), // Lấy thời gian hiện tại (làm tròn)
-                            })
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Failed to save view history');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log('View history updated:', data);
-                        })
-                        .catch(error => {
-                            console.error('Error updating view history:', error);
-                        });
-                }
-
-                // Gửi dữ liệu định kỳ mỗi 5 giây
-                setInterval(() => {
-                    if (!video.paused) { // Chỉ lưu nếu video đang được phát
-                        saveViewHistory();
-                    }
-                }, 5000); // Mỗi 5 giây
-            });
-        </script>
-    @endif
-
-    {{-- <script src="js/scripts.js"></script> --}}
-
+            </main><!-- #main -->
+        </div><!-- #primary -->
+    </div><!-- #content -->
     <!-- end similar -->
 @endsection

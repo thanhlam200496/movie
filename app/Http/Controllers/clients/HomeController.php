@@ -13,7 +13,7 @@ class HomeController extends Controller
 {
     function test()
     {
-        return view('client_movie.layouts.default');
+        return view('client_movie.home');
     }
     public function home(Request $request)
     {
