@@ -10,170 +10,836 @@
 @section('keywords')
     xem phim online, phim mới, phim chiếu rạp
 @endsection
-@section('main')
-    <!-- head -->
-    <section class="section section--head">
-        <div class="container">
-            <div class="row">
+@push('style')
+    <style>
+        .site-header {
+            margin-bottom: 50px
+        }
+    </style>
+@endpush
+@section('content')
+    <div id="content" class="site-content">
+        <div class="jws-title-bar-wrap">
 
+            <div data-elementor-type="wp-post" data-elementor-id="4695" class="elementor elementor-4695">
+                <section
+                    class="elementor-section elementor-top-section elementor-element elementor-element-7526d41 elementor-section-full_width elementor-section-height-default elementor-section-height-default"
+                    data-id="7526d41" data-element_type="section">
+                    <div class="elementor-container elementor-column-gap-default jws_section_">
+                        <div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-1469ffc"
+                            data-id="1469ffc" data-element_type="column">
+                            <div class="elementor-widget-wrap elementor-element-populated">
+                                <div class="elementor-element elementor-element-26a22fc elementor-widget elementor-widget-jws_widget_heading"
+                                    data-id="26a22fc" data-element_type="widget"
+                                    data-widget_type="jws_widget_heading.default">
+                                    <div class="elementor-widget-container">
+                                        <div class="title-wrapper ">
+                                            <h1 class="title">Action</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="elementor-element elementor-element-05ff6de elementor-widget elementor-widget-jws-breadcrumbs"
+                                    data-id="05ff6de" data-element_type="widget" data-widget_type="jws-breadcrumbs.default">
+                                    <div class="elementor-widget-container">
 
-                <div class="col-12 col-xl-6">
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb__item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb__item"><a href="catalog.html">Catalog</a></li>
-                        <li class="breadcrumb__item breadcrumb__item--active">Category</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- end head -->
+                                        <ul class="jws-breadcrumbs" itemscope=""
+                                            itemtype="http://schema.org/BreadcrumbList">
 
-    <!-- catalog -->
-    <div class="catalog catalog--page">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="catalog__nav">
-
-
-
-
-                        <div class="catalog__select-wrap">
-                            <form id="filter-form" action="{{ route('category.filter') }}" method="get">
-                                <select class="catalog__select" name="category">
-                                    <option value="">All genres</option>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}"
-                                            @if ($category->id == request()->category) selected @endif>{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-
-                                <select class="catalog__select" name="year">
-                                    <option value="">All the years</option>
-                                    <option value="1">'50s</option>
-                                    <option value="2">'60s</option>
-                                    <option value="3">'70s</option>
-                                    <option value="4">'80s</option>
-                                    <option value="5">'90s</option>
-                                    <option value="6">2000-10</option>
-                                    <option value="7">2010-20</option>
-                                    <option value="8">2021</option>
-                                </select>
-                                <select class="catalog__select" name="type_film">
-                                    <option value="">All the type firm</option>
-                                    <option value="TV Show">TV Show</option>
-                                    <option value="Movie">Movie</option>
-
-                                </select>
-                                <input type="text"
-                                    style="padding: 0 0 0 20px; background-color:    #131720; color:#fff; border: none; margin-right: 10px; height: 40px; border-radius: 16px;"
-                                    name="search" value="{{ request()->search }}" placeholder="I'm looking for...">
-                                <button type="submit">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20"
-                                        viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                        <path fill="#2f80ed"
-                                            d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                                    </svg> </button>
-                            </form>
-
+                                            <li class="jws-breadcrumbs__item jws-breadcrumbs__item--home"
+                                                itemprop="itemListElement" position="0" itemscope=""
+                                                itemtype="http://schema.org/ListItem">
+                                                <a class="jws-breadcrumbs__crumb jws-breadcrumbs__crumb--link jws-breadcrumbs__crumb--home"
+                                                    itemprop="item" rel="v:url" property="v:title"
+                                                    href="../../index.html" title="Home">
+                                                    <span itemprop="name" class="jws-breadcrumbs__text">
+                                                        Home </span>
+                                                </a>
+                                            </li>
+                                            <li class="jws-breadcrumbs__separator"><span
+                                                    class="jws-breadcrumbs__separator__text">/</span></li>
+                                            <li class="jws-breadcrumbs__item jws-breadcrumbs__item--parent jws-breadcrumbs__item--post-type-archive jws-breadcrumbs__item--post-type-archive-movies"
+                                                itemprop="itemListElement" position="1" itemscope=""
+                                                itemtype="http://schema.org/ListItem">
+                                                <a href="../../movie/index.html" class="jws-breadcrumbs__crumb"
+                                                    itemprop="item" rel="v:url" property="v:title">
+                                                    <span itemprop="name" class="jws-breadcrumbs__text">
+                                                        Movies </span>
+                                                </a>
+                                            </li>
+                                            <li class="jws-breadcrumbs__separator jws-breadcrumbs__separator"><span
+                                                    class="jws-breadcrumbs__separator__text">/</span></li>
+                                            <li class="jws-breadcrumbs__item jws-breadcrumbs__item--current jws-breadcrumbs__item--custom-tax-archive jws-breadcrumbs__item--custom-tax-archive-movies"
+                                                itemprop="itemListElement" position="" itemscope=""
+                                                itemtype="http://schema.org/ListItem">
+                                                <span class="jws-breadcrumbs__crumb" itemprop="item" rel="v:url"
+                                                    property="v:title">
+                                                    <span itemprop="name" class="jws-breadcrumbs__text">
+                                                        Action </span>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="slider-radio">
-                            <input type="radio" name="grade" id="featured" checked="checked"><label
-                                for="featured">Featured</label>
-                            <input type="radio" name="grade" id="popular"><label for="popular">Popular</label>
-                            <input type="radio" name="grade" id="newest"><label for="newest">Newest</label>
-                        </div>
+
+
+
 
                     </div>
+                </section>
+            </div>
+        </div>
+        <div id="primary" class="content-area">
+            <main id="main" class="site-main jws-movies-archive jws-movies_advanced-element sidebar-left">
+                <div class="container">
+                    <div class="row">
+                        <div class="post_sidebar sidebar-has_sidebar col-xl-2 col-lg-12 col-12">
 
-                    <div id="movie-list" class="row row--grid">
-                        @foreach ($movies as $movie)
-                            <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                                <div class="card">
-                                    <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}"
-                                        class="card__cover">
-                                        <img src="/timthumb.php?src={{ $movie->poster_url != null ? Storage::url('images/' . $movie->poster_url) : $movie->link_poster_internet }}&w=190&h=290"
-                                            alt="">
- <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M11 1C16.5228 1 21 5.47716 21 11C21 16.5228 16.5228 21 11 21C5.47716 21 1 16.5228 1 11C1 5.47716 5.47716 1 11 1Z"
-                                                stroke-linecap="round" stroke-linejoin="round" />
-                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M14.0501 11.4669C13.3211 12.2529 11.3371 13.5829 10.3221 14.0099C10.1601 14.0779 9.74711 14.2219 9.65811 14.2239C9.46911 14.2299 9.28711 14.1239 9.19911 13.9539C9.16511 13.8879 9.06511 13.4569 9.03311 13.2649C8.93811 12.6809 8.88911 11.7739 8.89011 10.8619C8.88911 9.90489 8.94211 8.95489 9.04811 8.37689C9.07611 8.22089 9.15811 7.86189 9.18211 7.80389C9.22711 7.69589 9.30911 7.61089 9.40811 7.55789C9.48411 7.51689 9.57111 7.49489 9.65811 7.49789C9.74711 7.49989 10.1091 7.62689 10.2331 7.67589C11.2111 8.05589 13.2801 9.43389 14.0401 10.2439C14.1081 10.3169 14.2951 10.5129 14.3261 10.5529C14.3971 10.6429 14.4321 10.7519 14.4321 10.8619C14.4321 10.9639 14.4011 11.0679 14.3371 11.1549C14.3041 11.1999 14.1131 11.3999 14.0501 11.4669Z"
-                                                stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
+                            <div class="main-sidebar jws_sticky_move">
+                                <div class="jws-filter-modal">
+                                    <div class="modal-overlay"></div>
+                                    <div class="siderbar-inner jws-scrollbar modal-content sidebar">
+                                        <div class="modal-top">
+                                            <span class="modal-title">FILTERS</span>
+                                            <span class="modal-close">Close</span>
+                                        </div>
+                                        <style id="elementor-post-4684">
+                                            .elementor-widget-heading .elementor-heading-title {
+                                                font-family: var(--e-global-typography-primary-font-family), Sans-serif;
+                                                font-weight: var(--e-global-typography-primary-font-weight);
+                                                color: var(--e-global-color-primary);
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-de353e3>.elementor-widget-container {
+                                                margin: 0px 0px -3px 0px;
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-de353e3 .elementor-heading-title {
+                                                font-family: var(--e-global-typography-secondary-font-family), Sans-serif;
+                                                font-weight: var(--e-global-typography-secondary-font-weight);
+                                                color: var(--e-global-color-secondary);
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-3915054>.elementor-widget-container {
+                                                margin: 0px 0px 52px 0px;
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-5378429>.elementor-widget-container {
+                                                margin: 0px 0px 4px 0px;
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-5378429 .elementor-heading-title {
+                                                font-family: var(--e-global-typography-secondary-font-family), Sans-serif;
+                                                font-weight: var(--e-global-typography-secondary-font-weight);
+                                                color: var(--e-global-color-secondary);
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-9365ef2>.elementor-widget-container {
+                                                margin: 0px 0px 50px 0px;
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-54aa582>.elementor-widget-container {
+                                                margin: 0px 0px 5px 0px;
+                                                padding: 0px 0px 15px 0px;
+                                                border-style: solid;
+                                                border-width: 0px 0px 1px 0px;
+                                                border-color: #FFFFFF1A;
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-54aa582 .elementor-heading-title {
+                                                font-family: var(--e-global-typography-secondary-font-family), Sans-serif;
+                                                font-weight: var(--e-global-typography-secondary-font-weight);
+                                                color: var(--e-global-color-secondary);
+                                            }
+                                        </style>
+                                        <style>
+                                            .elementor-widget-heading .elementor-heading-title {
+                                                font-family: var(--e-global-typography-primary-font-family), Sans-serif;
+                                                font-weight: var(--e-global-typography-primary-font-weight);
+                                                color: var(--e-global-color-primary);
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-de353e3>.elementor-widget-container {
+                                                margin: 0px 0px -3px 0px;
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-de353e3 .elementor-heading-title {
+                                                font-family: var(--e-global-typography-secondary-font-family), Sans-serif;
+                                                font-weight: var(--e-global-typography-secondary-font-weight);
+                                                color: var(--e-global-color-secondary);
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-3915054>.elementor-widget-container {
+                                                margin: 0px 0px 52px 0px;
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-5378429>.elementor-widget-container {
+                                                margin: 0px 0px 4px 0px;
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-5378429 .elementor-heading-title {
+                                                font-family: var(--e-global-typography-secondary-font-family), Sans-serif;
+                                                font-weight: var(--e-global-typography-secondary-font-weight);
+                                                color: var(--e-global-color-secondary);
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-9365ef2>.elementor-widget-container {
+                                                margin: 0px 0px 50px 0px;
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-54aa582>.elementor-widget-container {
+                                                margin: 0px 0px 5px 0px;
+                                                padding: 0px 0px 15px 0px;
+                                                border-style: solid;
+                                                border-width: 0px 0px 1px 0px;
+                                                border-color: #FFFFFF1A;
+                                            }
+
+                                            .elementor-4684 .elementor-element.elementor-element-54aa582 .elementor-heading-title {
+                                                font-family: var(--e-global-typography-secondary-font-family), Sans-serif;
+                                                font-weight: var(--e-global-typography-secondary-font-weight);
+                                                color: var(--e-global-color-secondary);
+                                            }
+                                        </style>
+                                        <div data-elementor-type="wp-post" data-elementor-id="4684"
+                                            class="elementor elementor-4684">
+                                            <section
+                                                class="elementor-section elementor-top-section elementor-element elementor-element-00fca6d elementor-section-boxed elementor-section-height-default elementor-section-height-default"
+                                                data-id="00fca6d" data-element_type="section">
+                                                <div class="elementor-container elementor-column-gap-no jws_section_">
+                                                    <div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-97ea137"
+                                                        data-id="97ea137" data-element_type="column">
+                                                        <div class="elementor-widget-wrap elementor-element-populated">
+                                                            <div class="elementor-element elementor-element-de353e3 elementor-widget elementor-widget-heading"
+                                                                data-id="de353e3" data-element_type="widget"
+                                                                data-widget_type="heading.default">
+                                                                <div class="elementor-widget-container">
+                                                                    <h5
+                                                                        class="elementor-heading-title elementor-size-default">
+                                                                        Thể Loại</h5>
+                                                                </div>
+                                                            </div>
+                                                            <div class="elementor-element elementor-element-3915054 elementor-widget elementor-widget-jws_post_category_filter"
+                                                                data-id="3915054" data-element_type="widget"
+                                                                data-widget_type="jws_post_category_filter.default">
+                                                                <div class="elementor-widget-container">
+
+                                                                    <div class="jws-post-category-filter">
+
+                                                                        <ul class="reset_ul_ol">
+
+                                                                            <li class="cat-item current">
+                                                                                <a rel="nofollow" href="index.html">
+                                                                                    <span>Action</span>
+                                                                                </a>
+                                                                            </li>
+
+                                                                            @foreach ($categories as $category)
+                                                                                <li class="cat-item">
+                                                                                    <a rel="nofollow"
+                                                                                        href="../adventure/index.html">
+                                                                                        <span>{{ $category->name }}</span>
+                                                                                    </a>
+                                                                                </li>
+                                                                            @endforeach
+
+
+
+                                                                            <li class="cat-item">
+                                                                                <a rel="nofollow"
+                                                                                    href="../anime/index.html">
+                                                                                    <span>Anime</span>
+                                                                                </a>
+                                                                            </li>
+
+
+                                                                            <li class="cat-item">
+                                                                                <a rel="nofollow"
+                                                                                    href="../comedy/index.html">
+                                                                                    <span>Comedy</span>
+                                                                                </a>
+                                                                            </li>
+
+
+                                                                            <li class="cat-item">
+                                                                                <a rel="nofollow"
+                                                                                    href="../crime/index.html">
+                                                                                    <span>Crime</span>
+                                                                                </a>
+                                                                            </li>
+
+
+                                                                            <li class="cat-item">
+                                                                                <a rel="nofollow"
+                                                                                    href="../documentary/index.html">
+                                                                                    <span>Documentary</span>
+                                                                                </a>
+                                                                            </li>
+
+
+                                                                            <li class="cat-item">
+                                                                                <a rel="nofollow"
+                                                                                    href="../drama/index.html">
+                                                                                    <span>Drama</span>
+                                                                                </a>
+                                                                            </li>
+
+
+                                                                            <li class="cat-item">
+                                                                                <a rel="nofollow"
+                                                                                    href="../family/index.html">
+                                                                                    <span>Family</span>
+                                                                                </a>
+                                                                            </li>
+
+
+                                                                            <li class="cat-item">
+                                                                                <a rel="nofollow"
+                                                                                    href="../history/index.html">
+                                                                                    <span>History</span>
+                                                                                </a>
+                                                                            </li>
+
+
+                                                                            <li class="cat-item">
+                                                                                <a rel="nofollow"
+                                                                                    href="../horror/index.html">
+                                                                                    <span>Horror</span>
+                                                                                </a>
+                                                                            </li>
+
+
+                                                                            <li class="cat-item">
+                                                                                <a rel="nofollow"
+                                                                                    href="../romance/index.html">
+                                                                                    <span>Romance</span>
+                                                                                </a>
+                                                                            </li>
+
+
+                                                                            <li class="cat-item">
+                                                                                <a rel="nofollow"
+                                                                                    href="../sci-fi/index.html">
+                                                                                    <span>Sci-Fi</span>
+                                                                                </a>
+                                                                            </li>
+
+
+                                                                            <li class="cat-item">
+                                                                                <a rel="nofollow"
+                                                                                    href="../thriller/index.html">
+                                                                                    <span>Thriller</span>
+                                                                                </a>
+                                                                            </li>
+
+                                                                        </ul>
+
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="elementor-element elementor-element-5378429 elementor-widget elementor-widget-heading"
+                                                                data-id="5378429" data-element_type="widget"
+                                                                data-widget_type="heading.default">
+                                                                <div class="elementor-widget-container">
+                                                                    <h5
+                                                                        class="elementor-heading-title elementor-size-default">
+                                                                        Movies by year</h5>
+                                                                </div>
+                                                            </div>
+                                                            <div class="elementor-element elementor-element-9365ef2 elementor-widget elementor-widget-jws_post_years_filter"
+                                                                data-id="9365ef2" data-element_type="widget"
+                                                                data-widget_type="jws_post_years_filter.default">
+                                                                <div class="elementor-widget-container">
+
+                                                                    <div class="jws-post-years-filter">
+
+
+                                                                        <ul class="reset_ul_ol jws-filter-list">
+                                                                            <li><a rel="nofollow" class="fs-small"
+                                                                                    href="index61a9.html?years=2016">2016</a>
+                                                                            </li>
+                                                                            <li><a rel="nofollow" class="fs-small"
+                                                                                    href="index4fc0.html?years=2017">2017</a>
+                                                                            </li>
+                                                                            <li><a rel="nofollow" class="fs-small"
+                                                                                    href="indexc46f.html?years=2018">2018</a>
+                                                                            </li>
+                                                                            <li><a rel="nofollow" class="fs-small"
+                                                                                    href="index306e.html?years=2019">2019</a>
+                                                                            </li>
+                                                                            <li><a rel="nofollow" class="fs-small"
+                                                                                    href="index7ab9.html?years=2020">2020</a>
+                                                                            </li>
+                                                                            <li><a rel="nofollow" class="fs-small"
+                                                                                    href="index03ec.html?years=2021">2021</a>
+                                                                            </li>
+                                                                            <li><a rel="nofollow" class="fs-small"
+                                                                                    href="index50fe.html?years=2022">2022</a>
+                                                                            </li>
+                                                                            <li><a rel="nofollow" class="fs-small"
+                                                                                    href="indexaecc.html?years=2023">2023</a>
+                                                                            </li>
+                                                                        </ul>
+
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="elementor-element elementor-element-54aa582 elementor-widget elementor-widget-heading"
+                                                                data-id="54aa582" data-element_type="widget"
+                                                                data-widget_type="heading.default">
+                                                                <div class="elementor-widget-container">
+                                                                    <h5
+                                                                        class="elementor-heading-title elementor-size-default">
+                                                                        Top 5 Movies</h5>
+                                                                </div>
+                                                            </div>
+                                                            <div class="elementor-element elementor-element-86c8b20 elementor-widget elementor-widget-jws_top_videos"
+                                                                data-id="86c8b20" data-element_type="widget"
+                                                                data-widget_type="jws_top_videos.default">
+                                                                <div class="elementor-widget-container">
+                                                                    <div class="jws-top-videos-tabs-element">
+
+                                                                        <div class="top-videos-content row layout2">
+
+                                                                            <div
+                                                                                class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                                <div class="top-videos-inner">
+
+                                                                                    <div class="top-number h5">
+
+                                                                                        1
+                                                                                    </div>
+                                                                                    <div class="top-images">
+
+                                                                                        <a
+                                                                                            href="../../movie/spacex/index.html">
+                                                                                            <img class='attachment-50x70 size-50x70'
+                                                                                                alt=''
+                                                                                                src="{{ asset('clients/wp-content/uploads/2023/06/spacex-50x70.jpg') }}">
+                                                                                        </a>
+
+                                                                                    </div>
+                                                                                    <div class="top-content">
+                                                                                        <div class="video-years">
+                                                                                            2022</div>
+                                                                                        <h6>
+                                                                                            <a
+                                                                                                href="../../movie/spacex/index.html">SpaceX</a>
+                                                                                        </h6>
+                                                                                        <div class="video-cat">
+                                                                                            <a href="../documentary/index.html"
+                                                                                                rel="tag">Documentary</a>
+                                                                                            <a href="../sci-fi/index.html"
+                                                                                                rel="tag">Sci-Fi</a>
+                                                                                        </div>
+
+
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                            <div
+                                                                                class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                                <div class="top-videos-inner">
+
+                                                                                    <div class="top-number h5">
+
+                                                                                        2
+                                                                                    </div>
+                                                                                    <div class="top-images">
+
+                                                                                        <a
+                                                                                            href="../../movie/the-sleeping-angel/index.html">
+                                                                                            <img class='attachment-50x70 size-50x70'
+                                                                                                alt=''
+                                                                                                src="{{ asset('clients/wp-content/uploads/2023/02/movies2-50x70.jpg') }}">
+                                                                                        </a>
+
+                                                                                    </div>
+                                                                                    <div class="top-content">
+                                                                                        <div class="video-years">
+                                                                                            2019</div>
+                                                                                        <h6>
+                                                                                            <a
+                                                                                                href="../../movie/the-sleeping-angel/index.html">The
+                                                                                                Sleeping Angel</a>
+                                                                                        </h6>
+                                                                                        <div class="video-cat">
+                                                                                            <a href="../crime/index.html"
+                                                                                                rel="tag">Crime</a>
+                                                                                            <a href="../sci-fi/index.html"
+                                                                                                rel="tag">Sci-Fi</a>
+                                                                                        </div>
+
+
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                            <div
+                                                                                class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                                <div class="top-videos-inner">
+
+                                                                                    <div class="top-number h5">
+
+                                                                                        3
+                                                                                    </div>
+                                                                                    <div class="top-images">
+
+                                                                                        <a
+                                                                                            href="../../movie/night-of-the-living-dead/index.html">
+                                                                                            <img class='attachment-50x70 size-50x70'
+                                                                                                alt=''
+                                                                                                src="{{ asset('clients/wp-content/uploads/2023/02/image_deads-50x70.jpg') }}">
+                                                                                        </a>
+
+                                                                                    </div>
+                                                                                    <div class="top-content">
+                                                                                        <div class="video-years">
+                                                                                            2018</div>
+                                                                                        <h6>
+                                                                                            <a
+                                                                                                href="../../movie/night-of-the-living-dead/index.html">Night
+                                                                                                of The Living
+                                                                                                Dead</a>
+                                                                                        </h6>
+                                                                                        <div class="video-cat">
+                                                                                            <a href="../history/index.html"
+                                                                                                rel="tag">History</a>
+                                                                                            <a href="../horror/index.html"
+                                                                                                rel="tag">Horror</a>
+                                                                                        </div>
+
+
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                            <div
+                                                                                class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                                <div class="top-videos-inner">
+
+                                                                                    <div class="top-number h5">
+
+                                                                                        4
+                                                                                    </div>
+                                                                                    <div class="top-images">
+
+                                                                                        <a
+                                                                                            href="../../movie/the-white-house/index.html">
+                                                                                            <img class='attachment-50x70 size-50x70'
+                                                                                                alt=''
+                                                                                                src="{{ asset('clients/wp-content/uploads/2023/06/6TeIVKPw7nXXWy2zKmDmlnSwzb7-scaled-50x70.jpg') }}">
+                                                                                        </a>
+
+                                                                                    </div>
+                                                                                    <div class="top-content">
+                                                                                        <div class="video-years">
+                                                                                            2023</div>
+                                                                                        <h6>
+                                                                                            <a
+                                                                                                href="../../movie/the-white-house/index.html">The
+                                                                                                White House</a>
+                                                                                        </h6>
+                                                                                        <div class="video-cat">
+                                                                                            <a href="index.html"
+                                                                                                rel="tag">Action</a>
+                                                                                            <a href="../adventure/index.html"
+                                                                                                rel="tag">Adventure</a>
+                                                                                        </div>
+
+
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                            <div
+                                                                                class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                                <div class="top-videos-inner">
+
+                                                                                    <div class="top-number h5">
+
+                                                                                        5
+                                                                                    </div>
+                                                                                    <div class="top-images">
+
+                                                                                        <a
+                                                                                            href="../../movie/the-blood-moon-party/index.html">
+                                                                                            <img class='attachment-50x70 size-50x70'
+                                                                                                alt=''
+                                                                                                src="{{ asset('clients/wp-content/uploads/2023/02/blood-50x70.jpg') }}"">
+                                                                                        </a>
+
+                                                                                    </div>
+                                                                                    <div class="top-content">
+                                                                                        <div class="video-years">
+                                                                                            2020</div>
+                                                                                        <h6>
+                                                                                            <a
+                                                                                                href="../../movie/the-blood-moon-party/index.html">The
+                                                                                                Blood Moon Party</a>
+                                                                                        </h6>
+                                                                                        <div class="video-cat">
+                                                                                            <a href="../adventure/index.html"
+                                                                                                rel="tag">Adventure</a>
+                                                                                            <a href="../sci-fi/index.html"
+                                                                                                rel="tag">Sci-Fi</a>
+                                                                                        </div>
+
+
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+
+
+
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+
+
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="post_content col-xl-10 col-lg-12 col-12">
+                            <div class="archive-nav row row-end-height">
+                                <div class="col-xl-6 col-lg-12">
+                                    <a class="show_filter_shop" href="javascript:void(0)">
+                                        <i aria-hidden="true" class="jws-icon-plus"></i>
+                                        <span>Filters</span>
                                     </a>
-                                    <form action="{{ route('favorite.add') }}" method="post">
-                                        @csrf
-                                        <input type="hidden" name="movie_id" value="{{ $movie->id }}">
-                                        <input type="hidden" name="user_id" value="{{ Auth::user()->id ?? null }}">
-                                        <button class="card__add" type="submit">
 
-                                            @if (auth()->check())
-                                                <?php $dem = 0; ?>
-                                                @foreach ($favorites as $item)
-                                                    @if ($item->user_id == auth()->user()->id && $item->movie_id == $movie->id)
-                                                        <?php $dem += 1; ?>
-                                                    @endif
+                                    <div class="post-result fs-small cl-heading">
+                                        Showing all 5 results </div>
+
+                                </div>
+                                <div class="col-xl-6 col-lg-12">
+                                    <form method="get" id="filter-form" action="{{ route('category.filter') }}"
+                                        class="post-select-filter fs-small">
+                                        <div class="fild-item"><select class='cat_change' name="category">
+                                                <option value="">Danh mục</option>
+                                                @foreach ($categories as $category)
+                                                    <option value="{{ $category->id }}" @if ($category->id == request()->category) selected @endif>
+                                                        {{ $category->name }}</option>
                                                 @endforeach
-                                                @if ($dem == 0)
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                        <path
-                                                            d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                                    </svg>
-                                                @else
-                                                    <svg xmlns="http://www.w3.org/2000/svg" height="6.5" width="7.5"
-                                                        viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                                        <path fill="#FFD43B"
-                                                            d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z" />
-                                                    </svg>
-                                                @endif
-                                            @else
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
-                                                </svg>
-                                            @endif
-                                        </button>
+
+
+                                            </select></div>
+                                        <div class="fild-item"><select class="years" name="years">
+                                                <option value="">Year</option>
+                                                <option value="2016">2016</option>
+                                                <option value="2017">2017</option>
+                                                <option value="2018">2018</option>
+                                                <option value="2019">2019</option>
+                                                <option value="2020">2020</option>
+                                                <option value="2021">2021</option>
+                                                <option value="2022">2022</option>
+                                                <option value="2023">2023</option>
+                                            </select></div>
+                                        <div class="fild-item"><select class="sortby" name="sortby">
+                                                <option value="">Sort by</option>
+                                                <option value="title">Title</option>
+                                                <option value="date">Date</option>
+                                                <option value="likes">Likes</option>
+                                                <option value="views">Views</option>
+                                            </select></div>
+                                        <button type="submit">lọc</button>
                                     </form>
-                                    <span class="card__rating"><svg xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" />
-                                        </svg> {{ $movie->rating }}</span>
-                                    <h3 class="card__title"><a
-                                            href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">{{ $movie->title }}</a>
-                                    </h3>
-                                    <ul class="card__list">
-                                        {{-- <li>Free</li> --}}
-                                        <li>{{ $movie->release_year }}</li>
-                                        <li>{{ $movie->categories->first()->name ?? null }}</li>
-                                    </ul>
                                 </div>
 
+
                             </div>
-                        @endforeach
+                            <div class="movies_advanced_content row layout3" id="movie-list">
+                                @foreach ($movies as $movie)
+                                    <div class="jws-post-item col-xl-20 col-lg-4 col-md-6 col-12">
+                                        <div class="post-inner">
+
+                                            <div class="content-display">
+
+                                                <div class="post-media">
+                                                    <a
+                                                        href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
+                                                        <img class='attachment-488x680 size-488x680' alt=''
+                                                            src={{ $movie->poster_url != null ? Storage::url('public/images/' . $movie->poster_url) : $movie->link_poster_internet }}>
+                                                    </a>
+                                                    <div class="content-hover">
+                                                        <div class="hover-inner jws-scrollbar">
+                                                            <div class="video-imdb"><span>8.2</span></div>
+                                                            <h5 class="video_title">
+                                                                <a
+                                                                    href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
+                                                                    @if (strlen($movie->title) > 50)
+                                                                        {{ substr($movie->title, 0, 50) }}...
+                                                                    @else
+                                                                        {{ $movie->title }}
+                                                                    @endif
+                                                                </a>
+                                                            </h5>
+                                                            <div class="video-meta">
+                                                                <div class="video-badge">{{ $movie->type_film }}</div>
+                                                                <div class="video-years">{{ $movie->release_year }}</div>
+                                                                <div class="video-time">{{ $movie->duration }}</div>
+                                                            </div>
+                                                            <div class="video-description">
+                                                                @if (strlen($movie->description) > 150)
+                                                                    {!! substr($movie->description, 0, 150) !!}...
+                                                                @else
+                                                                    {!! $movie->description !!}
+                                                                @endif
+                                                            </div>
+                                                            <div class="video-meta2">
+                                                                {{-- <div><label>Language:</label>en</div>
+
+
+                                                                <div><label>Actor:</label>
+                                                                    <a href="../../person/brooke-mulford/index.html">Brooke
+                                                                        Mulford</a>
+                                                                </div>
+
+                                                                <div><label>Crew:</label>
+                                                                    <a href="../../person/alaya-pacheco/index.html">Alaya
+                                                                        Pacheco</a>, <a
+                                                                        href="../../person/ricky-aleman/index.html">Ricky
+                                                                        Aleman</a>, <a
+                                                                        href="../../person/sarah-neal/index.html">Sarah
+                                                                        Neal</a>
+                                                                </div> --}}
+
+
+                                                            </div>
+                                                            <div class="video-play">
+                                                                <a class="video-trailer"
+                                                                    href="{{ $movie->trailer_url }}">
+                                                                    <i class="jws-icon-play-fill"></i>
+                                                                    Trailer </a>
+                                                                <a class="video-detail"
+                                                                    href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
+                                                                    <i class="jws-icon-info-light"></i>
+                                                                    Detail </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <h6 class="video_title">
+                                                    <a
+                                                        href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
+                                                        {{ $movie->title }} </a>
+                                                </h6>
+                                                <div class="video-cat">
+                                                    @foreach ($movie->categories->unique('id') as $category)
+                                                        <a href="../movies_cat/action/index.html"
+                                                            rel="tag">{{ $category->name }}</a>
+                                                        @if ($loop->last != true)
+                                                            ,
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                @endforeach
+
+
+                            </div>
+                            <div class="jws-pagination-number">
+                                <ul class='page-numbers'>
+
+                    @if (!$movies->onFirstPage())
+                        <li>
+                            <a href="{{ $movies->appends(request()->query())->previousPageUrl() }}">
+                                <
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Hiển thị các trang lân cận -->
+                    @php
+                        $start = max(1, $movies->currentPage() - 2); // Trang bắt đầu hiển thị (2 trang trước)
+                        $end = min($movies->lastPage(), $movies->currentPage() + 2); // Trang kết thúc hiển thị (2 trang sau)
+                    @endphp
+
+                    <!-- Hiển thị trang đầu tiên và '...' nếu cần -->
+                    @if ($start > 1)
+                        <li><a href="{{ $movies->appends(request()->query())->url(1) }}">1</a></li>
+                        @if ($start > 2)
+                            <li><span style="color: #fff">...</span></li>
+                        @endif
+                    @endif
+
+                    <!-- Vòng lặp hiển thị các trang trong khoảng $start đến $end -->
+                    @for ($page = $start; $page <= $end; $page++)
+                    @if ($movies->currentPage() == $page)
+<li><span aria-current="page" class="page-numbers current">{{ $page }}</span></li>
+                    @else
+<li><a class="page-numbers" href="{{ $movies->appends(request()->query())->url($page) }}">{{ $page }}</a></li>
+                    @endif
 
 
 
+                    @endfor
+
+                    <!-- Hiển thị trang cuối cùng và '...' nếu cần -->
+                    @if ($end < $movies->lastPage())
+                        @if ($end < $movies->lastPage() - 1)
+                            <li><span style="color: #fff">...</span></li>
+                        @endif
+                        <li><a
+                                href="{{ $movies->appends(request()->query())->url($movies->lastPage()) }}">{{ $movies->lastPage() }}</a>
+                        </li>
+                    @endif
+
+                    <!-- Nút Next -->
+                    @if ($movies->hasMorePages())
+                        <li>
+                            <a href="{{ $movies->appends(request()->query())->nextPageUrl() }}">
+                                >
+                            </a>
+                        </li>
+                    @endif
+                                </ul>
+                            </div>
+                        </div>
 
                     </div>
+
                 </div>
-            </div>
+            </main><!-- #main -->
+        </div><!-- #primary -->
+    </div><!-- #content -->
 
-            <div class="row">
-                <div class="col-12">
-                    <button id="load-more" class="catalog__more" data-page="1" type="button">Load more</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- end catalog -->
-
+    {{-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selects = document.querySelectorAll('.post-select-filter select');
+            selects.forEach(select => {
+                select.addEventListener('change', function() {
+                    this.form.submit();
+                });
+            });
+        });
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -283,6 +949,6 @@
                     });
             });
         });
-    </script>
+    </script> --}}
     <!-- end subscriptions -->
 @endsection

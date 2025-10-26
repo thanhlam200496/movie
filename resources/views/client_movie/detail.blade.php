@@ -19,6 +19,13 @@
         , {{ $category->name }}
     @endforeach
 @endsection
+@push('style')
+<style>
+    .site-header{
+        margin-bottom: 70px
+    }
+</style>
+@endpush
 @section('content')
     <!-- details -->
 
