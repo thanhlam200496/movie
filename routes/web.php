@@ -32,6 +32,8 @@ Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
     Route::get('/', [ClientsCategoryController::class, 'index'])->name('index');
     Route::get('filter', [ClientsCategoryController::class, 'index'])->name('filter');
+    Route::get('fetch', [ClientsCategoryController::class, 'fetchMovies'])->name('fetch');
+
 });
 Route::group(['prefix' => 'favorite', 'as' => 'favorite.'], function () {
     Route::post('add', [FavoriteController::class, 'store'])->name('add');

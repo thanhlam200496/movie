@@ -630,198 +630,69 @@
                                         <span>Filters</span>
                                     </a>
 
-                                    <div class="post-result fs-small cl-heading">
-                                        Showing all 5 results </div>
-
+                                    <div class="post-result fs-small cl-heading" id="post-result">
+                                        {{-- initial count --}}
+                                        @if ($movies->total() > 0)
+                                            Showing {{ $movies->firstItem() }} to {{ $movies->lastItem() }} item of
+                                            {{ $movies->total() }} results
+                                        @else
+                                            Showing 0 results
+                                        @endif
+                                    </div>
                                 </div>
+
                                 <div class="col-xl-6 col-lg-12">
                                     <form method="get" id="filter-form" action="{{ route('category.filter') }}"
                                         class="post-select-filter fs-small">
-                                        <div class="fild-item"><select class='cat_change' name="category">
+                                        <div class="fild-item">
+                                            <select class='cat_change' name="category">
                                                 <option value="">Danh mục</option>
                                                 @foreach ($categories as $category)
-                                                    <option value="{{ $category->id }}" @if ($category->id == request()->category) selected @endif>
+                                                    <option value="{{ $category->id }}"
+                                                        @if ($category->id == request()->category) selected @endif>
                                                         {{ $category->name }}</option>
                                                 @endforeach
+                                            </select>
+                                        </div>
 
-
-                                            </select></div>
-                                        <div class="fild-item"><select class="years" name="years">
+                                        <div class="fild-item">
+                                            <select class="years" name="years">
                                                 <option value="">Year</option>
-                                                <option value="2016">2016</option>
-                                                <option value="2017">2017</option>
-                                                <option value="2018">2018</option>
-                                                <option value="2019">2019</option>
-                                                <option value="2020">2020</option>
-                                                <option value="2021">2021</option>
-                                                <option value="2022">2022</option>
-                                                <option value="2023">2023</option>
-                                            </select></div>
-                                        <div class="fild-item"><select class="sortby" name="sortby">
+                                                @for ($y = 2016; $y <= date('Y'); $y++)
+                                                    <option value="{{ $y }}"
+                                                        @if (request()->years == $y) selected @endif>
+                                                        {{ $y }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+
+                                        <div class="fild-item">
+                                            <select class="sortby" name="sortby">
                                                 <option value="">Sort by</option>
-                                                <option value="title">Title</option>
-                                                <option value="date">Date</option>
-                                                <option value="likes">Likes</option>
-                                                <option value="views">Views</option>
-                                            </select></div>
-                                        <button type="submit">lọc</button>
+                                                <option value="title" @if (request()->sortby == 'title') selected @endif>
+                                                    Title</option>
+                                                <option value="date" @if (request()->sortby == 'date') selected @endif>
+                                                    Date</option>
+                                                <option value="likes" @if (request()->sortby == 'likes') selected @endif>
+                                                    Likes</option>
+                                                <option value="views" @if (request()->sortby == 'views') selected @endif>
+                                                    Views</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="button-default">lọc</button>
                                     </form>
                                 </div>
-
-
                             </div>
+
                             <div class="movies_advanced_content row layout3" id="movie-list">
-                                @foreach ($movies as $movie)
-                                    <div class="jws-post-item col-xl-20 col-lg-4 col-md-6 col-12">
-                                        <div class="post-inner">
-
-                                            <div class="content-display">
-
-                                                <div class="post-media">
-                                                    <a
-                                                        href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
-                                                        <img class='attachment-488x680 size-488x680' alt=''
-                                                            src={{ $movie->poster_url != null ? Storage::url('public/images/' . $movie->poster_url) : $movie->link_poster_internet }}>
-                                                    </a>
-                                                    <div class="content-hover">
-                                                        <div class="hover-inner jws-scrollbar">
-                                                            <div class="video-imdb"><span>8.2</span></div>
-                                                            <h5 class="video_title">
-                                                                <a
-                                                                    href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
-                                                                    @if (strlen($movie->title) > 50)
-                                                                        {{ substr($movie->title, 0, 50) }}...
-                                                                    @else
-                                                                        {{ $movie->title }}
-                                                                    @endif
-                                                                </a>
-                                                            </h5>
-                                                            <div class="video-meta">
-                                                                <div class="video-badge">{{ $movie->type_film }}</div>
-                                                                <div class="video-years">{{ $movie->release_year }}</div>
-                                                                <div class="video-time">{{ $movie->duration }}</div>
-                                                            </div>
-                                                            <div class="video-description">
-                                                                @if (strlen($movie->description) > 150)
-                                                                    {!! substr($movie->description, 0, 150) !!}...
-                                                                @else
-                                                                    {!! $movie->description !!}
-                                                                @endif
-                                                            </div>
-                                                            <div class="video-meta2">
-                                                                {{-- <div><label>Language:</label>en</div>
-
-
-                                                                <div><label>Actor:</label>
-                                                                    <a href="../../person/brooke-mulford/index.html">Brooke
-                                                                        Mulford</a>
-                                                                </div>
-
-                                                                <div><label>Crew:</label>
-                                                                    <a href="../../person/alaya-pacheco/index.html">Alaya
-                                                                        Pacheco</a>, <a
-                                                                        href="../../person/ricky-aleman/index.html">Ricky
-                                                                        Aleman</a>, <a
-                                                                        href="../../person/sarah-neal/index.html">Sarah
-                                                                        Neal</a>
-                                                                </div> --}}
-
-
-                                                            </div>
-                                                            <div class="video-play">
-                                                                <a class="video-trailer"
-                                                                    href="{{ $movie->trailer_url }}">
-                                                                    <i class="jws-icon-play-fill"></i>
-                                                                    Trailer </a>
-                                                                <a class="video-detail"
-                                                                    href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
-                                                                    <i class="jws-icon-info-light"></i>
-                                                                    Detail </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <h6 class="video_title">
-                                                    <a
-                                                        href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $movie->episodes[0]->id]) }}">
-                                                        {{ $movie->title }} </a>
-                                                </h6>
-                                                <div class="video-cat">
-                                                    @foreach ($movie->categories->unique('id') as $category)
-                                                        <a href="../movies_cat/action/index.html"
-                                                            rel="tag">{{ $category->name }}</a>
-                                                        @if ($loop->last != true)
-                                                            ,
-                                                        @endif
-                                                    @endforeach
-                                                </div>
-                                            </div>
-
-
-                                        </div>
-                                    </div>
-                                @endforeach
-
-
+                                @include('client_movie.partials.movie_list', ['movies' => $movies])
                             </div>
-                            <div class="jws-pagination-number">
-                                <ul class='page-numbers'>
 
-                    @if (!$movies->onFirstPage())
-                        <li>
-                            <a href="{{ $movies->appends(request()->query())->previousPageUrl() }}">
-                                <
-                            </a>
-                        </li>
-                    @endif
-
-                    <!-- Hiển thị các trang lân cận -->
-                    @php
-                        $start = max(1, $movies->currentPage() - 2); // Trang bắt đầu hiển thị (2 trang trước)
-                        $end = min($movies->lastPage(), $movies->currentPage() + 2); // Trang kết thúc hiển thị (2 trang sau)
-                    @endphp
-
-                    <!-- Hiển thị trang đầu tiên và '...' nếu cần -->
-                    @if ($start > 1)
-                        <li><a href="{{ $movies->appends(request()->query())->url(1) }}">1</a></li>
-                        @if ($start > 2)
-                            <li><span style="color: #fff">...</span></li>
-                        @endif
-                    @endif
-
-                    <!-- Vòng lặp hiển thị các trang trong khoảng $start đến $end -->
-                    @for ($page = $start; $page <= $end; $page++)
-                    @if ($movies->currentPage() == $page)
-<li><span aria-current="page" class="page-numbers current">{{ $page }}</span></li>
-                    @else
-<li><a class="page-numbers" href="{{ $movies->appends(request()->query())->url($page) }}">{{ $page }}</a></li>
-                    @endif
-
-
-
-                    @endfor
-
-                    <!-- Hiển thị trang cuối cùng và '...' nếu cần -->
-                    @if ($end < $movies->lastPage())
-                        @if ($end < $movies->lastPage() - 1)
-                            <li><span style="color: #fff">...</span></li>
-                        @endif
-                        <li><a
-                                href="{{ $movies->appends(request()->query())->url($movies->lastPage()) }}">{{ $movies->lastPage() }}</a>
-                        </li>
-                    @endif
-
-                    <!-- Nút Next -->
-                    @if ($movies->hasMorePages())
-                        <li>
-                            <a href="{{ $movies->appends(request()->query())->nextPageUrl() }}">
-                                >
-                            </a>
-                        </li>
-                    @endif
-                                </ul>
+                            <div id="pagination-wrap">
+                                @include('client_movie.partials.pagination', ['movies' => $movies])
                             </div>
                         </div>
+
 
                     </div>
 
@@ -829,6 +700,127 @@
             </main><!-- #main -->
         </div><!-- #primary -->
     </div><!-- #content -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('filter-form');
+            const movieList = document.getElementById('movie-list');
+            const paginationWrap = document.getElementById('pagination-wrap');
+            const postResult = document.getElementById('post-result');
+
+            // Gọi khi form thay đổi (select change)
+            form.addEventListener('change', function(e) {
+                // khi select thay đổi — luôn về trang 1
+                submitFilters();
+            });
+
+            // Bắt submit form (nếu có)
+            form.addEventListener('submit', function(e) {
+
+                e.preventDefault();
+                submitFilters();
+            });
+
+            // Delegation: bắt click tất cả các link trong pagination-wrap
+            document.addEventListener('click', function(e) {
+                const a = e.target.closest('#pagination-wrap a');
+                if (!a) return;
+                e.preventDefault();
+                // Lấy href từ link (link đã chứa query string vì withQueryString())
+                const url = new URL(a.href, window.location.origin);
+                // Đảm bảo giữ các filter hiện tại (nếu link không chứa)
+                submitFilters(url.searchParams);
+            });
+
+            function submitFilters(optionalParams) {
+                // Lấy form data
+                const formData = new FormData(form);
+
+                // Nếu optionalParams là instance of URLSearchParams, dùng nó (khi click pagination),
+                // nếu không, convert formData -> URLSearchParams (mặc định)
+                let params;
+                if (optionalParams && typeof optionalParams.forEach === 'function') {
+                    // optionalParams là URLSearchParams
+                    // Nhưng ta vẫn muốn đảm bảo các filter hiện tại từ form override page param
+                    params = new URLSearchParams();
+                    // copy form fields first
+                    for (const pair of formData.entries()) {
+                        if (pair[1] !== null && pair[1] !== '') params.append(pair[0], pair[1]);
+                    }
+                    // merge pagination params from optionalParams (page=...)
+                    optionalParams.forEach((value, key) => {
+                        // nếu là page thì set page, còn field khác để optional override? ta ưu tiên optional page
+                        params.set(key, value);
+                    });
+                } else {
+                    params = new URLSearchParams(formData);
+                }
+
+                // luôn reset to page 1 nếu không phải click pagination
+                if (!optionalParams) params.delete('page');
+
+                // build url
+                const url = '{{ route('category.filter') }}' + '?' + params.toString();
+
+                // fetch GET
+                fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network error');
+                        return response.json();
+                    })
+                    .then(data => {
+                        // data: { html: '...', pagination: '...', countText: '...' }
+                        if (data.html !== undefined) {
+                            movieList.innerHTML = data.html;
+                        } else {
+                            movieList.innerHTML = '<p>No results</p>';
+                        }
+
+                        if (data.pagination !== undefined) {
+                            paginationWrap.innerHTML = data.pagination;
+                        } else {
+                            paginationWrap.innerHTML = '';
+                        }
+
+                        if (data.countText !== undefined) {
+                            postResult.textContent = data.countText;
+                        }
+
+                        // Update browser URL (so user có thể copy link): history.pushState
+                        // Gắn URL hiện tại bằng params (không reload)
+                        const newUrl = '{{ url()->current() }}' + '?' + params.toString();
+                        window.history.replaceState({}, '', newUrl);
+                    })
+                    .catch(err => {
+                        console.error('Error fetching movies:', err);
+                        // Có thể show toast / message
+                    });
+            }
+
+            // OPTIONAL: khi user bấm back/forward, load lại state từ URL
+            window.addEventListener('popstate', function(event) {
+                // khởi tạo params từ window.location
+                const params = new URLSearchParams(window.location.search);
+                // copy params vào form fields
+                for (const [k, v] of params.entries()) {
+                    const field = form.elements[k];
+                    if (field) {
+                        field.value = v;
+                    }
+                }
+                // submit with params (keeps page if present)
+                submitFilters(params);
+            });
+
+        });
+    </script>
+
 
     {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
