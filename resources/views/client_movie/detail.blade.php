@@ -190,8 +190,11 @@
 
 
                                                         <div class="post-inner">
-                                                            <a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $list->id]) }}">
-                                                                <div class="post-media">
+
+
+<a href="{{ route('movie.show', ['slug' => $movie->slug, 'episode' => $list->id]) }}"
+   class="episode-link"
+   data-episode-id="{{ $list->id }}">                                                                <div class="post-media">
 
                                                                     <img class='attachment-630x400 size-630x400'
                                                                         alt=''
@@ -912,4 +915,171 @@
         </div><!-- #primary -->
     </div><!-- #content -->
     <!-- end similar -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const videoWrapperSelector = '.col-xl-9'; // container chứa video area
+  const videoWrapper = document.querySelector(videoWrapperSelector);
+  let plyrInstance = null;
+  let hlsInstance = null;
+
+  // Utility: destroy existing player/hls cleanly
+  function destroyPlayer() {
+    try {
+      if (hlsInstance) {
+        try { hlsInstance.destroy(); } catch(e){ console.warn('destroy hls err', e); }
+        hlsInstance = null;
+      }
+      if (plyrInstance) {
+        try { plyrInstance.destroy(); } catch(e){ console.warn('destroy plyr err', e); }
+        plyrInstance = null;
+      }
+      // remove any existing #player to avoid duplicates
+      const old = videoWrapper.querySelector('#player');
+      if (old) old.remove();
+    } catch(err) {
+      console.error('Error destroying player:', err);
+    }
+  }
+
+  // Create video element markup and return video DOM element
+  function createVideoElement() {
+    // create a <video> element with reasonable attributes
+    const video = document.createElement('video');
+    video.id = 'player';
+    video.setAttribute('playsinline', ''); // important for mobile
+    video.setAttribute('controls', '');    // show controls
+    video.setAttribute('preload', 'metadata');
+    // optional: video.muted = false;
+    return video;
+  }
+
+  // Initialize player for given data from server
+  // data = { id, title, type: 'hls'|'mp4', video_url }
+  async function initVideoFromData(data) {
+    destroyPlayer();
+
+    // Create and insert new video element into wrapper (replace area)
+    const video = createVideoElement();
+    // Insert video at top of wrapper (or use specific sub-container)
+    // Better to find exact container for video area if not wrapper
+    // we assume wrapper contains video and we want to place at its top
+    videoWrapper.prepend(video);
+
+    // HLS case
+    if (data.type === 'hls') {
+      if (Hls.isSupported()) {
+        hlsInstance = new Hls();
+        // attach event listeners for debug if needed
+        hlsInstance.on(Hls.Events.ERROR, function(event, data_) {
+          console.warn('Hls error', event, data_);
+        });
+        hlsInstance.loadSource(data.video_url);
+        hlsInstance.attachMedia(video);
+        // Wait until media attached and manifest parsed before init Plyr
+        hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+          // initialize Plyr after HLS is ready
+          plyrInstance = new Plyr('#player');
+          // Optionally resume from watchedDuration if you have it in data
+          if (data.watchedDuration) {
+            try { video.currentTime = Number(data.watchedDuration) || 0; } catch(e) {}
+          }
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        // Safari native HLS
+        video.src = data.video_url;
+        video.addEventListener('loadedmetadata', () => {
+          plyrInstance = new Plyr('#player');
+          if (data.watchedDuration) try { video.currentTime = Number(data.watchedDuration) || 0; } catch(e){}
+        }, { once: true });
+      } else {
+        console.error('HLS not supported');
+      }
+    } else {
+      // mp4: add <source> and call load()
+      const source = document.createElement('source');
+      source.src = data.video_url;
+      source.type = 'video/mp4';
+      video.appendChild(source);
+      // ensure browser picks up source
+      video.load();
+      // wait metadata then init Plyr
+      video.addEventListener('loadedmetadata', () => {
+        plyrInstance = new Plyr('#player');
+        if (data.watchedDuration) try { video.currentTime = Number(data.watchedDuration) || 0; } catch(e){}
+      }, { once: true });
+    }
+  }
+
+  // Event delegation: click episode links
+  document.addEventListener('click', async (e) => {
+    const link = e.target.closest('.episode-link, .jws-pisodes_advanced-item a');
+    if (!link) return;
+
+    e.preventDefault();
+
+    // find episode id from data attribute or parse href
+    const episodeId = link.dataset.episodeId || (new URL(link.href, window.location.origin).pathname.split('/').pop());
+    if (!episodeId) {
+      console.warn('Missing episode id');
+      return;
+    }
+
+    try {
+      const res = await fetch(`/ajax/episode/${episodeId}`, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+      });
+
+      if (!res.ok) {
+        const txt = await res.text().catch(()=>null);
+        throw new Error('Fetch error: ' + res.status + ' ' + txt);
+      }
+
+      const data = await res.json();
+      if (data.error) {
+        console.warn('Server error:', data.error);
+        return;
+      }
+
+      // init video player with returned data
+      await initVideoFromData(data);
+
+      // update active class visual
+      document.querySelectorAll('.jws-pisodes_advanced-item').forEach(el => el.classList.remove('active'));
+      const activeItem = link.closest('.jws-pisodes_advanced-item');
+      if (activeItem) activeItem.classList.add('active');
+
+      // Optionally update URL without reloading
+      const newUrl = new URL(link.href, window.location.origin);
+      window.history.pushState({}, '', newUrl);
+
+    } catch (err) {
+      console.error('Error loading episode:', err);
+    }
+  });
+
+  // OPTIONAL: handle back/forward to re-load episode from URL
+  window.addEventListener('popstate', () => {
+    const pathParts = window.location.pathname.split('/');
+    const last = pathParts[pathParts.length - 1];
+    const id = Number(last) ? last : null;
+    if (id) {
+      // simulate click on corresponding link if present
+      const link = document.querySelector(`[data-episode-id="${id}"]`);
+      if (link) link.click();
+    }
+  });
+
+  // INITIAL: if page already has a player markup (initial load), we should instantiate it safely once
+  (function initInitialPlayer() {
+    const existingVideo = document.getElementById('player');
+    if (!existingVideo) return;
+    // If it's HLS and has data attribute or blade code handled it, you may initialize Plyr here.
+    // But to avoid double-init, ensure code that was previously in blade is removed.
+    try {
+      plyrInstance = new Plyr('#player');
+    } catch(e) { console.warn('init initial plyr err', e); }
+  })();
+});
+</script>
 @endsection
