@@ -41,6 +41,8 @@ Route::group(['prefix' => 'favorite', 'as' => 'favorite.'], function () {
 Route::group(['prefix' => 'movie', 'as' => 'movie.'], function () {
     Route::get('show/{slug}/{episode?}', [ClientsMovieController::class, 'show'])->name('show');
 });
+// routes/web.php
+Route::get('ajax/episode/{id}', [ClientsMovieController::class, 'ajaxEpisode'])->name('ajax.episode');
 Route::group(['prefix' => 'phim', 'as' => 'movie.'], function () {
     Route::get('{slug}/{episode?}', [ClientsMovieController::class, 'show'])->name('Chi-tiet-phim');
 });

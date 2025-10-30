@@ -47,4 +47,21 @@ if ($episodeId) {
             'listWatched' => $listWatched
         ]);
     }
+public function ajaxEpisode($id)
+{
+    $episode = Episode::find($id);
+
+    if (!$episode) {
+        return response()->json(['error' => 'Không tìm thấy tập phim'], 404);
+    }
+
+    return response()->json([
+        'id' => $episode->id,
+        'title' => $episode->title,
+        'type' => $episode->link_video_internet ? 'hls' : 'mp4',
+        'video_url' => $episode->link_video_internet
+            ? $episode->link_video_internet
+            : asset('storage/videos/' . $episode->video_url),
+    ]);
+}
 }
