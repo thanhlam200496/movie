@@ -24,6 +24,23 @@
     .site-header{
         margin-bottom: 70px
     }
+
+
+.plyr__controls {
+  display: flex;
+  flex-wrap: wrap; /* Cho phép xuống dòng */
+  align-items: center;
+
+
+}
+
+/* Phần tử ngắt dòng */
+
+.plyr__break {
+  flex-basis: 100%; /* Chiếm trọn chiều ngang */
+  height: 0;         /* Không chiếm thêm không gian thừa */
+}
+
 </style>
 @endpush
 @section('content')
@@ -77,41 +94,57 @@
                                 @endif
 
                                 <script>
-                                    const player = new Plyr('#player');
+                                    const player = new Plyr('#player', {
+  controls: [
 
-                                    player.on('ready', () => {
-                                        const controls = document.querySelector('.plyr__controls');
+'progress',
+    'current-time',
+    'duration',
+    'rewind',
+    'play',   // cho play ra sau volume
+    'fast-forward',
+    'mute',
+    'volume',
 
-                                        // Tạo nút lùi 10s
-                                        const backBtn = document.createElement('button');
-                                        backBtn.className = 'plyr__custom-button';
-                                        backBtn.innerText = '⏪';
-                                        backBtn.title = 'Lùi 10 giây';
-                                        backBtn.addEventListener('click', () => {
-                                            player.currentTime = Math.max(player.currentTime - 10, 0);
-                                        });
+'pip',
+'settings',
+    'fullscreen'
+  ]
+});
 
-                                        // Tạo nút tua 10s
-                                        const forwardBtn = document.createElement('button');
-                                        forwardBtn.className = 'plyr__custom-button';
-                                        forwardBtn.innerText = '⏩';
-                                        forwardBtn.title = 'Tua 10 giây';
-                                        forwardBtn.addEventListener('click', () => {
-                                            player.currentTime = Math.min(player.currentTime + 10, player.duration);
-                                        });
+                                    // player.on('ready', () => {
+                                    //     const controls = document.querySelector('.plyr__controls');
 
-                                        // Thêm nút vào thanh điều khiển (chèn sau nút play)
-                                        const playButton = controls.querySelector('.plyr__control--overlaid') || controls.querySelector(
-                                            '.plyr__control[aria-label="Play"]');
-                                        if (playButton && playButton.parentNode) {
-                                            controls.insertBefore(backBtn, playButton); // Chèn lùi 10s trước nút play
-                                            controls.insertBefore(forwardBtn, playButton.nextSibling); // Chèn tua 10s sau nút play
-                                        } else {
-                                            // Nếu không tìm được nút play, thêm cuối cùng
-                                            controls.appendChild(backBtn);
-                                            controls.appendChild(forwardBtn);
-                                        }
-                                    });
+                                    //     // Tạo nút lùi 10s
+                                    //     const backBtn = document.createElement('button');
+                                    //     backBtn.className = 'plyr__custom-button';
+                                    //     backBtn.innerText = '⏪';
+                                    //     backBtn.title = 'Lùi 10 giây';
+                                    //     backBtn.addEventListener('click', () => {
+                                    //         player.currentTime = Math.max(player.currentTime - 10, 0);
+                                    //     });
+
+                                    //     // Tạo nút tua 10s
+                                    //     const forwardBtn = document.createElement('button');
+                                    //     forwardBtn.className = 'plyr__custom-button';
+                                    //     forwardBtn.innerText = '⏩';
+                                    //     forwardBtn.title = 'Tua 10 giây';
+                                    //     forwardBtn.addEventListener('click', () => {
+                                    //         player.currentTime = Math.min(player.currentTime + 10, player.duration);
+                                    //     });
+
+                                    //     // Thêm nút vào thanh điều khiển (chèn sau nút play)
+                                    //     const playButton = controls.querySelector('.plyr__control--overlaid') || controls.querySelector(
+                                    //         '.plyr__control[aria-label="Play"]');
+                                    //     if (playButton && playButton.parentNode) {
+                                    //         controls.insertBefore(backBtn, playButton); // Chèn lùi 10s trước nút play
+                                    //         controls.insertBefore(forwardBtn, playButton.nextSibling); // Chèn tua 10s sau nút play
+                                    //     } else {
+                                    //         // Nếu không tìm được nút play, thêm cuối cùng
+                                    //         controls.appendChild(backBtn);
+                                    //         controls.appendChild(forwardBtn);
+                                    //     }
+                                    // });
                                 </script>
                                 <div class="vjs-loading-spinner"></div>
 
@@ -119,7 +152,20 @@
 
 
                             </div>
+<script>document.addEventListener('DOMContentLoaded', () => {
+    const controls = document.querySelector('.plyr__controls');
 
+    if (controls) {
+        const breakElement = document.createElement('div');
+        breakElement.classList.add('plyr__break');
+        // Ví dụ: ngắt dòng sau phần volume
+        const volume = controls.querySelector('.plyr__time--duration');
+        if (volume && volume.nextSibling) {
+            controls.insertBefore(breakElement, volume.nextSibling);
+        }
+    }
+});
+</script>
                             <div class="col-xl-3">
 
                                 <div class="sidebar-list list">
