@@ -77,7 +77,7 @@ Route::get('/movies/paginate', [MovieController::class, 'paginate'])->name('movi
 
 Route::group(
     ['prefix' => 'admin', 'as' => 'admin.'
-    // , 'middleware' => ['auth', 'admin']
+    , 'middleware' => ['auth', 'admin']
 ],
     function () {
         Route::get('/', [DashboardController::class, 'index']);

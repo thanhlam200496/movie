@@ -35,7 +35,7 @@ public function index(Request $request)
 
     $movies = $moviesFilter->where('status', 'Public')
         ->orderBy('created_at', 'DESC')
-        ->paginate(5)
+        ->paginate(12)
         ->withQueryString(); // giữ query string trong links()
 
     $favorites = Favorite::all();

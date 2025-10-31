@@ -3109,10 +3109,9 @@
                                             <div class="nsl-button-label-container">Continue with <b>Facebook</b></div>
                                         </div>
                                     </a><a
-                                        href="https://accounts.google.com/o/oauth2/v2/auth?response_type=code&amp;client_id=589760312499-65sn5brjem2hkphvn0o78muptbemooq8.apps.googleusercontent.com&amp;redirect_uri=https%3A%2F%2Fstreamvid.jwsuperthemes.com%2Fwp-login.php%3FloginSocial%3Dgoogle&amp;state=60f2c0b21a7b28caf2374b21d983b103&amp;scope=email+profile&amp;access_type=offline&amp;prompt=select_account"
+                                        href="{{route('auth.google')}}"
                                         rel="nofollow" aria-label="Continue with &lt;b&gt;Google&lt;/b&gt;"
-                                        data-plugin="nsl" data-action="connect" data-provider="google"
-                                        data-popupwidth="600" data-popupheight="600">
+                                        >
                                         <div class="nsl-button nsl-button-default nsl-button-google" data-skin="light"
                                             style="background-color:#fff;">
                                             <div class="nsl-button-svg-container"><svg
@@ -3145,23 +3144,25 @@
                             <div class="jws-login slider-item">
 
 
-                                <form name="loginpopopform" id="jws-loginform"
-                                    action="https://streamvid.jwsuperthemes.com/wp-login.php" method="post">
+                                <form name="loginpopopform"
+                                {{-- id="jws-loginform" --}}
+
+                                    action="{{ route('signin') }}" method="POST">
                                     <div class="row">
                                         <div class="col-12 form-row">
                                             <label>Email or username</label>
-                                            <input type="text" name="log" class="input required"
+                                            <input type="text" name="name" class="input required"
                                                 value="" size="20" />
                                         </div>
                                         <div class="col-12 form-row">
                                             <label>Password</label>
-                                            <input type="password" name="pwd" class="input required"
+                                            <input type="password" name="password" class="input required"
                                                 value="" size="20" />
                                             <span class="field-icon toggle-password2 jws-icon-eye"></span>
                                         </div>
 
                                         <div class="forgetmenot login-remember col-12 fs-small">
-                                            <label for="popupRememberme"><input name="rememberme" type="checkbox"
+                                            <label for="popupRememberme"><input name="remember" type="checkbox"
                                                     value="forever" id="popupRememberme" /> Remember me</label><a
                                                 class="lost-pass-link" href="../my-account/lost-password/index.html"
                                                 title="Lost Password">Lost your password?</a>
@@ -3180,6 +3181,8 @@
                         <div class="fs-small privacy-policy">By registering, you agree to Streamvid's <a
                                 href="#">Terms
                                 of Use</a> and <a href="#">Privacy Policy</a></div>
+                                <div class="fs-small privacy-policy"> <a
+                                href="{{ route('logout') }}">Logout</a> </div>
 
                     </div>
                 </div>
