@@ -940,8 +940,8 @@ var jwsThemeModule;
 												id: 'v=', // String that splits URL in a two parts, second part should be %id%
 												// Or null - full URL will be returned
 												// Or a function that should return %id%, for example:
-												// id: function(url) { return 'parsed id'; } 
-												src: '//www.youtube.com/embed/%id%?autoplay=1' // URL that will be set as a source for iframe. 
+												// id: function(url) { return 'parsed id'; }
+												src: '//www.youtube.com/embed/%id%?autoplay=1' // URL that will be set as a source for iframe.
 											},
 											vimeo: {
 												index: 'vimeo.com/',
@@ -1459,7 +1459,7 @@ var jwsThemeModule;
 					setOffset($(this));
 					$(this).addClass('with-offsets');
 				});
-				//mega menu  
+				//mega menu
 				var mega_item = mainMenu.find(' > li.menu-item-design-mega_menu_full_width');
 				if (mega_item.length > 0) {
 					$('.jws_header').addClass('has-mega-full');

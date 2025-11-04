@@ -1,6 +1,6 @@
 @extends('client_movie.layouts.default')
-@section('main')
-<div class="sign section--full-bg" data-bg="img/bg.jpg">
+@section('content')
+<div class="sign section--full-bg" data-bg="img/bg.jpg" style="margin-top: 50px">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -29,7 +29,7 @@
                             <input id="remember" name="remember" type="checkbox" checked="checked">
                             <label for="remember">I agree to the <a href="privacy.html">Privacy Policy</a></label>
                         </div>
-                        
+
                         <button class="sign__btn" type="submit">Sign up</button>
 
                         <span class="sign__delimiter">or</span>

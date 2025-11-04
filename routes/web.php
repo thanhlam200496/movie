@@ -58,6 +58,7 @@ Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 Route::controller(UserController::class)->group(function () {
     Route::get('signin-form', 'signinForm')->name('signinForm');
     Route::post('signin', 'signin')->name('signin');
+    
     Route::get('signup-form', 'signupForm')->name('signupForm');
     Route::post('signup', 'signup')->name('signup');
 });

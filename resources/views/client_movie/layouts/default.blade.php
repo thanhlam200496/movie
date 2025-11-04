@@ -4,7 +4,7 @@
 <!-- Mirrored from streamvid.jwsuperthemes.com/home/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Oct 2025 11:59:28 GMT -->
 <!-- Added by HTTrack -->
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
-
+{{-- login ở trong này: public\clients\wp-content\cache\min\1\wp-content\themes\streamvid\assets\js\main99f7.js --}}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,6 +16,8 @@
     <script>
         var jws_variation_gallery_data = null
     </script>
+
+
     <meta name='robots' content='max-image-preview:large' />
     <meta property="og:title" content="Home" />
     <meta property="og:type" content="article" />
@@ -3019,7 +3021,8 @@
 </head>
 
 <body data-rsssl=1
-    class="pmpro-variation_1 episodes-template-default single single-episodes postid-4049 wp-embed-responsive theme-streamvid pmpro-body-has-access woocommerce-no-js button-default user-not-logged-in has-tool-bar single-product-default container-full  elementor-default elementor-kit-6 page-template-default page page-id-56 elementor-page elementor-page-56">
+    class="{{ auth()->check() ? 'logged' : 'user-not-logged-in' }} pmpro-variation_1 episodes-template-default single single-episodes postid-4049 wp-embed-responsive theme-streamvid pmpro-body-has-access woocommerce-no-js button-default has-tool-bar single-product-default container-full  elementor-default elementor-kit-6 page-template-default page page-id-56 elementor-page elementor-page-56">
+
 
 
     <div id="page" class="site">
@@ -3145,13 +3148,14 @@
 
 
                                 <form name="loginpopopform"
-                                {{-- id="jws-loginform" --}}
+                                id="jws-loginform"
 
-                                    action="{{ route('signin') }}" method="POST">
+                                    action="{{ route('signinAjax') }}" method="POST">
+                                    @csrf
                                     <div class="row">
                                         <div class="col-12 form-row">
                                             <label>Email or username</label>
-                                            <input type="text" name="name" class="input required"
+                                            <input type="text" name="email" class="input required"
                                                 value="" size="20" />
                                         </div>
                                         <div class="col-12 form-row">

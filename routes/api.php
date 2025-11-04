@@ -28,3 +28,9 @@ Route::middleware('auth:sanctum')->post('/view-history', [ViewHistoryController:
 
 ;
 
+Route::controller(UserController::class)->group(function () {
+
+    Route::post('signinAjax', 'signinAjax')->name('signinAjax');
+    
+});
+

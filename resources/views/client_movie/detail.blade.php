@@ -20,28 +20,30 @@
     @endforeach
 @endsection
 @push('style')
-<style>
-    .site-header{
-        margin-bottom: 70px
-    }
+    <style>
+        .site-header {
+            margin-bottom: 70px
+        }
 
 
-.plyr__controls {
-  display: flex;
-  flex-wrap: wrap; /* Cho phép xuống dòng */
-  align-items: center;
+        .plyr__controls {
+            display: flex;
+            flex-wrap: wrap;
+            /* Cho phép xuống dòng */
+            align-items: center;
 
 
-}
+        }
 
-/* Phần tử ngắt dòng */
+        /* Phần tử ngắt dòng */
 
-.plyr__break {
-  flex-basis: 100%; /* Chiếm trọn chiều ngang */
-  height: 0;         /* Không chiếm thêm không gian thừa */
-}
-
-</style>
+        .plyr__break {
+            flex-basis: 100%;
+            /* Chiếm trọn chiều ngang */
+            height: 0;
+            /* Không chiếm thêm không gian thừa */
+        }
+    </style>
 @endpush
 @section('content')
     <!-- details -->
@@ -95,22 +97,22 @@
 
                                 <script>
                                     const player = new Plyr('#player', {
-  controls: [
+                                        controls: [
 
-'progress',
-    'current-time',
-    'duration',
-    'rewind',
-    'play',   // cho play ra sau volume
-    'fast-forward',
-    'mute',
-    'volume',
 
-'pip',
-'settings',
-    'fullscreen'
-  ]
-});
+                                            'rewind',
+                                            'play', // cho play ra sau volume
+                                            'fast-forward',
+                                            'mute',
+                                            'volume',
+                                            'pip',
+                                            'settings',
+                                            'fullscreen',
+                                            'progress',
+                                            'current-time',
+                                            'duration'
+                                        ]
+                                    });
 
                                     // player.on('ready', () => {
                                     //     const controls = document.querySelector('.plyr__controls');
@@ -152,20 +154,27 @@
 
 
                             </div>
-<script>document.addEventListener('DOMContentLoaded', () => {
-    const controls = document.querySelector('.plyr__controls');
+                            <script>
+                                document.addEventListener('DOMContentLoaded', () => {
+                                    const controls = document.querySelector('.plyr__controls');
 
-    if (controls) {
-        const breakElement = document.createElement('div');
-        breakElement.classList.add('plyr__break');
-        // Ví dụ: ngắt dòng sau phần volume
-        const volume = controls.querySelector('.plyr__time--duration');
-        if (volume && volume.nextSibling) {
-            controls.insertBefore(breakElement, volume.nextSibling);
-        }
-    }
-});
-</script>
+                                    if (controls) {
+                                        const breakElement = document.createElement('div');
+                                        breakElement.classList.add('plyr__break');
+                                        // Ví dụ: ngắt dòng sau phần volume
+                                        const volume = controls.querySelector('[data-plyr="fullscreen"]');
+                                        if (volume && volume.nextSibling) {
+                                            controls.insertBefore(breakElement, volume.nextSibling);
+                                        }
+                                    }
+                                });
+                            </script>
+                            <style>
+                                .plyr__controls{
+                                    display: flex;
+                                    justify-content: space-evenly;
+                                }
+                            </style>
                             <div class="col-xl-3">
 
                                 <div class="sidebar-list list">
@@ -1154,20 +1163,20 @@
         });
     </script>
     @if (!empty(Auth::user()))
-     <script>
-                            document.addEventListener('DOMContentLoaded', () => {
-                                const video = document.getElementById('player'); // Lấy thẻ video
-                                const watchedDuration = parseInt(video.getAttribute('data-watched-duration'), 10) ||
-                                    0; // Lấy watchedDuration từ data-watched-duration
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const video = document.getElementById('player'); // Lấy thẻ video
+                const watchedDuration = parseInt(video.getAttribute('data-watched-duration'), 10) ||
+                    0; // Lấy watchedDuration từ data-watched-duration
 
-                                // Set thời gian bắt đầu cho video
-                                video.currentTime = watchedDuration;
+                // Set thời gian bắt đầu cho video
+                video.currentTime = watchedDuration;
 
-                                console.log("Video starts at:", watchedDuration);
+                console.log("Video starts at:", watchedDuration);
 
-                                // Xử lý các sự kiện khác như lưu lịch sử xem
-                            });
-                        </script>
+                // Xử lý các sự kiện khác như lưu lịch sử xem
+            });
+        </script>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const video = document.getElementById('player'); // Lấy thẻ video
