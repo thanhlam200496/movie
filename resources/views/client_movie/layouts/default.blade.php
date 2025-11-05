@@ -5,6 +5,7 @@
 <!-- Added by HTTrack -->
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
 {{-- login ở trong này: public\clients\wp-content\cache\min\1\wp-content\themes\streamvid\assets\js\main99f7.js --}}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -65,7 +66,7 @@
                             n(e, "\ud83c\uddfa\ud83c\uddf3", "\ud83c\uddfa\u200b\ud83c\uddf3") && !n(e,
                                 "\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f",
                                 "\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f"
-                                );
+                            );
                     case "emoji":
                         return !n(e, "\ud83d\udc26\u200d\u2b1b", "\ud83d\udc26\u200b\u2b1b")
                 }
@@ -3095,7 +3096,8 @@
 
                         <div class="login-width-social">
                             <div class="nsl-container nsl-container-block" data-align="left">
-                                <div class="nsl-container-buttons"><a
+                                <div class="nsl-container-buttons">
+                                    {{-- <a
                                         href="https://www.facebook.com/v19.0/dialog/oauth?response_type=code&amp;client_id=703263796729949&amp;redirect_uri=https%3A%2F%2Fstreamvid.jwsuperthemes.com%2Fwp-login.php%3FloginSocial%3Dfacebook&amp;state=4e9abacd04c78c19f1477cc17f63de32&amp;scope=public_profile%2Cemail"
                                         rel="nofollow" aria-label="Continue with &lt;b&gt;Facebook&lt;/b&gt;"
                                         data-plugin="nsl" data-action="connect" data-provider="facebook"
@@ -3111,10 +3113,9 @@
                                                 </svg></div>
                                             <div class="nsl-button-label-container">Continue with <b>Facebook</b></div>
                                         </div>
-                                    </a><a
-                                        href="{{route('auth.google')}}"
-                                        rel="nofollow" aria-label="Continue with &lt;b&gt;Google&lt;/b&gt;"
-                                        >
+                                    </a> --}}
+                                    <a href="{{ route('auth.google') }}" rel="nofollow"
+                                        aria-label="Continue with &lt;b&gt;Google&lt;/b&gt;">
                                         <div class="nsl-button nsl-button-default nsl-button-google" data-skin="light"
                                             style="background-color:#fff;">
                                             <div class="nsl-button-svg-container"><svg
@@ -3135,26 +3136,43 @@
                                                 </svg></div>
                                             <div class="nsl-button-label-container">Continue with <b>Google</b></div>
                                         </div>
-                                    </a></div>
+                                    </a>
+                                </div>
                             </div>
                             <div class="social-line">
                                 <span>or</span>
                             </div>
                         </div>
+                        <style>
+                            #jws-registerform {
+                                display: none;
+                            }
 
+                            #dangnhaplink {
+                                display: none;
+                            }
+
+                            /* Hiệu ứng ẩn/hiện mượt */
+                            .fade {
+                                opacity: 0;
+                                transition: opacity 0.4s ease;
+                            }
+
+                            .fade.show {
+                                opacity: 1;
+                            }
+                        </style>
 
                         <div class="form-contaier owl-carousel">
                             <div class="jws-login slider-item">
 
 
-                                <form name="loginpopopform"
-                                id="jws-loginform"
-
-                                    action="{{ route('signinAjax') }}" method="POST">
+                                <form name="loginpopopform" id="jws-loginform" action="{{ route('signinAjax') }}"
+                                    method="POST">
                                     @csrf
                                     <div class="row">
                                         <div class="col-12 form-row">
-                                            <label>Email or username</label>
+                                            <label>Email </label>
                                             <input type="text" name="email" class="input required"
                                                 value="" size="20" />
                                         </div>
@@ -3179,14 +3197,89 @@
                                     </div>
 
                                 </form>
+                                <form name="registerpopupform" id="jws-registerform" action="" method="POST">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-12 form-row">
+                                            <label>Name</label>
+                                            <input type="text" name="name" class="input required"
+                                                value="" size="20" />
+                                        </div>
+                                        <div class="col-12 form-row">
+                                            <label>Email </label>
+                                            <input type="text" name="email" class="input required"
+                                                value="" size="20" />
+                                        </div>
+                                        <div class="col-12 form-row">
+                                            <label>Password</label>
+                                            <input type="password" name="password" class="input required"
+                                                value="" size="20" />
+                                            <span class="field-icon toggle-password2 jws-icon-eye"></span>
+                                        </div>
+
+
+                                        <div class="submit login-submit jws-button  col-12">
+                                            <input type="submit" name="wp-submit" class="button button-default"
+                                                value="Sign In" />
+                                            <input type="hidden" name="testcookie" value="1" />
+                                        </div>
+                                    </div>
+
+                                </form>
                             </div>
 
                         </div>
-                        <div class="fs-small privacy-policy">By registering, you agree to Streamvid's <a
-                                href="#">Terms
-                                of Use</a> and <a href="#">Privacy Policy</a></div>
-                                <div class="fs-small privacy-policy"> <a
-                                href="{{ route('logout') }}">Logout</a> </div>
+                        
+
+                        <div class="fs-small privacy-policy">hoặc
+                            <a href="#" name="dangkylink" id="dangkylink">Đăng ký</a>
+
+                            <a href="#" name="dangnhaplink" id="dangnhaplink">Đăng nhập</a>
+                        </div>
+                        <script>
+                            function showForm(showId, hideId) {
+                                const showForm = document.getElementById(showId);
+                                const hideForm = document.getElementById(hideId);
+
+                                // Ẩn form hiện tại (fade out)
+                                hideForm.classList.remove('show');
+                                hideForm.addEventListener('transitionend', function onFadeOut() {
+                                    hideForm.style.display = 'none';
+                                    hideForm.removeEventListener('transitionend', onFadeOut);
+
+                                    // Hiện form mới (fade in)
+                                    showForm.style.display = 'block';
+                                    setTimeout(() => showForm.classList.add('show'), 10);
+                                }, {
+                                    once: true
+                                });
+                            }
+
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const formDangNhap = document.getElementById('jws-loginform');
+                                const formDangKy = document.getElementById('jws-registerform');
+
+                                // Thêm class fade mặc định
+                                formDangNhap.classList.add('fade', 'show');
+                                formDangKy.classList.add('fade');
+
+                                document.getElementById('dangkylink').addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    showForm('jws-registerform', 'jws-loginform');
+
+                                    document.getElementById('dangnhaplink').style.display = 'block';
+                                    document.getElementById('dangkylink').style.display = 'none';
+                                });
+
+                                document.getElementById('dangnhaplink').addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    showForm('jws-loginform', 'jws-registerform');
+
+                                    document.getElementById('dangnhaplink').style.display = 'none';
+                                    document.getElementById('dangkylink').style.display = 'block';
+                                });
+                            });
+                        </script>
 
                     </div>
                 </div>
@@ -4114,7 +4207,7 @@
                                 const redirectTo = buttonLinkElement.dataset.redirect;
                                 if (redirectTo === 'current') {
                                     href += 'redirect=' + encodeURIComponent(window.location.href) +
-                                    '&';
+                                        '&';
                                 } else if (redirectTo && redirectTo !== '') {
                                     href += 'redirect=' + encodeURIComponent(redirectTo) + '&';
                                 }
@@ -4170,7 +4263,7 @@
                 const facebookLoginButtons = document.querySelectorAll(
                     ' a[data-plugin="nsl"][data-provider="facebook"]');
                 if (facebookLoginButtons.length && checkWebView() && /Android/.test(window.navigator
-                    .userAgent) && !isAllowedWebViewForUserAgent('facebook')) {
+                        .userAgent) && !isAllowedWebViewForUserAgent('facebook')) {
                     facebookLoginButtons.forEach(function(facebookLoginButton) {
                         if (scriptOptions._unsupportedWebviewBehavior === 'disable-button') {
                             disableButtonInWebView(facebookLoginButton);

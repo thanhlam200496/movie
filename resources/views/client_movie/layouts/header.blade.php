@@ -1286,7 +1286,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="elementor-element elementor-element-62603db elementor-widget__width-auto submenu-bottom elementor-widget elementor-widget-jws_dropdown_text"
+                                    {{-- <div class="elementor-element elementor-element-62603db elementor-widget__width-auto submenu-bottom elementor-widget elementor-widget-jws_dropdown_text"
                                         data-id="62603db" data-element_type="widget"
                                         data-widget_type="jws_dropdown_text.default">
                                         <div class="elementor-widget-container">
@@ -1306,7 +1306,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     @if (auth()->user())
                                         <div class="elementor-element elementor-element-71ec678 elementor-widget__width-auto elementor-widget elementor-widget-jws_account"
