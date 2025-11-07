@@ -170,7 +170,7 @@
                                 });
                             </script>
                             <style>
-                                .plyr__controls{
+                                .plyr__controls {
                                     display: flex;
                                     justify-content: space-evenly;
                                 }
@@ -629,8 +629,9 @@
                                                 &ldquo;Political Animal&rdquo; <small><a rel="nofollow"
                                                         id="cancel-comment-reply-link" href="index.html#respond"
                                                         style="display:none;">Cancel reply</a></small></h5>
-                                            <form action="https://streamvid.jwsuperthemes.com/wp-comments-post.php"
-                                                method="post" id="commentform" class="comment-form" novalidate>
+                                            <form action="{{ route('comment') }}" method="POST" id="commentform"
+                                                class="comment-form" novalidate>
+                                                @csrf
                                                 <p class="comment-notes"><span id="email-notes">Your email address
                                                         will not be published.</span> <span
                                                         class="required-field-message">Required fields are marked
@@ -646,20 +647,21 @@
                                                     </div>
                                                     <input type="hidden" name="comment_rating" id="comment_rating"
                                                         required>
-                                                </div><input type="hidden" name="redirect_to" value="index.html">
+                                                </div>
+                                                <input type="hidden" name="episode_id" value="{{ $episode->id }}">
                                                 <p class="comment-form-comment"><label class="form-label"
                                                         for="comment">Your review&nbsp;<span
                                                             class="required">*</span></label>
-                                                    <textarea id="comment" name="comment" cols="45" rows="8" required></textarea>
+                                                    <textarea id="comment" name="content" cols="45" rows="8" required>aaaaa</textarea>
                                                 </p>
                                                 <p class="comment-form-author col-xl-6 col-12"><label
                                                         class="form-label">Name *</label><input id="author"
-                                                        name="author" type="text" value="" size="30"
-                                                        aria-required="true" /></p>
+                                                        name="name" type="text" value="{{ Auth::user()->name }}"
+                                                        size="30" aria-required="true" /></p>
                                                 <p class="comment-form-email col-xl-6 col-12"><label
                                                         class="form-label">Email *</label><input id="email"
-                                                        name="email" type="text" value="" size="30"
-                                                        aria-required="true" /></p>
+                                                        name="email" type="text" value="{{ Auth::user()->email }}"
+                                                        size="30" aria-required="true" /></p>
                                                 <p class="comment-form-cookies-consent"><input
                                                         id="wp-comment-cookies-consent" name="wp-comment-cookies-consent"
                                                         type="checkbox" value="yes" /> <label
@@ -678,293 +680,678 @@
                                     </div>
                                 </div>
 
-                                <div id="comments" class="comment_top">
+                                {{-- <div id="comments" class="comment_top">
 
                                     <p class="jws-noreviews">There are no reviews yet.</p>
 
-                                </div>
+                                </div> --}}
+                                <div id="comments" class="comment_top">
+                                    <ol class="comment-list" id="comment-list">
+                                        @foreach ($comments as $comment)
+                                            <li class="comment byuser comment-author-streamvid bypostauthor even thread-even depth-1"
+                                                id="comment-168">
+                                                <div id="div-comment-168" class="comment-body">
 
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-3">
-                            <div class="jws_sticky_move">
-                                <style id="elementor-post-4078">
-                                    .elementor-widget-heading .elementor-heading-title {
-                                        font-family: var(--e-global-typography-primary-font-family), Sans-serif;
-                                        font-weight: var(--e-global-typography-primary-font-weight);
-                                        color: var(--e-global-color-primary);
-                                    }
-
-                                    .elementor-4078 .elementor-element.elementor-element-9def3cf>.elementor-widget-container {
-                                        margin: 0px 0px 5px 0px;
-                                        padding: 0px 0px 15px 0px;
-                                        border-style: solid;
-                                        border-width: 0px 0px 1px 0px;
-                                        border-color: #FFFFFF1A;
-                                    }
-
-                                    .elementor-4078 .elementor-element.elementor-element-9def3cf .elementor-heading-title {
-                                        font-family: var(--e-global-typography-secondary-font-family), Sans-serif;
-                                        font-weight: var(--e-global-typography-secondary-font-weight);
-                                        color: var(--e-global-color-secondary);
-                                    }
-                                </style>
-                                <style>
-                                    .elementor-widget-heading .elementor-heading-title {
-                                        font-family: var(--e-global-typography-primary-font-family), Sans-serif;
-                                        font-weight: var(--e-global-typography-primary-font-weight);
-                                        color: var(--e-global-color-primary);
-                                    }
-
-                                    .elementor-4078 .elementor-element.elementor-element-9def3cf>.elementor-widget-container {
-                                        margin: 0px 0px 5px 0px;
-                                        padding: 0px 0px 15px 0px;
-                                        border-style: solid;
-                                        border-width: 0px 0px 1px 0px;
-                                        border-color: #FFFFFF1A;
-                                    }
-
-                                    .elementor-4078 .elementor-element.elementor-element-9def3cf .elementor-heading-title {
-                                        font-family: var(--e-global-typography-secondary-font-family), Sans-serif;
-                                        font-weight: var(--e-global-typography-secondary-font-weight);
-                                        color: var(--e-global-color-secondary);
-                                    }
-                                </style>
-                                <div data-elementor-type="wp-post" data-elementor-id="4078"
-                                    class="elementor elementor-4078">
-                                    <section
-                                        class="elementor-section elementor-top-section elementor-element elementor-element-6115c3a elementor-section-boxed elementor-section-height-default elementor-section-height-default"
-                                        data-id="6115c3a" data-element_type="section">
-                                        <div class="elementor-container elementor-column-gap-no jws_section_">
-                                            <div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-51db0ec"
-                                                data-id="51db0ec" data-element_type="column">
-                                                <div class="elementor-widget-wrap elementor-element-populated">
-                                                    <div class="elementor-element elementor-element-9def3cf elementor-widget elementor-widget-heading"
-                                                        data-id="9def3cf" data-element_type="widget"
-                                                        data-widget_type="heading.default">
-                                                        <div class="elementor-widget-container">
-                                                            <h5 class="elementor-heading-title elementor-size-default">
-                                                                Popular TV Shows</h5>
-                                                        </div>
+                                                    <div class="comment-avatar">
+                                                        <img alt=''
+                                                            src='https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-300x169.jpg'
+                                                            srcset='https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-300x169.jpg 300w, https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-1024x576.jpg 1024w, https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-768x432.jpg 768w, https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-1536x864.jpg 1536w, https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-1422x800.jpg 1422w, https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-600x338.jpg 600w, https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2.jpg 1920w'
+                                                            class='avatar avatar-32 photo' height='32' width='32'
+                                                            decoding='async' />
                                                     </div>
-                                                    <div class="elementor-element elementor-element-5eea66e elementor-widget elementor-widget-jws_top_videos"
-                                                        data-id="5eea66e" data-element_type="widget"
-                                                        data-widget_type="jws_top_videos.default">
-                                                        <div class="elementor-widget-container">
-                                                            <div class="jws-top-videos-tabs-element">
+                                                    <div class="comment-info">
+                                                        <div class="jws-raring-result"><span data-star="5"
+                                                                style="width:100%"></span></div>
+                                                        <h6 class="comment-author">{{ $comment->name }}</h6>
+                                                        <span class="comment-date">{{ $comment->created_at }} </span>
+                                                        <div class="comment-content">
+                                                            <p>{{ $comment->content }}</p>
+                                                        </div>
 
-                                                                <div class="top-videos-content row layout2">
+                                                    </div>
 
-                                                                    <div
-                                                                        class="top-videos-item col-xl-12 col-lg-12 col-12">
-                                                                        <div class="top-videos-inner">
+                                                </div>
+                                            </li>
+                                        @endforeach
 
-                                                                            <div class="top-number h5">
+                                    </ol>
 
-                                                                                1
-                                                                            </div>
-                                                                            <div class="top-images">
 
-                                                                                <a
-                                                                                    href="../tv_shows/shark-hunters/index.html">
-                                                                                    <img class='attachment-50x70 size-50x70'
-                                                                                        alt=''
-                                                                                        src="{{ asset('clients/wp-content/uploads/2023/02/sahark-e1676001886337-50x70.jpg') }}>
+
+                                    <div class="clear"></div>
+                                    <div class="jws-pagination-number"><ul class='page-numbers'>
+	<li><span aria-current="page" class="page-numbers current">1</span></li>
+	<li><a class="page-numbers" href="https://streamvid.jwsuperthemes.com/movie/page/2/?sortby=views">2</a></li>
+	<li><a class="next page-numbers" href="https://streamvid.jwsuperthemes.com/movie/page/2/?sortby=views"><i class="jws-icon-caret-double-right"></i></a></li>
+</ul>
+</div>
+                                </div>
+                            </div>
+                            <!-- Thêm jQuery và script Ajax -->
+                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                            <script>
+                                // Gửi bình luận chính qua Ajax
+                                $(document).on('submit', '#commentform', function(e) {
+                                    e.preventDefault();
+                                    let content = $('textarea[name="content"]').val();
+                                    let episodeId = $('input[name="episode_id"]').val();
+                                    let name = $('input[name="name"]').val();
+                                    let email = $('input[name="email"]').val();
+
+
+                                    $.ajax({
+                                        url: '{{ route('comment') }}',
+                                        method: 'POST',
+                                        data: {
+                                            content: content,
+                                            episode_id: episodeId,
+                                            name: name,
+                                            email: email,
+                                            _token: $('meta[name="csrf-token"]').attr('content')
+                                        },
+                                        success: function(response) {
+                                            if (response.success) {
+                                                $('#text').val('');
+                                                $('#error-message').empty();
+                                                loadComments(currentPage);
+                                            }
+                                        },
+                                        error: function(xhr) {
+                                            if (xhr.status === 422) {
+                                                let errors = xhr.responseJSON.errors;
+                                                $('#error-message').empty();
+                                                if (errors.content) {
+                                                    $('#error-message').text(errors.content[0]);
+                                                }
+                                            } else {
+                                                console.log('Lỗi khác:', xhr.responseText);
+                                            }
+                                        }
+                                    });
+                                });
+
+                                let currentPage = 1;
+                                let shownReplies = {};
+
+                                // Hàm tạo HTML cho bình luận
+                                function renderComment(comment, parentContent = '') {
+                                    let itemClass = comment.parent_id ? 'comments__item comments__item--answer' : 'comments__item';
+                                    let hasReplies = comment.replies && comment.replies.length > 0;
+                                    let isShown = shownReplies[comment.id] || false;
+                                    let displayStyle = comment.parent_id && !isShown ? 'display: none;' : '';
+        //                             let html = `
+        //     <li class="${itemClass}" data-comment-id="${comment.id}" data-parent-id="${comment.parent_id || ''}" style="${displayStyle}">
+        //         <div class="comments__autor">
+        //             <img class="comments__avatar" src="{{ asset('clients/img/avatar.svg') }}" alt="">
+        //             <span class="comments__name">${comment.user.name}</span>
+        //             <span class="comments__time">${new Date(comment.created_at).toLocaleString()}</span>
+        //         </div>
+        // `;
+        let html = `
+        <li class="comment byuser comment-author-streamvid bypostauthor even thread-even depth-1"
+                                                id="comment-168">
+                                                <div id="div-comment-168" class="comment-body">
+
+                                                    <div class="comment-avatar">
+                                                        <img alt=''
+                                                            src='https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-300x169.jpg'
+                                                            srcset='https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-300x169.jpg 300w, https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-1024x576.jpg 1024w, https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-768x432.jpg 768w, https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-1536x864.jpg 1536w, https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-1422x800.jpg 1422w, https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2-600x338.jpg 600w, https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/spider_ex2.jpg 1920w'
+                                                            class='avatar avatar-32 photo' height='32' width='32'
+                                                            decoding='async' />
+                                                    </div>
+                                                    <div class="comment-info">
+                                                        <div class="jws-raring-result"><span data-star="5"
+                                                                style="width:100%"></span></div>
+                                                        <h6 class="comment-author">${comment.name}</h6>
+                                                        <span class="comment-date">${new Date(comment.created_at).toLocaleString()} </span>
+                                                        <div class="comment-content">
+                                                            <p>${comment.content}</p>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </li>
+        `;
+
+        //                             if (comment.parent_id && parentContent) {
+        //                                 let shortParentContent = parentContent.length > 50 ? parentContent.substring(0, 50) + '...' : parentContent;
+        //                                 html += `
+        //         <p class="comments__quote">"${shortParentContent}"</p>
+        //     `;
+        //                             }
+
+        //                             html += `
+        //         <p class="comments__text">${comment.content}</p>
+        //         <div class="comments__actions">
+        //             <div class="comments__rate">
+        //                 <button type="button"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 7.3273V14.6537" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14.6667 10.9905H7.33333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg> 10</button>
+        //                 <button type="button">0 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.6667 10.9905H7.33333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+        //             </div>
+        //             <button type="button" class="reply-btn" data-comment-id="${comment.id}" data-content="${comment.content.replace(/"/g, '"')}"><svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><polyline points='400 160 464 224 400 288' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><path d='M448,224H154C95.24,224,48,273.33,48,332v20' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /></svg><span>Reply</span></button>
+        //             <button type="button"><svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><polyline points='320 120 368 168 320 216' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><path d='M352,168H144a80.24,80.24,0,0,0-80,80v16' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><polyline points='192 392 144 344 192 296' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><path d='M160,344H368a80.24,80.24,0,0,0,80-80V248' style='fill:none;stroke-linecap:round;stroke-width:32px' /></svg><span>Quote</span></button>
+        // `;
+
+        //                             if (hasReplies) {
+        //                                 html += `
+        //             <button type="button" class="toggle-replies" data-comment-id="${comment.id}" style="margin-left: 10px; color: #007bff; background: none; border: none; cursor: pointer;">${isShown ? 'Show less' : `Show more (${comment.replies.length})`}</button>
+        //         </div>
+        //     `;
+        //                             } else {
+        //                                 html += `</div>`;
+        //                             }
+
+        //                             html += `</li>`;
+
+        //                             if (hasReplies) {
+        //                                 comment.replies.forEach(reply => {
+        //                                     html += renderComment(reply, comment.content);
+        //                                 });
+        //                             }
+
+                                    return html;
+                                }
+
+                                // Load bình luận và phân trang
+                                function loadComments(page = 1) {
+                                    let episodeId = $('input[name="episode_id"]').val();
+                                    $.get('/comments/' + episodeId + '?page=' + page, function(data) {
+                                        $('#comment-list').empty();
+                                        data.comments.forEach(comment => {
+                                            $('#comment-list').append(renderComment(comment));
+                                        });
+
+                                        // Cập nhật tổng số bình luận
+                                        $('#total-comments').text(data.total);
+
+                                        Object.keys(shownReplies).forEach(commentId => {
+                                            if (shownReplies[commentId]) {
+                                                $(`#comment-list li[data-parent-id="${commentId}"]`).show();
+                                            }
+                                        });
+
+                                        let perPage = 5;
+                                        let from = (data.current_page - 1) * perPage + 1;
+                                        let to = Math.min(data.current_page * perPage, data.total);
+                                        $('#page-info').text(`${from} - ${to} from ${data.total}`);
+
+                                        updatePagination(data.current_page, data.last_page);
+                                    });
+                                }
+
+                                // Tạo phân trang động
+                                function updatePagination(currentPage, lastPage) {
+                                    $('#paginator').empty();
+                                    if (currentPage > 1) {
+                                        $('#paginator').append(`
+                <li>
+                    <a href="#" class="page-link" data-page="${currentPage - 1}">
+                        <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.75 5.36475L13.1992 5.36475" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M5.771 10.1271L0.749878 5.36496L5.771 0.602051" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </a>
+                </li>
+            `);
+                                    }
+
+                                    let startPage = Math.max(1, currentPage - 2);
+                                    let endPage = Math.min(lastPage, currentPage + 2);
+                                    for (let i = startPage; i <= endPage; i++) {
+                                        $('#paginator').append(`
+                <li class="${i === currentPage ? 'active' : ''}">
+                    <a href="#" class="page-link" data-page="${i}">${i}</a>
+                </li>
+            `);
+                                    }
+
+                                    if (currentPage < lastPage) {
+                                        $('#paginator').append(`
+                <li>
+                    <a href="#" class="page-link" data-page="${currentPage + 1}">
+                        <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.1992 5.3645L0.75 5.3645" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M8.17822 0.602051L13.1993 5.36417L8.17822 10.1271" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </a>
+                </li>
+            `);
+                                    }
+
+                                    $('.page-link').click(function(e) {
+                                        e.preventDefault();
+                                        let page = $(this).data('page');
+                                        currentPage = page;
+                                        loadComments(page);
+                                    });
+                                }
+
+
+
+                                // Hiển thị popup và nội dung bình luận cha
+                                $(document).on('click', '.reply-btn', function() {
+                                    let commentId = $(this).data('comment-id');
+                                    let parentContent = $(this).data('content');
+                                    let shortParentContent = parentContent.length > 50 ? parentContent.substring(0, 50) + '...' :
+                                        parentContent;
+                                    $('#parent_id').val(commentId);
+                                    $('#reply-text').val('');
+                                    $('#parent-content').text(`Replying to: "${shortParentContent}"`);
+                                    $('#reply-popup-overlay').show();
+                                    $('#reply-popup').show();
+                                });
+
+                                // Đóng popup
+                                $(document).on('click', '#close-popup, #reply-popup-overlay', function() {
+                                    $('#reply-popup-overlay').hide();
+                                    $('#reply-popup').hide();
+                                    $('#reply-text').val('');
+                                    $('#reply-error-message').empty();
+                                    $('#parent-content').text('');
+                                });
+
+                                // Ngăn sự kiện click trong popup lan ra overlay
+                                $(document).on('click', '#reply-popup', function(e) {
+                                    e.stopPropagation();
+                                });
+
+                                // Gửi reply qua Ajax
+                                $(document).on('submit', '#reply-form', function(e) {
+                                    e.preventDefault();
+                                    let content = $('#reply-text').val();
+                                    let episodeId = $('input[name="episode_id"]').val();
+                                    let parentId = $('#parent_id').val();
+
+                                    $.ajax({
+                                        url: '{{ route('comment') }}',
+                                        method: 'POST',
+                                        data: {
+                                            content: content,
+                                            episode_id: episodeId,
+                                            parent_id: parentId,
+                                            _token: $('input[name="_token"]').val()
+                                        },
+                                        success: function(response) {
+                                            if (response.success) {
+                                                $('#reply-text').val('');
+                                                $('#reply-error-message').empty();
+                                                $('#parent-content').text('');
+                                                $('#reply-popup-overlay').hide();
+                                                $('#reply-popup').hide();
+                                                loadComments(currentPage);
+                                            }
+                                        },
+                                        error: function(xhr) {
+                                            if (xhr.status === 422) {
+                                                let errors = xhr.responseJSON.errors;
+                                                $('#reply-error-message').empty();
+                                                if (errors.content) {
+                                                    $('#reply-error-message').text(errors.content[0]);
+                                                }
+                                            } else {
+                                                console.log('Lỗi khác:', xhr.responseText);
+                                            }
+                                        }
+                                    });
+                                });
+
+                                // // Xử lý nút "Show more"/"Show less"
+                                // $(document).on('click', '.toggle-replies', function() {
+                                //     let commentId = $(this).data('comment-id');
+                                //     let $replies = $(`#comment-list li[data-parent-id="${commentId}"]`);
+                                //     if ($replies.is(':visible')) {
+                                //         $replies.hide();
+                                //         $(this).text(`Show more (${$replies.length})`);
+                                //         shownReplies[commentId] = false;
+                                //     } else {
+                                //         $replies.show();
+                                //         $(this).text('Show less');
+                                //         shownReplies[commentId] = true;
+                                //     }
+                                // });
+
+                                // Gọi loadComments khi trang được tải
+                                $(document).ready(function() {
+                                    loadComments();
+                                });
+                            </script>
+
+                            <!-- CSS tùy chỉnh -->
+                            <style>
+                                .sign__btn:hover {
+                                    background: #0056b3;
+                                }
+
+                                #close-popup:hover {
+                                    background: #999;
+                                }
+
+                                .popup {
+                                    animation: fadeIn 0.3s ease-in-out;
+                                }
+
+                                #reply-popup-overlay {
+                                    animation: fadeInOverlay 0.3s ease-in-out;
+                                }
+
+                                @keyframes fadeIn {
+                                    from {
+                                        opacity: 0;
+                                        transform: translate(-50%, -60%);
+                                    }
+
+                                    to {
+                                        opacity: 1;
+                                        transform: translate(-50%, -50%);
+                                    }
+                                }
+
+                                @keyframes fadeInOverlay {
+                                    from {
+                                        opacity: 0;
+                                    }
+
+                                    to {
+                                        opacity: 1;
+                                    }
+                                }
+
+                                .comments__item--answer {
+                                    margin-left: 20px;
+                                    border-left: 2px solid #ddd;
+                                    padding-left: 15px;
+                                }
+
+                                .toggle-replies:hover {
+                                    text-decoration: underline;
+                                }
+
+                                .comments__text,
+                                .comments__quote,
+                                #parent-content {
+                                    word-wrap: break-word;
+                                    overflow-wrap: break-word;
+                                    white-space: normal;
+                                    max-width: 100%;
+                                }
+                            </style>
+                            <div class="col-xl-3">
+                                <div class="jws_sticky_move">
+                                    <style id="elementor-post-4078">
+                                        .elementor-widget-heading .elementor-heading-title {
+                                            font-family: var(--e-global-typography-primary-font-family), Sans-serif;
+                                            font-weight: var(--e-global-typography-primary-font-weight);
+                                            color: var(--e-global-color-primary);
+                                        }
+
+                                        .elementor-4078 .elementor-element.elementor-element-9def3cf>.elementor-widget-container {
+                                            margin: 0px 0px 5px 0px;
+                                            padding: 0px 0px 15px 0px;
+                                            border-style: solid;
+                                            border-width: 0px 0px 1px 0px;
+                                            border-color: #FFFFFF1A;
+                                        }
+
+                                        .elementor-4078 .elementor-element.elementor-element-9def3cf .elementor-heading-title {
+                                            font-family: var(--e-global-typography-secondary-font-family), Sans-serif;
+                                            font-weight: var(--e-global-typography-secondary-font-weight);
+                                            color: var(--e-global-color-secondary);
+                                        }
+                                    </style>
+                                    <style>
+                                        .elementor-widget-heading .elementor-heading-title {
+                                            font-family: var(--e-global-typography-primary-font-family), Sans-serif;
+                                            font-weight: var(--e-global-typography-primary-font-weight);
+                                            color: var(--e-global-color-primary);
+                                        }
+
+                                        .elementor-4078 .elementor-element.elementor-element-9def3cf>.elementor-widget-container {
+                                            margin: 0px 0px 5px 0px;
+                                            padding: 0px 0px 15px 0px;
+                                            border-style: solid;
+                                            border-width: 0px 0px 1px 0px;
+                                            border-color: #FFFFFF1A;
+                                        }
+
+                                        .elementor-4078 .elementor-element.elementor-element-9def3cf .elementor-heading-title {
+                                            font-family: var(--e-global-typography-secondary-font-family), Sans-serif;
+                                            font-weight: var(--e-global-typography-secondary-font-weight);
+                                            color: var(--e-global-color-secondary);
+                                        }
+                                    </style>
+                                    <div data-elementor-type="wp-post" data-elementor-id="4078"
+                                        class="elementor elementor-4078">
+                                        <section
+                                            class="elementor-section elementor-top-section elementor-element elementor-element-6115c3a elementor-section-boxed elementor-section-height-default elementor-section-height-default"
+                                            data-id="6115c3a" data-element_type="section">
+                                            <div class="elementor-container elementor-column-gap-no jws_section_">
+                                                <div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-51db0ec"
+                                                    data-id="51db0ec" data-element_type="column">
+                                                    <div class="elementor-widget-wrap elementor-element-populated">
+                                                        <div class="elementor-element elementor-element-9def3cf elementor-widget elementor-widget-heading"
+                                                            data-id="9def3cf" data-element_type="widget"
+                                                            data-widget_type="heading.default">
+                                                            <div class="elementor-widget-container">
+                                                                <h5 class="elementor-heading-title elementor-size-default">
+                                                                    Popular TV Shows</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="elementor-element elementor-element-5eea66e elementor-widget elementor-widget-jws_top_videos"
+                                                            data-id="5eea66e" data-element_type="widget"
+                                                            data-widget_type="jws_top_videos.default">
+                                                            <div class="elementor-widget-container">
+                                                                <div class="jws-top-videos-tabs-element">
+
+                                                                    <div class="top-videos-content row layout2">
+
+                                                                        <div
+                                                                            class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                            <div class="top-videos-inner">
+
+                                                                                <div class="top-number h5">
+
+                                                                                    1
+                                                                                </div>
+                                                                                <div class="top-images">
+
+                                                                                    <a
+                                                                                        href="../tv_shows/shark-hunters/index.html">
+                                                                                        <img class='attachment-50x70 size-50x70'
+                                                                                            alt=''
+                                                                                            src="{{ asset('clients/wp-content/uploads/2023/02/sahark-e1676001886337-50x70.jpg') }}>
                                                                                 </a>
 
                                                                             </div>
                                                                             <div class="top-content">
-                                                                                    <div class="video-years">2018</div>
-                                                                                    <h6>
-                                                                                        <a
-                                                                                            href="../tv_shows/shark-hunters/index.html">Shark
-                                                                                            Hunters</a>
-                                                                                    </h6>
-                                                                                    <div class="video-cat">
-                                                                                        <a href="../tv_shows_cat/action/index.html"
-                                                                                            rel="tag">Action</a>
-                                                                                    </div>
+                                                                                        <div class="video-years">2018</div>
+                                                                                        <h6>
+                                                                                            <a
+                                                                                                href="../tv_shows/shark-hunters/index.html">Shark
+                                                                                                Hunters</a>
+                                                                                        </h6>
+                                                                                        <div class="video-cat">
+                                                                                            <a href="../tv_shows_cat/action/index.html"
+                                                                                                rel="tag">Action</a>
+                                                                                        </div>
 
+
+                                                                                </div>
 
                                                                             </div>
-
                                                                         </div>
-                                                                    </div>
-                                                                    <div
-                                                                        class="top-videos-item col-xl-12 col-lg-12 col-12">
-                                                                        <div class="top-videos-inner">
+                                                                        <div
+                                                                            class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                            <div class="top-videos-inner">
 
-                                                                            <div class="top-number h5">
+                                                                                <div class="top-number h5">
 
-                                                                                2
-                                                                            </div>
-                                                                            <div class="top-images">
+                                                                                    2
+                                                                                </div>
+                                                                                <div class="top-images">
 
-                                                                                <a
-                                                                                    href="../tv_shows/the-wasted-times/index.html">
-                                                                                    <img class='attachment-50x70 size-50x70'
-                                                                                        alt=''
-                                                                                        src="{{ asset('clients/wp-content/uploads/2023/02/The-Wasted-Times-50x70.jpg') }}>
+                                                                                    <a
+                                                                                        href="../tv_shows/the-wasted-times/index.html">
+                                                                                        <img class='attachment-50x70 size-50x70'
+                                                                                            alt=''
+                                                                                            src="{{ asset('clients/wp-content/uploads/2023/02/The-Wasted-Times-50x70.jpg') }}>
                                                                                 </a>
 
                                                                             </div>
                                                                             <div class="top-content">
-                                                                                    <div class="video-years">2028</div>
-                                                                                    <h6>
-                                                                                        <a
-                                                                                            href="../tv_shows/the-wasted-times/index.html">The
-                                                                                            Wasted Times</a>
-                                                                                    </h6>
-                                                                                    <div class="video-cat">
-                                                                                        <a href="../tv_shows_cat/drama/index.html"
-                                                                                            rel="tag">Drama</a> <a
-                                                                                            href="../tv_shows_cat/school/index.html"
-                                                                                            rel="tag">School</a>
-                                                                                    </div>
+                                                                                        <div class="video-years">2028</div>
+                                                                                        <h6>
+                                                                                            <a
+                                                                                                href="../tv_shows/the-wasted-times/index.html">The
+                                                                                                Wasted Times</a>
+                                                                                        </h6>
+                                                                                        <div class="video-cat">
+                                                                                            <a href="../tv_shows_cat/drama/index.html"
+                                                                                                rel="tag">Drama</a> <a
+                                                                                                href="../tv_shows_cat/school/index.html"
+                                                                                                rel="tag">School</a>
+                                                                                        </div>
 
+
+                                                                                </div>
 
                                                                             </div>
-
                                                                         </div>
-                                                                    </div>
-                                                                    <div
-                                                                        class="top-videos-item col-xl-12 col-lg-12 col-12">
-                                                                        <div class="top-videos-inner">
+                                                                        <div
+                                                                            class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                            <div class="top-videos-inner">
 
-                                                                            <div class="top-number h5">
+                                                                                <div class="top-number h5">
 
-                                                                                3
-                                                                            </div>
-                                                                            <div class="top-images">
+                                                                                    3
+                                                                                </div>
+                                                                                <div class="top-images">
 
-                                                                                <a
-                                                                                    href="../tv_shows/political-animal/index.html">
-                                                                                    <img class='attachment-50x70 size-50x70'
-                                                                                        alt=''
-                                                                                        src="{{ asset('clients/wp-content/uploads/2023/03/Political-Animal-50x70.jpg') }}>
+                                                                                    <a
+                                                                                        href="../tv_shows/political-animal/index.html">
+                                                                                        <img class='attachment-50x70 size-50x70'
+                                                                                            alt=''
+                                                                                            src="{{ asset('clients/wp-content/uploads/2023/03/Political-Animal-50x70.jpg') }}>
                                                                                 </a>
 
                                                                             </div>
                                                                             <div class="top-content">
-                                                                                    <div class="video-years">2019</div>
-                                                                                    <h6>
-                                                                                        <a
-                                                                                            href="../tv_shows/political-animal/index.html">Political
-                                                                                            Animal</a>
-                                                                                    </h6>
-                                                                                    <div class="video-cat">
-                                                                                        <a href="../tv_shows_cat/music/index.html"
-                                                                                            rel="tag">Music</a> <a
-                                                                                            href="../tv_shows_cat/reality/index.html"
-                                                                                            rel="tag">Reality</a>
-                                                                                    </div>
+                                                                                        <div class="video-years">2019</div>
+                                                                                        <h6>
+                                                                                            <a
+                                                                                                href="../tv_shows/political-animal/index.html">Political
+                                                                                                Animal</a>
+                                                                                        </h6>
+                                                                                        <div class="video-cat">
+                                                                                            <a href="../tv_shows_cat/music/index.html"
+                                                                                                rel="tag">Music</a> <a
+                                                                                                href="../tv_shows_cat/reality/index.html"
+                                                                                                rel="tag">Reality</a>
+                                                                                        </div>
 
+
+                                                                                </div>
 
                                                                             </div>
-
                                                                         </div>
-                                                                    </div>
-                                                                    <div
-                                                                        class="top-videos-item col-xl-12 col-lg-12 col-12">
-                                                                        <div class="top-videos-inner">
+                                                                        <div
+                                                                            class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                            <div class="top-videos-inner">
 
-                                                                            <div class="top-number h5">
+                                                                                <div class="top-number h5">
 
-                                                                                4
-                                                                            </div>
-                                                                            <div class="top-images">
+                                                                                    4
+                                                                                </div>
+                                                                                <div class="top-images">
 
-                                                                                <a
-                                                                                    href="../tv_shows/the-unstoppable-soldier/index.html">
-                                                                                    <img class='attachment-50x70 size-50x70'
-                                                                                        alt=''
-                                                                                        src="{{ asset('clients/wp-content/uploads/2023/03/israel-palacio-IprD0z0zqss-unsplash-50x70.jpg') }}>
+                                                                                    <a
+                                                                                        href="../tv_shows/the-unstoppable-soldier/index.html">
+                                                                                        <img class='attachment-50x70 size-50x70'
+                                                                                            alt=''
+                                                                                            src="{{ asset('clients/wp-content/uploads/2023/03/israel-palacio-IprD0z0zqss-unsplash-50x70.jpg') }}>
                                                                                 </a>
 
                                                                             </div>
                                                                             <div class="top-content">
-                                                                                    <div class="video-years">2020</div>
-                                                                                    <h6>
-                                                                                        <a
-                                                                                            href="../tv_shows/the-unstoppable-soldier/index.html">The
-                                                                                            Unstoppable Soldier</a>
-                                                                                    </h6>
-                                                                                    <div class="video-cat">
-                                                                                        <a href="../tv_shows_cat/drama/index.html"
-                                                                                            rel="tag">Drama</a> <a
-                                                                                            href="../tv_shows_cat/reality/index.html"
-                                                                                            rel="tag">Reality</a>
-                                                                                    </div>
+                                                                                        <div class="video-years">2020</div>
+                                                                                        <h6>
+                                                                                            <a
+                                                                                                href="../tv_shows/the-unstoppable-soldier/index.html">The
+                                                                                                Unstoppable Soldier</a>
+                                                                                        </h6>
+                                                                                        <div class="video-cat">
+                                                                                            <a href="../tv_shows_cat/drama/index.html"
+                                                                                                rel="tag">Drama</a> <a
+                                                                                                href="../tv_shows_cat/reality/index.html"
+                                                                                                rel="tag">Reality</a>
+                                                                                        </div>
 
+
+                                                                                </div>
 
                                                                             </div>
-
                                                                         </div>
-                                                                    </div>
-                                                                    <div
-                                                                        class="top-videos-item col-xl-12 col-lg-12 col-12">
-                                                                        <div class="top-videos-inner">
+                                                                        <div
+                                                                            class="top-videos-item col-xl-12 col-lg-12 col-12">
+                                                                            <div class="top-videos-inner">
 
-                                                                            <div class="top-number h5">
+                                                                                <div class="top-number h5">
 
-                                                                                5
-                                                                            </div>
-                                                                            <div class="top-images">
+                                                                                    5
+                                                                                </div>
+                                                                                <div class="top-images">
 
-                                                                                <a
-                                                                                    href="../tv_shows/fireworks-wednesday/index.html">
-                                                                                    <img class='attachment-50x70 size-50x70'
-                                                                                        alt=''
-                                                                                        src="{{ asset('clients/wp-content/uploads/2023/02/Fireworks-Wednesday-50x70.jpg') }}>
+                                                                                    <a
+                                                                                        href="../tv_shows/fireworks-wednesday/index.html">
+                                                                                        <img class='attachment-50x70 size-50x70'
+                                                                                            alt=''
+                                                                                            src="{{ asset('clients/wp-content/uploads/2023/02/Fireworks-Wednesday-50x70.jpg') }}>
                                                                                 </a>
 
                                                                             </div>
                                                                             <div class="top-content">
-                                                                                    <div class="video-years">2019</div>
-                                                                                    <h6>
-                                                                                        <a
-                                                                                            href="../tv_shows/fireworks-wednesday/index.html">Fireworks
-                                                                                            Wednesday</a>
-                                                                                    </h6>
-                                                                                    <div class="video-cat">
-                                                                                        <a href="../tv_shows_cat/family/index.html"
-                                                                                            rel="tag">Family</a> <a
-                                                                                            href="../tv_shows_cat/international/index.html"
-                                                                                            rel="tag">International</a>
-                                                                                    </div>
+                                                                                        <div class="video-years">2019</div>
+                                                                                        <h6>
+                                                                                            <a
+                                                                                                href="../tv_shows/fireworks-wednesday/index.html">Fireworks
+                                                                                                Wednesday</a>
+                                                                                        </h6>
+                                                                                        <div class="video-cat">
+                                                                                            <a href="../tv_shows_cat/family/index.html"
+                                                                                                rel="tag">Family</a>
+                                                                                            <a href="../tv_shows_cat/international/index.html"
+                                                                                                rel="tag">International</a>
+                                                                                        </div>
 
+
+                                                                                </div>
 
                                                                             </div>
-
                                                                         </div>
+
+
+
+
+
                                                                     </div>
-
-
-
-
-
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+
+
+
+
+
                                             </div>
-
-
-
-
-
-                                        </div>
-                                    </section>
+                                        </section>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
-
-
-                </div>
 
             </main><!-- #main -->
         </div><!-- #primary -->

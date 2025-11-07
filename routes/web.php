@@ -58,19 +58,17 @@ Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 Route::controller(UserController::class)->group(function () {
     Route::get('signin-form', 'signinForm')->name('signinForm');
     Route::post('signin', 'signin')->name('signin');
-    
+
     Route::get('signup-form', 'signupForm')->name('signupForm');
     Route::post('signup', 'signup')->name('signup');
 });
 
-Route::controller(CommentController::class)->group(function () {
-    Route::post('add-comment', 'store')->name('comment');
-});
+
 
 Route::get('/test-group-season', [MovieController::class, 'groupMoviesBySeason']);
 
 
-Route::post('/comments', [CommentController::class, 'store'])->name('comment');
+
 Route::get('/comments/{episode_id}', [CommentController::class, 'index'])->name('comments.index');
 
 // routes/web.php

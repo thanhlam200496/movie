@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admins\MovieController;
+use App\Http\Controllers\clients\CommentController;
 use App\Http\Controllers\clients\UserController;
 use App\Http\Controllers\ViewHistoryController;
 use Illuminate\Http\Request;
@@ -31,6 +32,10 @@ Route::middleware('auth:sanctum')->post('/view-history', [ViewHistoryController:
 Route::controller(UserController::class)->group(function () {
 
     Route::post('signinAjax', 'signinAjax')->name('signinAjax');
-    
+
+});
+// Route::post('/comments', [CommentController::class, 'store'])->name('comment');
+Route::controller(CommentController::class)->group(function () {
+    Route::post('add-comment', 'store')->name('comment');
 });
 

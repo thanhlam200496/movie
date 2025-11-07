@@ -3197,7 +3197,7 @@
                                     </div>
 
                                 </form>
-                                <form name="registerpopupform" id="jws-registerform" action="" method="POST">
+                                <form name="registerpopupform" id="jws-registerform" action="{{ route('signup') }}" method="POST">
                                     @csrf
                                     <div class="row">
                                         <div class="col-12 form-row">
@@ -3229,7 +3229,7 @@
                             </div>
 
                         </div>
-                        
+
 
                         <div class="fs-small privacy-policy">hoặc
                             <a href="#" name="dangkylink" id="dangkylink">Đăng ký</a>

@@ -31,11 +31,15 @@ class CommentController extends Controller
             'content' => 'required|string|max:1000',
             'episode_id' => 'required|exists:episodes,id',
         'parent_id' => 'nullable|exists:comments,id', // Thêm validate cho parent_id
+        'name'=>'required|string|max:50',
+        'email'=>'required|string|max:50',
         ]);
 
         $comment = Comment::create([
+            'name' => $request->name,
+            'email' => $request->email,
             'content' => $request->content,
-            'user_id' => auth()->id(),
+
             'episode_id' => $request->episode_id,
             'parent_id' => $request->parent_id, // Lưu parent_id nếu có
         ]);
@@ -44,6 +48,7 @@ class CommentController extends Controller
             'success' => true,
             'comment' => $comment->load('user'),
         ]);
+
     }
 
     public function index(Request $request, $episode_id)
@@ -52,7 +57,7 @@ class CommentController extends Controller
         // Lấy các bình luận cha và load tất cả replies phân cấp
         $comments = Comment::where('episode_id', $episode_id)
             ->whereNull('parent_id')
-            ->with(['user', 'replies.user']) // Load user và replies
+            // ->with(['user', 'replies.user']) // Load user và replies
             ->latest()
             ->paginate($perPage);
 
