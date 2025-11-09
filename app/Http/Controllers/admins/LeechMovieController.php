@@ -65,130 +65,130 @@ class LeechMovieController extends Controller
 
 
     // hàm gốc
-    //   public function importAllMoviesWithEpisodes($slug, Request $request)
-    //    {
-    //        ini_set('max_execution_time', 0);
-    //        $startTime = microtime(true);
+      public function importAllMoviesWithEpisodes($slug, Request $request)
+       {
+           ini_set('max_execution_time', 0);
+           $startTime = microtime(true);
 
-    //        $leechUrl = LeechMovieUrl::where('slug', $slug)->firstOrFail();
-    //        $client = new Client(['timeout' => 15]);
+           $leechUrl = LeechMovieUrl::where('slug', $slug)->firstOrFail();
+           $client = new Client(['timeout' => 15]);
 
-    //        $trangdau = $request->trangdau;
-    //        $trangcuoi = $request->trangcuoi;
+           $trangdau = $request->trangdau;
+           $trangcuoi = $request->trangcuoi;
 
-    //        if ($trangdau > $trangcuoi) {
-    //            [$trangdau, $trangcuoi] = [$trangcuoi, $trangdau];
-    //        }
+           if ($trangdau > $trangcuoi) {
+               [$trangdau, $trangcuoi] = [$trangcuoi, $trangdau];
+           }
 
-    //       $allMovies = [];
+          $allMovies = [];
 
-    //        // 🔹 Bước 1: Lấy danh sách phim từ tất cả các trang
-    //        for ($page = $trangdau; $page <= $trangcuoi; $page++) {
-    //            $response = $client->get($leechUrl->url_list_movie . $page);
-    //            if ($response->getStatusCode() !== 200) continue;
-    //            $data = json_decode($response->getBody(), true);
-    //            $movies = $data['items'] ?? [];
-    //            $allMovies = array_merge($allMovies, $movies);
-    //        }
+           // 🔹 Bước 1: Lấy danh sách phim từ tất cả các trang
+           for ($page = $trangdau; $page <= $trangcuoi; $page++) {
+               $response = $client->get($leechUrl->url_list_movie . $page);
+               if ($response->getStatusCode() !== 200) continue;
+               $data = json_decode($response->getBody(), true);
+               $movies = $data['items'] ?? [];
+               $allMovies = array_merge($allMovies, $movies);
+           }
 
-    //        // 🔹 Bước 2: Chuẩn bị request song song tới API chi tiết phim
-    //        $requests = function ($movies) use ($client, $leechUrl) {
-    //            foreach ($movies as $movieDataNomal) {
-    //                yield function () use ($client, $leechUrl, $movieDataNomal) {
-    //                    return $client->getAsync($leechUrl->url_detail . $movieDataNomal['slug'], [
-    //                        'meta' => ['movie_basic' => $movieDataNomal]
-    //                    ]);
-    //                };
-    //            }
-    //        };
+           // 🔹 Bước 2: Chuẩn bị request song song tới API chi tiết phim
+           $requests = function ($movies) use ($client, $leechUrl) {
+               foreach ($movies as $movieDataNomal) {
+                   yield function () use ($client, $leechUrl, $movieDataNomal) {
+                       return $client->getAsync($leechUrl->url_detail . $movieDataNomal['slug'], [
+                           'meta' => ['movie_basic' => $movieDataNomal]
+                       ]);
+                   };
+               }
+           };
 
-    //        $concurrency = 20; // số lượng request chạy song song
-    //        $pool = new Pool($client, $requests($allMovies), [
-    //            'concurrency' => $concurrency,
-    //            'fulfilled' => function (Response $response, $index) use ($allMovies) {
-    //                try {
-    //                    $movieDataNomal = $allMovies[$index];
-    //                    $detailsData = json_decode($response->getBody(), true);
-    //                    $episodesData = $detailsData['episodes'] ?? [];
-    //                    $movieData = $detailsData['movie'] ?? null;
+           $concurrency = 20; // số lượng request chạy song song
+           $pool = new Pool($client, $requests($allMovies), [
+               'concurrency' => $concurrency,
+               'fulfilled' => function (Response $response, $index) use ($allMovies) {
+                   try {
+                       $movieDataNomal = $allMovies[$index];
+                       $detailsData = json_decode($response->getBody(), true);
+                       $episodesData = $detailsData['episodes'] ?? [];
+                       $movieData = $detailsData['movie'] ?? null;
 
-    //                    if (!$movieData) {
-    //                        Log::warning("Thiếu dữ liệu phim: {$movieDataNomal['slug']}");
-    //                        return;
-    //                    }
+                       if (!$movieData) {
+                           Log::warning("Thiếu dữ liệu phim: {$movieDataNomal['slug']}");
+                           return;
+                       }
 
-    //                    DB::beginTransaction();
-    //                    // Lưu ảnh vào storage
-    //                    $posterFilm = file_get_contents($movieData['thumb_url']);
-    //                    $fileName = basename($movieData['thumb_url']);
-    //                    Storage::put('public/images/' . $fileName, $posterFilm);
-    //                    $movie = Movie::updateOrCreate(
-    //                        ['slug' => $movieDataNomal['slug']],
-    //                        [
-    //                            'title' => $movieDataNomal['name'],
-    //                            'slug' => $movieDataNomal['slug'],
-    //                            'release_year' => $movieDataNomal['year'],
-    //                            'poster_url' => $fileName,
-    //                            'link_poster_internet' => $movieData['thumb_url'] ?? '',
-    //                            'status' => 'Public',
-    //                            'description' => $movieData['content'] ?? '',
-    //                            'trailer_url' => $movieData['trailer_url'] ?? '',
-    //                            'rating' => $movieData['tmdb']['vote_average'] ?? null,
-    //                            'views' => $movieData['view'] ?? null,
-    //                            'countries' => $movieData['country'][0]['name'] ?? null,
-    //                            'duration' => $movieData['time'] ?? null,
-    //                            'type_film' => $movieData['episode_current'] == 'Full' ? 'Movie' : 'TV Show',
-    //                        ]
-    //                    );
+                       DB::beginTransaction();
+                       // Lưu ảnh vào storage
+                       $posterFilm = file_get_contents($movieData['thumb_url']);
+                       $fileName = basename($movieData['thumb_url']);
+                       Storage::put('public/images/' . $fileName, $posterFilm);
+                       $movie = Movie::updateOrCreate(
+                           ['slug' => $movieDataNomal['slug']],
+                           [
+                               'title' => $movieDataNomal['name'],
+                               'slug' => $movieDataNomal['slug'],
+                               'release_year' => $movieDataNomal['year'],
+                               'poster_url' => $fileName,
+                               'link_poster_internet' => $movieData['thumb_url'] ?? '',
+                               'status' => 'Public',
+                               'description' => $movieData['content'] ?? '',
+                               'trailer_url' => $movieData['trailer_url'] ?? '',
+                               'rating' => $movieData['tmdb']['vote_average'] ?? null,
+                               'views' => $movieData['view'] ?? null,
+                               'countries' => $movieData['country'][0]['name'] ?? null,
+                               'duration' => $movieData['time'] ?? null,
+                               'type_film' => $movieData['episode_current'] == 'Full' ? 'Movie' : 'TV Show',
+                           ]
+                       );
 
-    //                    // Gắn category
-    //                    foreach ($movieData['category'] as $category) {
-    //                        $categoryNew = Category::firstOrCreate(
-    //                            ['slug' => $category['slug']],
-    //                            ['name' => $category['name']]
-    //                        );
-    //                        $movie->categories()->syncWithoutDetaching([$categoryNew->id]);
-    //                    }
+                       // Gắn category
+                       foreach ($movieData['category'] as $category) {
+                           $categoryNew = Category::firstOrCreate(
+                               ['slug' => $category['slug']],
+                               ['name' => $category['name']]
+                           );
+                           $movie->categories()->syncWithoutDetaching([$categoryNew->id]);
+                       }
 
-    //                  //   Lưu tập phim
-    //                    $episodesToInsert = [];
-    //                    foreach ($episodesData as $episode) {
-    //                        foreach ($episode['server_data'] as $ep) {
-    //                            $episodeNumber = (count($episode['server_data']) == 1) ? 'Full' : $ep['name'];
-    //                            $episodesToInsert[] = [
-    //                                'movie_id' => $movie->id,
-    //                                'episode_number' => $episodeNumber,
-    //                                'title' => "{$movie->title} - {$ep['name']}",
-    //                                'link_video_internet' => $ep['link_m3u8'] ?? null,
-    //                                'created_at' => now(),
-    //                                'updated_at' => now(),
-    //                            ];
-    //                        }
-    //                    }
+                     //   Lưu tập phim
+                       $episodesToInsert = [];
+                       foreach ($episodesData as $episode) {
+                           foreach ($episode['server_data'] as $ep) {
+                               $episodeNumber = (count($episode['server_data']) == 1) ? 'Full' : $ep['name'];
+                               $episodesToInsert[] = [
+                                   'movie_id' => $movie->id,
+                                   'episode_number' => $episodeNumber,
+                                   'title' => "{$movie->title} - {$ep['name']}",
+                                   'link_video_internet' => $ep['link_m3u8'] ?? null,
+                                   'created_at' => now(),
+                                   'updated_at' => now(),
+                               ];
+                           }
+                       }
 
-    //                    if (!empty($episodesToInsert)) {
-    //                        Episode::insert($episodesToInsert);
-    //                    }
+                       if (!empty($episodesToInsert)) {
+                           Episode::insert($episodesToInsert);
+                       }
 
-    //                    DB::commit();
-    //                } catch (\Throwable $e) {
-    //                    DB::rollBack();
-    //                    Log::error("Lỗi khi lưu phim: {$e->getMessage()}");
-    //                }
-    //            },
-    //            'rejected' => function ($reason, $index) {
-    //                Log::error('Request failed: ' . $reason->getMessage());
-    //            },
-    //        ]);
+                       DB::commit();
+                   } catch (\Throwable $e) {
+                       DB::rollBack();
+                       Log::error("Lỗi khi lưu phim: {$e->getMessage()}");
+                   }
+               },
+               'rejected' => function ($reason, $index) {
+                   Log::error('Request failed: ' . $reason->getMessage());
+               },
+           ]);
 
-    //        $promise = $pool->promise();
-    //        $promise->wait();
+           $promise = $pool->promise();
+           $promise->wait();
 
-    //        $executionTime = round(microtime(true) - $startTime, 2);
-    //        Log::info("Import xong {$executionTime}s cho " . count($allMovies) . " phim");
+           $executionTime = round(microtime(true) - $startTime, 2);
+           Log::info("Import xong {$executionTime}s cho " . count($allMovies) . " phim");
 
-    //        return redirect()->back()->with('success', "Leech thành công {$executionTime}s cho " . count($allMovies) . " phim");
-    //    }
+           return redirect()->back()->with('success', "Leech thành công {$executionTime}s cho " . count($allMovies) . " phim");
+       }
 
 
 
@@ -340,127 +340,127 @@ class LeechMovieController extends Controller
 
 
 
-    // hàm lấy phim không tải ảnh
-    public function importAllMoviesWithEpisodes($slug, Request $request)
-    {
-        ini_set('max_execution_time', 0);
-        $startTime = microtime(true);
+    // // hàm lấy phim không tải ảnh
+    // public function importAllMoviesWithEpisodes($slug, Request $request)
+    // {
+    //     ini_set('max_execution_time', 0);
+    //     $startTime = microtime(true);
 
-        $leechUrl = LeechMovieUrl::where('slug', $slug)->firstOrFail();
-        $client = new Client(['timeout' => 15]);
+    //     $leechUrl = LeechMovieUrl::where('slug', $slug)->firstOrFail();
+    //     $client = new Client(['timeout' => 15]);
 
-        $trangdau = $request->trangdau;
-        $trangcuoi = $request->trangcuoi;
+    //     $trangdau = $request->trangdau;
+    //     $trangcuoi = $request->trangcuoi;
 
-        if ($trangdau > $trangcuoi) {
-            [$trangdau, $trangcuoi] = [$trangcuoi, $trangdau];
-        }
+    //     if ($trangdau > $trangcuoi) {
+    //         [$trangdau, $trangcuoi] = [$trangcuoi, $trangdau];
+    //     }
 
-        $allMovies = [];
+    //     $allMovies = [];
 
-        // 🔹 Bước 1: Lấy danh sách phim từ tất cả các trang
-        for ($page = $trangdau; $page <= $trangcuoi; $page++) {
-            $response = $client->get($leechUrl->url_list_movie . $page);
-            if ($response->getStatusCode() !== 200) continue;
-            $data = json_decode($response->getBody(), true);
-            $movies = $data['items'] ?? [];
-            $allMovies = array_merge($allMovies, $movies);
-        }
+    //     // 🔹 Bước 1: Lấy danh sách phim từ tất cả các trang
+    //     for ($page = $trangdau; $page <= $trangcuoi; $page++) {
+    //         $response = $client->get($leechUrl->url_list_movie . $page);
+    //         if ($response->getStatusCode() !== 200) continue;
+    //         $data = json_decode($response->getBody(), true);
+    //         $movies = $data['items'] ?? [];
+    //         $allMovies = array_merge($allMovies, $movies);
+    //     }
 
-        // 🔹 Bước 2: Chuẩn bị request song song tới API chi tiết phim
-        $requests = function ($movies) use ($client, $leechUrl) {
-            foreach ($movies as $movieDataNomal) {
-                yield function () use ($client, $leechUrl, $movieDataNomal) {
-                    return $client->getAsync($leechUrl->url_detail . $movieDataNomal['slug'], [
-                        'meta' => ['movie_basic' => $movieDataNomal]
-                    ]);
-                };
-            }
-        };
+    //     // 🔹 Bước 2: Chuẩn bị request song song tới API chi tiết phim
+    //     $requests = function ($movies) use ($client, $leechUrl) {
+    //         foreach ($movies as $movieDataNomal) {
+    //             yield function () use ($client, $leechUrl, $movieDataNomal) {
+    //                 return $client->getAsync($leechUrl->url_detail . $movieDataNomal['slug'], [
+    //                     'meta' => ['movie_basic' => $movieDataNomal]
+    //                 ]);
+    //             };
+    //         }
+    //     };
 
-        $concurrency = 20; // số lượng request chạy song song
-        $pool = new Pool($client, $requests($allMovies), [
-            'concurrency' => $concurrency,
-            'fulfilled' => function (Response $response, $index) use ($allMovies) {
-                try {
-                    $movieDataNomal = $allMovies[$index];
-                    $detailsData = json_decode($response->getBody(), true);
-                    $episodesData = $detailsData['episodes'] ?? [];
-                    $movieData = $detailsData['movie'] ?? null;
+    //     $concurrency = 20; // số lượng request chạy song song
+    //     $pool = new Pool($client, $requests($allMovies), [
+    //         'concurrency' => $concurrency,
+    //         'fulfilled' => function (Response $response, $index) use ($allMovies) {
+    //             try {
+    //                 $movieDataNomal = $allMovies[$index];
+    //                 $detailsData = json_decode($response->getBody(), true);
+    //                 $episodesData = $detailsData['episodes'] ?? [];
+    //                 $movieData = $detailsData['movie'] ?? null;
 
-                    if (!$movieData) {
-                        Log::warning("Thiếu dữ liệu phim: {$movieDataNomal['slug']}");
-                        return;
-                    }
+    //                 if (!$movieData) {
+    //                     Log::warning("Thiếu dữ liệu phim: {$movieDataNomal['slug']}");
+    //                     return;
+    //                 }
 
-                    DB::beginTransaction();
+    //                 DB::beginTransaction();
 
-                    $movie = Movie::updateOrCreate(
-                        ['slug' => $movieDataNomal['slug']],
-                        [
-                            'title' => $movieDataNomal['name'],
-                            'slug' => $movieDataNomal['slug'],
-                            'release_year' => $movieDataNomal['year'],
-                            'link_poster_internet' => $movieData['thumb_url'] ?? '',
-                            'status' => 'Public',
-                            'description' => $movieData['content'] ?? '',
-                            'trailer_url' => $movieData['trailer_url'] ?? '',
-                            'rating' => $movieData['tmdb']['vote_average'] ?? null,
-                            'views' => $movieData['view'] ?? null,
-                            'countries' => $movieData['country'][0]['name'] ?? null,
-                            'duration' => $movieData['time'] ?? null,
-                            'type_film' => $movieData['episode_current'] == 'Full' ? 'Movie' : 'TV Show',
-                        ]
-                    );
+    //                 $movie = Movie::updateOrCreate(
+    //                     ['slug' => $movieDataNomal['slug']],
+    //                     [
+    //                         'title' => $movieDataNomal['name'],
+    //                         'slug' => $movieDataNomal['slug'],
+    //                         'release_year' => $movieDataNomal['year'],
+    //                         'link_poster_internet' => $movieData['thumb_url'] ?? '',
+    //                         'status' => 'Public',
+    //                         'description' => $movieData['content'] ?? '',
+    //                         'trailer_url' => $movieData['trailer_url'] ?? '',
+    //                         'rating' => $movieData['tmdb']['vote_average'] ?? null,
+    //                         'views' => $movieData['view'] ?? null,
+    //                         'countries' => $movieData['country'][0]['name'] ?? null,
+    //                         'duration' => $movieData['time'] ?? null,
+    //                         'type_film' => $movieData['episode_current'] == 'Full' ? 'Movie' : 'TV Show',
+    //                     ]
+    //                 );
 
-                    // Gắn category
-                    foreach ($movieData['category'] as $category) {
-                        $categoryNew = Category::firstOrCreate(
-                            ['slug' => $category['slug']],
-                            ['name' => $category['name']]
-                        );
-                        $movie->categories()->syncWithoutDetaching([$categoryNew->id]);
-                    }
+    //                 // Gắn category
+    //                 foreach ($movieData['category'] as $category) {
+    //                     $categoryNew = Category::firstOrCreate(
+    //                         ['slug' => $category['slug']],
+    //                         ['name' => $category['name']]
+    //                     );
+    //                     $movie->categories()->syncWithoutDetaching([$categoryNew->id]);
+    //                 }
 
-                    // Lưu tập phim
-                    $episodesToInsert = [];
-                    foreach ($episodesData as $episode) {
-                        foreach ($episode['server_data'] as $ep) {
-                            $episodeNumber = (count($episode['server_data']) == 1) ? 'Full' : $ep['name'];
-                            $episodesToInsert[] = [
-                                'movie_id' => $movie->id,
-                                'episode_number' => $episodeNumber,
-                                'title' => "{$movie->title} - {$ep['name']}",
-                                'link_video_internet' => $ep['link_m3u8'] ?? null,
-                                'created_at' => now(),
-                                'updated_at' => now(),
-                            ];
-                        }
-                    }
+    //                 // Lưu tập phim
+    //                 $episodesToInsert = [];
+    //                 foreach ($episodesData as $episode) {
+    //                     foreach ($episode['server_data'] as $ep) {
+    //                         $episodeNumber = (count($episode['server_data']) == 1) ? 'Full' : $ep['name'];
+    //                         $episodesToInsert[] = [
+    //                             'movie_id' => $movie->id,
+    //                             'episode_number' => $episodeNumber,
+    //                             'title' => "{$movie->title} - {$ep['name']}",
+    //                             'link_video_internet' => $ep['link_m3u8'] ?? null,
+    //                             'created_at' => now(),
+    //                             'updated_at' => now(),
+    //                         ];
+    //                     }
+    //                 }
 
-                    if (!empty($episodesToInsert)) {
-                        Episode::insert($episodesToInsert);
-                    }
+    //                 if (!empty($episodesToInsert)) {
+    //                     Episode::insert($episodesToInsert);
+    //                 }
 
-                    DB::commit();
-                } catch (\Throwable $e) {
-                    DB::rollBack();
-                    Log::error("Lỗi khi lưu phim: {$e->getMessage()}");
-                }
-            },
-            'rejected' => function (RequestException $reason, $index) use ($allMovies) {
-                Log::error("Request thất bại cho phim {$allMovies[$index]['slug']}: {$reason->getMessage()}");
-            },
-        ]);
+    //                 DB::commit();
+    //             } catch (\Throwable $e) {
+    //                 DB::rollBack();
+    //                 Log::error("Lỗi khi lưu phim: {$e->getMessage()}");
+    //             }
+    //         },
+    //         'rejected' => function (RequestException $reason, $index) use ($allMovies) {
+    //             Log::error("Request thất bại cho phim {$allMovies[$index]['slug']}: {$reason->getMessage()}");
+    //         },
+    //     ]);
 
-        $promise = $pool->promise();
-        $promise->wait();
+    //     $promise = $pool->promise();
+    //     $promise->wait();
 
-        $executionTime = round(microtime(true) - $startTime, 2);
-        Log::info("Import xong {$executionTime}s cho " . count($allMovies) . " phim");
+    //     $executionTime = round(microtime(true) - $startTime, 2);
+    //     Log::info("Import xong {$executionTime}s cho " . count($allMovies) . " phim");
 
-        return redirect()->back()->with('success', "Leech thành công {$executionTime}s cho " . count($allMovies) . " phim");
-    }
+    //     return redirect()->back()->with('success', "Leech thành công {$executionTime}s cho " . count($allMovies) . " phim");
+    // }
 
 
 

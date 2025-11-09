@@ -61,7 +61,7 @@
 
 
                                 @if ($episode->link_video_internet != null)
-                                    <video id="player" data-watched-duration="{{ $watchedDuration }}">
+                                    <video id="player" data-watched-duration="{{ $watched_duration }}">
 
                                     </video>
                                     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -85,7 +85,7 @@
                                         }
                                     </script>
                                 @else
-                                    <video height="465px" data-watched-duration="{{ $watchedDuration }}" id="player">
+                                    <video height="465px" data-watched-duration="{{ $watched_duration }}" id="player">
 
                                         <source src="{{ Storage::url('public/videos/' . $episode->video_url) }}"
                                             type="video/mp4">
@@ -215,7 +215,7 @@
                                         <div class="jws-list-top">
 
                                             <div class="total-number">
-                                                Episodes 1-7 </div>
+                                                {{ $totalEpisode }} tập</div>
                                             <a href="javascript:void(0)" class="change-layout"></a>
                                         </div>
                                     </div>
@@ -431,7 +431,7 @@
                                                                                     Play Now </a>
                                                                                 <img class='attachment-280x176 size-280x176'
                                                                                     alt=''
-                                                                                    src="{{ asset('clients/wp-content/uploads/2023/02/Slide-2-av-280x176.jpg') }}>
+                                                                                    src="{{ asset('clients/wp-content/uploads/2023/02/Slide-2-av-280x176.jpg') }}">
                                                                             </div>
                                                                             <div class="tv-shows-content">
                                                                                 <h6 class="title">
@@ -457,7 +457,7 @@
                                                                                     Play Now </a>
                                                                                 <img class='attachment-280x176 size-280x176'
                                                                                     alt=''
-                                                                                    src="{{ asset('clients/wp-content/uploads/2023/06/The-Brady-Bunch-280x176.jpg') }}>
+                                                                                    src="{{ asset('clients/wp-content/uploads/2023/06/The-Brady-Bunch-280x176.jpg') }}">
                                                                             </div>
                                                                             <div class="tv-shows-content">
                                                                                 <h6 class="title">
@@ -483,8 +483,8 @@
                                                                                     Play Now </a>
                                                                                 <img class='attachment-280x176 size-280x176'
                                                                                     alt=''
-                                                                                    src="{{ asset('clients/wp-content/uploads/2023/06/Love-and-War-280x176.jpg') }}>
-                                                                            </div>
+                                                                                    src="{{ asset('clients/wp-content/uploads/2023/06/Love-and-War-280x176.jpg') }}">
+                                                                            </div>x
                                                                             <div class="tv-shows-content">
                                                                                 <h6 class="title">
                                                                                     <a
@@ -509,7 +509,7 @@
                                                                                     Play Now </a>
                                                                                 <img class='attachment-280x176 size-280x176'
                                                                                     alt=''
-                                                                                    src="{{ asset('clients/wp-content/uploads/2023/04/Falling-Water-280x176.jpg') }}>
+                                                                                    src="{{ asset('clients/wp-content/uploads/2023/04/Falling-Water-280x176.jpg') }}">
                                                                             </div>
                                                                             <div class="tv-shows-content">
                                                                                 <h6 class="title">
@@ -535,7 +535,7 @@
                                                                                     Play Now </a>
                                                                                 <img class='attachment-280x176 size-280x176'
                                                                                     alt=''
-                                                                                    src="{{ asset('clients/wp-content/uploads/2023/06/Day-Dreamers-280x176.jpg') }}>
+                                                                                    src="{{ asset('clients/wp-content/uploads/2023/06/Day-Dreamers-280x176.jpg') }}">
                                                                             </div>
                                                                             <div class="tv-shows-content">
                                                                                 <h6 class="title">
@@ -561,7 +561,7 @@
                                                                                     Play Now </a>
                                                                                 <img class='attachment-280x176 size-280x176'
                                                                                     alt=''
-                                                                                    src="{{ asset('clients/wp-content/uploads/2023/06/American-Nightmare-280x176.jpg') }}>
+                                                                                    src="{{ asset('clients/wp-content/uploads/2023/06/American-Nightmare-280x176.jpg') }}">
                                                                             </div>
                                                                             <div class="tv-shows-content">
                                                                                 <h6 class="title">
@@ -587,7 +587,7 @@
                                                                                     Play Now </a>
                                                                                 <img class='attachment-280x176 size-280x176'
                                                                                     alt=''
-                                                                                    src="{{ asset('clients/wp-content/uploads/2023/06/About-a-Boy-280x176.jpg') }}>
+                                                                                    src="{{ asset('clients/wp-content/uploads/2023/06/About-a-Boy-280x176.jpg') }}">
                                                                             </div>
                                                                             <div class="tv-shows-content">
                                                                                 <h6 class="title">
@@ -648,19 +648,20 @@
                                                     <input type="hidden" name="comment_rating" id="comment_rating"
                                                         required>
                                                 </div>
-                                                <input type="hidden" name="episode_id" value="{{ $episode->id }}">
+                                                <input type="hidden" name="episode_id" id="episode_id"
+                                                    value="{{ $episode->id }}">
                                                 <p class="comment-form-comment"><label class="form-label"
                                                         for="comment">Your review&nbsp;<span
                                                             class="required">*</span></label>
-                                                    <textarea id="comment" name="content" cols="45" rows="8" required>aaaaa</textarea>
+                                                    <textarea id="comment" name="content" cols="45" rows="8" required>{{ $episode->title }}</textarea>
                                                 </p>
                                                 <p class="comment-form-author col-xl-6 col-12"><label
                                                         class="form-label">Name *</label><input id="author"
-                                                        name="name" type="text" value="{{ Auth::user()->name }}"
+                                                        name="name" type="text" value="{{ Auth::user()->name??'' }}"
                                                         size="30" aria-required="true" /></p>
                                                 <p class="comment-form-email col-xl-6 col-12"><label
                                                         class="form-label">Email *</label><input id="email"
-                                                        name="email" type="text" value="{{ Auth::user()->email }}"
+                                                        name="email" type="text" value="{{ Auth::user()->email??'' }}"
                                                         size="30" aria-required="true" /></p>
                                                 <p class="comment-form-cookies-consent"><input
                                                         id="wp-comment-cookies-consent" name="wp-comment-cookies-consent"
@@ -679,6 +680,36 @@
                                         </div><!-- #respond -->
                                     </div>
                                 </div>
+                                <style>
+                                    .submit.loading {
+                                        position: relative;
+                                        color: transparent !important;
+                                    }
+
+                                    .submit.loading::after {
+                                        content: '';
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        width: 18px;
+                                        height: 18px;
+                                        margin: -9px 0 0 -9px;
+                                        border: 2px solid #fff;
+                                        border-top-color: transparent;
+                                        border-radius: 50%;
+                                        animation: spin 0.7s linear infinite;
+                                    }
+
+                                    @keyframes spin {
+                                        from {
+                                            transform: rotate(0deg);
+                                        }
+
+                                        to {
+                                            transform: rotate(360deg);
+                                        }
+                                    }
+                                </style>
 
                                 {{-- <div id="comments" class="comment_top">
 
@@ -719,12 +750,17 @@
 
 
                                     <div class="clear"></div>
-                                    <div class="jws-pagination-number"><ul class='page-numbers'>
-	<li><span aria-current="page" class="page-numbers current">1</span></li>
-	<li><a class="page-numbers" href="https://streamvid.jwsuperthemes.com/movie/page/2/?sortby=views">2</a></li>
-	<li><a class="next page-numbers" href="https://streamvid.jwsuperthemes.com/movie/page/2/?sortby=views"><i class="jws-icon-caret-double-right"></i></a></li>
-</ul>
-</div>
+                                    <div class="jws-pagination-number">
+                                        <ul class='page-numbers'>
+                                            <li><span aria-current="page" class="page-numbers current">1</span></li>
+                                            <li><a class="page-numbers"
+                                                    href="https://streamvid.jwsuperthemes.com/movie/page/2/?sortby=views">2</a>
+                                            </li>
+                                            <li><a class="next page-numbers"
+                                                    href="https://streamvid.jwsuperthemes.com/movie/page/2/?sortby=views"><i
+                                                        class="jws-icon-caret-double-right"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                             <!-- Thêm jQuery và script Ajax -->
@@ -749,6 +785,15 @@
                                             email: email,
                                             _token: $('meta[name="csrf-token"]').attr('content')
                                         },
+
+                                        beforeSend: function() {
+                                            // 👇 đổi nút thành trạng thái "đang gửi"
+                                            $('#submit')
+                                                .prop('disabled', true) // khóa nút
+                                                .val('Đang gửi...') // đổi text
+                                                .addClass('loading'); // thêm class nếu muốn hiệu ứng CSS
+                                        },
+
                                         success: function(response) {
                                             if (response.success) {
                                                 $('#text').val('');
@@ -756,6 +801,7 @@
                                                 loadComments(currentPage);
                                             }
                                         },
+
                                         error: function(xhr) {
                                             if (xhr.status === 422) {
                                                 let errors = xhr.responseJSON.errors;
@@ -766,8 +812,18 @@
                                             } else {
                                                 console.log('Lỗi khác:', xhr.responseText);
                                             }
+                                        },
+
+                                        complete: function() {
+                                            // 👇 khôi phục nút về trạng thái ban đầu
+                                            $('#submit')
+                                                .prop('disabled', false)
+                                                .val('Submit')
+                                                .removeClass('loading');
                                         }
                                     });
+
+
                                 });
 
                                 let currentPage = 1;
@@ -779,7 +835,7 @@
                                     let hasReplies = comment.replies && comment.replies.length > 0;
                                     let isShown = shownReplies[comment.id] || false;
                                     let displayStyle = comment.parent_id && !isShown ? 'display: none;' : '';
-        //                             let html = `
+                                    //                             let html = `
         //     <li class="${itemClass}" data-comment-id="${comment.id}" data-parent-id="${comment.parent_id || ''}" style="${displayStyle}">
         //         <div class="comments__autor">
         //             <img class="comments__avatar" src="{{ asset('clients/img/avatar.svg') }}" alt="">
@@ -787,7 +843,7 @@
         //             <span class="comments__time">${new Date(comment.created_at).toLocaleString()}</span>
         //         </div>
         // `;
-        let html = `
+                                    let html = `
         <li class="comment byuser comment-author-streamvid bypostauthor even thread-even depth-1"
                                                 id="comment-168">
                                                 <div id="div-comment-168" class="comment-body">
@@ -813,41 +869,6 @@
                                                 </div>
                                             </li>
         `;
-
-        //                             if (comment.parent_id && parentContent) {
-        //                                 let shortParentContent = parentContent.length > 50 ? parentContent.substring(0, 50) + '...' : parentContent;
-        //                                 html += `
-        //         <p class="comments__quote">"${shortParentContent}"</p>
-        //     `;
-        //                             }
-
-        //                             html += `
-        //         <p class="comments__text">${comment.content}</p>
-        //         <div class="comments__actions">
-        //             <div class="comments__rate">
-        //                 <button type="button"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 7.3273V14.6537" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14.6667 10.9905H7.33333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg> 10</button>
-        //                 <button type="button">0 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.6667 10.9905H7.33333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
-        //             </div>
-        //             <button type="button" class="reply-btn" data-comment-id="${comment.id}" data-content="${comment.content.replace(/"/g, '"')}"><svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><polyline points='400 160 464 224 400 288' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><path d='M448,224H154C95.24,224,48,273.33,48,332v20' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /></svg><span>Reply</span></button>
-        //             <button type="button"><svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><polyline points='320 120 368 168 320 216' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><path d='M352,168H144a80.24,80.24,0,0,0-80,80v16' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><polyline points='192 392 144 344 192 296' style='fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px' /><path d='M160,344H368a80.24,80.24,0,0,0,80-80V248' style='fill:none;stroke-linecap:round;stroke-width:32px' /></svg><span>Quote</span></button>
-        // `;
-
-        //                             if (hasReplies) {
-        //                                 html += `
-        //             <button type="button" class="toggle-replies" data-comment-id="${comment.id}" style="margin-left: 10px; color: #007bff; background: none; border: none; cursor: pointer;">${isShown ? 'Show less' : `Show more (${comment.replies.length})`}</button>
-        //         </div>
-        //     `;
-        //                             } else {
-        //                                 html += `</div>`;
-        //                             }
-
-        //                             html += `</li>`;
-
-        //                             if (hasReplies) {
-        //                                 comment.replies.forEach(reply => {
-        //                                     html += renderComment(reply, comment.content);
-        //                                 });
-        //                             }
 
                                     return html;
                                 }
@@ -1158,7 +1179,7 @@
                                                                                         href="../tv_shows/shark-hunters/index.html">
                                                                                         <img class='attachment-50x70 size-50x70'
                                                                                             alt=''
-                                                                                            src="{{ asset('clients/wp-content/uploads/2023/02/sahark-e1676001886337-50x70.jpg') }}>
+                                                                                            src="{{ asset('clients/wp-content/uploads/2023/02/sahark-e1676001886337-50x70.jpg') }}">
                                                                                 </a>
 
                                                                             </div>
@@ -1193,7 +1214,7 @@
                                                                                         href="../tv_shows/the-wasted-times/index.html">
                                                                                         <img class='attachment-50x70 size-50x70'
                                                                                             alt=''
-                                                                                            src="{{ asset('clients/wp-content/uploads/2023/02/The-Wasted-Times-50x70.jpg') }}>
+                                                                                            src="{{ asset('clients/wp-content/uploads/2023/02/The-Wasted-Times-50x70.jpg') }}">
                                                                                 </a>
 
                                                                             </div>
@@ -1230,7 +1251,7 @@
                                                                                         href="../tv_shows/political-animal/index.html">
                                                                                         <img class='attachment-50x70 size-50x70'
                                                                                             alt=''
-                                                                                            src="{{ asset('clients/wp-content/uploads/2023/03/Political-Animal-50x70.jpg') }}>
+                                                                                            src="{{ asset('clients/wp-content/uploads/2023/03/Political-Animal-50x70.jpg') }}">
                                                                                 </a>
 
                                                                             </div>
@@ -1267,7 +1288,7 @@
                                                                                         href="../tv_shows/the-unstoppable-soldier/index.html">
                                                                                         <img class='attachment-50x70 size-50x70'
                                                                                             alt=''
-                                                                                            src="{{ asset('clients/wp-content/uploads/2023/03/israel-palacio-IprD0z0zqss-unsplash-50x70.jpg') }}>
+                                                                                            src="{{ asset('clients/wp-content/uploads/2023/03/israel-palacio-IprD0z0zqss-unsplash-50x70.jpg') }}">
                                                                                 </a>
 
                                                                             </div>
@@ -1304,7 +1325,7 @@
                                                                                         href="../tv_shows/fireworks-wednesday/index.html">
                                                                                         <img class='attachment-50x70 size-50x70'
                                                                                             alt=''
-                                                                                            src="{{ asset('clients/wp-content/uploads/2023/02/Fireworks-Wednesday-50x70.jpg') }}>
+                                                                                            src="{{ asset('clients/wp-content/uploads/2023/02/Fireworks-Wednesday-50x70.jpg') }}">
                                                                                 </a>
 
                                                                             </div>
@@ -1357,7 +1378,7 @@
         </div><!-- #primary -->
     </div><!-- #content -->
     <!-- end similar -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const videoWrapperSelector = '.col-xl-9'; // container chứa video area
@@ -1397,7 +1418,7 @@
                 // create a <video> element with reasonable attributes
                 const video = document.createElement('video');
                 video.id = 'player';
-                video.setAttribute('playsinline', ''); // important for mobile
+                // video.setAttribute('playsinline', ''); // important for mobile
                 video.setAttribute('controls', ''); // show controls
                 video.setAttribute('preload', 'metadata');
                 // optional: video.muted = false;
@@ -1430,10 +1451,10 @@
                         hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
                             // initialize Plyr after HLS is ready
                             plyrInstance = new Plyr('#player');
-                            // Optionally resume from watchedDuration if you have it in data
-                            if (data.watchedDuration) {
+                            // Optionally resume from watched_duration if you have it in data
+                            if (data.watched_duration) {
                                 try {
-                                    video.currentTime = Number(data.watchedDuration) || 0;
+                                    video.currentTime = Number(data.watched_duration) || 0;
                                 } catch (e) {}
                             }
                         });
@@ -1442,8 +1463,8 @@
                         video.src = data.video_url;
                         video.addEventListener('loadedmetadata', () => {
                             plyrInstance = new Plyr('#player');
-                            if (data.watchedDuration) try {
-                                video.currentTime = Number(data.watchedDuration) || 0;
+                            if (data.watched_duration) try {
+                                video.currentTime = Number(data.watched_duration) || 0;
                             } catch (e) {}
                         }, {
                             once: true
@@ -1462,8 +1483,8 @@
                     // wait metadata then init Plyr
                     video.addEventListener('loadedmetadata', () => {
                         plyrInstance = new Plyr('#player');
-                        if (data.watchedDuration) try {
-                            video.currentTime = Number(data.watchedDuration) || 0;
+                        if (data.watched_duration) try {
+                            video.currentTime = Number(data.watched_duration) || 0;
                         } catch (e) {}
                     }, {
                         once: true
@@ -1548,23 +1569,208 @@
                 }
             })();
         });
+    </script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoWrapperSelector = '.col-xl-9'; // container chứa video area
+            const videoWrapper = document.querySelector(videoWrapperSelector);
+            let plyrInstance = null;
+            let hlsInstance = null;
+            let saveInterval = null; // interval lưu lịch sử
+
+            // ID người dùng và CSRF từ Laravel
+            const userId = {{ auth()->user()->id??0 }};
+            const token = '{{ csrf_token() }}';
+
+            if (userId) {
+// --- Hàm gửi lịch sử xem ---
+            async function saveViewHistory(video, episodeId) {
+                try {
+                    if (!video || video.paused) return; // chỉ lưu khi đang phát
+                    const currentTime = Math.floor(video.currentTime);
+
+                    const response = await fetch('/api/view-history', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token,
+                        },
+                        body: JSON.stringify({
+                            user_id: userId,
+                            episode_id: episodeId,
+                            watched_duration: currentTime,
+                        }),
+                    });
+
+                    if (!response.ok) throw new Error('Failed to save view history');
+                    const data = await response.json();
+                    console.log('View history updated:', data);
+                } catch (error) {
+                    console.error('Error updating view history:', error);
+                }
+            }
+            }
+
+
+            // --- Dọn dẹp ---
+            function destroyPlayer() {
+                try {
+                    if (saveInterval) clearInterval(saveInterval);
+                    if (hlsInstance) {
+                        hlsInstance.destroy();
+                        hlsInstance = null;
+                    }
+                    if (plyrInstance) {
+                        plyrInstance.destroy();
+                        plyrInstance = null;
+                    }
+                    const old = videoWrapper.querySelector('#player');
+                    if (old) old.remove();
+                } catch (err) {
+                    console.error('Error destroying player:', err);
+                }
+            }
+
+            // --- Tạo thẻ video ---
+            function createVideoElement() {
+                const video = document.createElement('video');
+                video.id = 'player';
+                video.setAttribute('controls', '');
+                video.setAttribute('preload', 'metadata');
+                return video;
+            }
+
+            // --- Khởi tạo video từ dữ liệu trả về ---
+            async function initVideoFromData(data) {
+                destroyPlayer();
+                const video = createVideoElement();
+                videoWrapper.prepend(video);
+
+                // HLS
+                if (data.type === 'hls') {
+                    if (Hls.isSupported()) {
+                        hlsInstance = new Hls();
+                        hlsInstance.loadSource(data.video_url);
+                        hlsInstance.attachMedia(video);
+                        hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+                            plyrInstance = new Plyr('#player');
+                            if (data.watched_duration)
+                                video.currentTime = Number(data.watched_duration) || 0;
+                        });
+                    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                        video.src = data.video_url;
+                        video.addEventListener(
+                            'loadedmetadata',
+                            () => {
+                                plyrInstance = new Plyr('#player');
+                                if (data.watched_duration)
+                                    video.currentTime = Number(data.watched_duration) || 0;
+                            }, {
+                                once: true
+                            }
+                        );
+                    }
+                } else {
+                    // MP4
+                    const source = document.createElement('source');
+                    source.src = data.video_url;
+                    source.type = 'video/mp4';
+                    video.appendChild(source);
+                    video.load();
+                    video.addEventListener(
+                        'loadedmetadata',
+                        () => {
+                            plyrInstance = new Plyr('#player');
+                            if (data.watched_duration)
+                                video.currentTime = Number(data.watched_duration) || 0;
+                        }, {
+                            once: true
+                        }
+                    );
+                }
+
+                // --- Bắt đầu lưu lịch sử xem ---
+                const episodeId = data.id;
+                saveInterval = setInterval(() => saveViewHistory(video, episodeId), 5000);
+            }
+
+            // --- Sự kiện click đổi tập ---
+            document.addEventListener('click', async (e) => {
+                const link = e.target.closest('.episode-link, .jws-pisodes_advanced-item a');
+                if (!link) return;
+                e.preventDefault();
+
+                const episodeId =
+                    link.dataset.episodeId ||
+                    new URL(link.href, window.location.origin).pathname.split('/').pop();
+                if (!episodeId) return console.warn('Missing episode id');
+
+                try {
+                    const res = await fetch(`/ajax/episode/${episodeId}`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            Accept: 'application/json',
+                        },
+                    });
+                    if (!res.ok) throw new Error('Fetch error ' + res.status);
+                    const data = await res.json();
+                    if (data.error) return console.warn('Server error:', data.error);
+
+                    await initVideoFromData(data);
+
+                    document.querySelectorAll('.jws-pisodes_advanced-item').forEach((el) =>
+                        el.classList.remove('active')
+                    );
+
+                    // đổi id tập phim trong form comment
+                    const idEpisode = document.getElementById('episode_id');
+                    idEpisode.value = data.id;
+                    // Gọi loadComments khi trang được tải
+                                $(document).ready(function() {
+                                    loadComments();
+                                });
+
+                    const activeItem = link.closest('.jws-pisodes_advanced-item');
+                    if (activeItem) activeItem.classList.add('active');
+
+                    window.history.pushState({}, '', link.href);
+                } catch (err) {
+                    console.error('Error loading episode:', err);
+                }
+            });
+
+            // --- Nếu load sẵn player ban đầu ---
+            (function initInitialPlayer() {
+                const existingVideo = document.getElementById('player');
+                if (!existingVideo) return;
+                try {
+                    plyrInstance = new Plyr('#player');
+                    const currentEpisode = {{ $episode->id }};
+                    saveInterval = setInterval(() => saveViewHistory(existingVideo, currentEpisode), 5000);
+                } catch (e) {
+                    console.warn('init initial plyr err', e);
+                }
+            })();
+        });
     </script>
+
     @if (!empty(Auth::user()))
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const video = document.getElementById('player'); // Lấy thẻ video
-                const watchedDuration = parseInt(video.getAttribute('data-watched-duration'), 10) ||
-                    0; // Lấy watchedDuration từ data-watched-duration
+                const watched_duration = parseInt(video.getAttribute('data-watched-duration'), 10) ||
+                    0; // Lấy watched_duration từ data-watched-duration
 
                 // Set thời gian bắt đầu cho video
-                video.currentTime = watchedDuration;
+                video.currentTime = watched_duration;
 
-                console.log("Video starts at:", watchedDuration);
+                console.log("Video starts at:", watched_duration);
 
                 // Xử lý các sự kiện khác như lưu lịch sử xem
             });
         </script>
-        <script>
+        {{-- <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const video = document.getElementById('player'); // Lấy thẻ video
                 const userId = {{ auth()->user()->id }};
@@ -1610,6 +1816,6 @@
                     }
                 }, 5000); // Mỗi 5 giây
             });
-        </script>
+        </script> --}}
     @endif
 @endsection

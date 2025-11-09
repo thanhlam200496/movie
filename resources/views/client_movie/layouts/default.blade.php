@@ -11,9 +11,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="profile" href="https://gmpg.org/xfn/11">
     <title>Home &#8211; StreamVid</title>
-    <link rel="preload" data-rocket-preload as="image"
+    {{-- <link rel="preload" data-rocket-preload as="image"
         href="{{ asset('clients/wp-content/uploads/2024/12/7I6VUdPj6tQECNHdviJkUHD2u89-scaled.jpg') }}"
-        fetchpriority="high">
+        fetchpriority="high"> --}}
     <script>
         var jws_variation_gallery_data = null
     </script>
