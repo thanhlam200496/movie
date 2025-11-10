@@ -657,12 +657,14 @@
                                                 </p>
                                                 <p class="comment-form-author col-xl-6 col-12"><label
                                                         class="form-label">Name *</label><input id="author"
-                                                        name="name" type="text" value="{{ Auth::user()->name??'' }}"
-                                                        size="30" aria-required="true" /></p>
+                                                        name="name" type="text"
+                                                        value="{{ Auth::user()->name ?? '' }}" size="30"
+                                                        aria-required="true" /></p>
                                                 <p class="comment-form-email col-xl-6 col-12"><label
                                                         class="form-label">Email *</label><input id="email"
-                                                        name="email" type="text" value="{{ Auth::user()->email??'' }}"
-                                                        size="30" aria-required="true" /></p>
+                                                        name="email" type="text"
+                                                        value="{{ Auth::user()->email ?? '' }}" size="30"
+                                                        aria-required="true" /></p>
                                                 <p class="comment-form-cookies-consent"><input
                                                         id="wp-comment-cookies-consent" name="wp-comment-cookies-consent"
                                                         type="checkbox" value="yes" /> <label
@@ -751,15 +753,15 @@
 
                                     <div class="clear"></div>
                                     <div class="jws-pagination-number">
-                                        <ul class='page-numbers'>
-                                            <li><span aria-current="page" class="page-numbers current">1</span></li>
+                                        <ul class='' id="paginator">
+                                            {{-- <li><span aria-current="page" class="page-numbers current">1</span></li>
                                             <li><a class="page-numbers"
                                                     href="https://streamvid.jwsuperthemes.com/movie/page/2/?sortby=views">2</a>
                                             </li>
                                             <li><a class="next page-numbers"
                                                     href="https://streamvid.jwsuperthemes.com/movie/page/2/?sortby=views"><i
                                                         class="jws-icon-caret-double-right"></i></a></li>
-                                        </ul>
+                                        </ul> --}}
                                     </div>
                                 </div>
                             </div>
@@ -799,6 +801,9 @@
                                                 $('#text').val('');
                                                 $('#error-message').empty();
                                                 loadComments(currentPage);
+                                                console.log(currentPage);
+
+                                                // updatePagination(data.current_page, data.last_page);
                                             }
                                         },
 
@@ -891,10 +896,13 @@
                                             }
                                         });
 
-                                        let perPage = 5;
+                                        let perPage = 3;
                                         let from = (data.current_page - 1) * perPage + 1;
                                         let to = Math.min(data.current_page * perPage, data.total);
                                         $('#page-info').text(`${from} - ${to} from ${data.total}`);
+
+                                        console.log(data);
+
 
                                         updatePagination(data.current_page, data.last_page);
                                     });
@@ -905,38 +913,31 @@
                                     $('#paginator').empty();
                                     if (currentPage > 1) {
                                         $('#paginator').append(`
-                <li>
-                    <a href="#" class="page-link" data-page="${currentPage - 1}">
-                        <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0.75 5.36475L13.1992 5.36475" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M5.771 10.1271L0.749878 5.36496L5.771 0.602051" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </a>
-                </li>
-            `);
+                                                    <li><a href="#" class="page-link" data-page="${currentPage - 1}">
+                                                                    <<
+                                                                </a></li>
+
+                                                   `);
                                     }
 
                                     let startPage = Math.max(1, currentPage - 2);
                                     let endPage = Math.min(lastPage, currentPage + 2);
                                     for (let i = startPage; i <= endPage; i++) {
                                         $('#paginator').append(`
-                <li class="${i === currentPage ? 'active' : ''}">
-                    <a href="#" class="page-link" data-page="${i}">${i}</a>
-                </li>
-            `);
+
+                                                  <li><a class="page-link ${i === currentPage ? 'current' : ''}"
+                                                                  href="#" data-page="${i}">${i}</a>
+                                                        </li>
+                                                     `);
                                     }
 
                                     if (currentPage < lastPage) {
                                         $('#paginator').append(`
-                <li>
-                    <a href="#" class="page-link" data-page="${currentPage + 1}">
-                        <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13.1992 5.3645L0.75 5.3645" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M8.17822 0.602051L13.1993 5.36417L8.17822 10.1271" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </a>
-                </li>
-            `);
+
+                                               <li><a href="#" class="page-link" data-page="${currentPage + 1}">
+                                                                   >>
+                                                                </a></li>
+                                             `);
                                     }
 
                                     $('.page-link').click(function(e) {
@@ -1180,20 +1181,20 @@
                                                                                         <img class='attachment-50x70 size-50x70'
                                                                                             alt=''
                                                                                             src="{{ asset('clients/wp-content/uploads/2023/02/sahark-e1676001886337-50x70.jpg') }}">
-                                                                                </a>
+                                                                                    </a>
 
-                                                                            </div>
-                                                                            <div class="top-content">
-                                                                                        <div class="video-years">2018</div>
-                                                                                        <h6>
-                                                                                            <a
-                                                                                                href="../tv_shows/shark-hunters/index.html">Shark
-                                                                                                Hunters</a>
-                                                                                        </h6>
-                                                                                        <div class="video-cat">
-                                                                                            <a href="../tv_shows_cat/action/index.html"
-                                                                                                rel="tag">Action</a>
-                                                                                        </div>
+                                                                                </div>
+                                                                                <div class="top-content">
+                                                                                    <div class="video-years">2018</div>
+                                                                                    <h6>
+                                                                                        <a
+                                                                                            href="../tv_shows/shark-hunters/index.html">Shark
+                                                                                            Hunters</a>
+                                                                                    </h6>
+                                                                                    <div class="video-cat">
+                                                                                        <a href="../tv_shows_cat/action/index.html"
+                                                                                            rel="tag">Action</a>
+                                                                                    </div>
 
 
                                                                                 </div>
@@ -1215,22 +1216,22 @@
                                                                                         <img class='attachment-50x70 size-50x70'
                                                                                             alt=''
                                                                                             src="{{ asset('clients/wp-content/uploads/2023/02/The-Wasted-Times-50x70.jpg') }}">
-                                                                                </a>
+                                                                                    </a>
 
-                                                                            </div>
-                                                                            <div class="top-content">
-                                                                                        <div class="video-years">2028</div>
-                                                                                        <h6>
-                                                                                            <a
-                                                                                                href="../tv_shows/the-wasted-times/index.html">The
-                                                                                                Wasted Times</a>
-                                                                                        </h6>
-                                                                                        <div class="video-cat">
-                                                                                            <a href="../tv_shows_cat/drama/index.html"
-                                                                                                rel="tag">Drama</a> <a
-                                                                                                href="../tv_shows_cat/school/index.html"
-                                                                                                rel="tag">School</a>
-                                                                                        </div>
+                                                                                </div>
+                                                                                <div class="top-content">
+                                                                                    <div class="video-years">2028</div>
+                                                                                    <h6>
+                                                                                        <a
+                                                                                            href="../tv_shows/the-wasted-times/index.html">The
+                                                                                            Wasted Times</a>
+                                                                                    </h6>
+                                                                                    <div class="video-cat">
+                                                                                        <a href="../tv_shows_cat/drama/index.html"
+                                                                                            rel="tag">Drama</a> <a
+                                                                                            href="../tv_shows_cat/school/index.html"
+                                                                                            rel="tag">School</a>
+                                                                                    </div>
 
 
                                                                                 </div>
@@ -1252,22 +1253,22 @@
                                                                                         <img class='attachment-50x70 size-50x70'
                                                                                             alt=''
                                                                                             src="{{ asset('clients/wp-content/uploads/2023/03/Political-Animal-50x70.jpg') }}">
-                                                                                </a>
+                                                                                    </a>
 
-                                                                            </div>
-                                                                            <div class="top-content">
-                                                                                        <div class="video-years">2019</div>
-                                                                                        <h6>
-                                                                                            <a
-                                                                                                href="../tv_shows/political-animal/index.html">Political
-                                                                                                Animal</a>
-                                                                                        </h6>
-                                                                                        <div class="video-cat">
-                                                                                            <a href="../tv_shows_cat/music/index.html"
-                                                                                                rel="tag">Music</a> <a
-                                                                                                href="../tv_shows_cat/reality/index.html"
-                                                                                                rel="tag">Reality</a>
-                                                                                        </div>
+                                                                                </div>
+                                                                                <div class="top-content">
+                                                                                    <div class="video-years">2019</div>
+                                                                                    <h6>
+                                                                                        <a
+                                                                                            href="../tv_shows/political-animal/index.html">Political
+                                                                                            Animal</a>
+                                                                                    </h6>
+                                                                                    <div class="video-cat">
+                                                                                        <a href="../tv_shows_cat/music/index.html"
+                                                                                            rel="tag">Music</a> <a
+                                                                                            href="../tv_shows_cat/reality/index.html"
+                                                                                            rel="tag">Reality</a>
+                                                                                    </div>
 
 
                                                                                 </div>
@@ -1289,22 +1290,22 @@
                                                                                         <img class='attachment-50x70 size-50x70'
                                                                                             alt=''
                                                                                             src="{{ asset('clients/wp-content/uploads/2023/03/israel-palacio-IprD0z0zqss-unsplash-50x70.jpg') }}">
-                                                                                </a>
+                                                                                    </a>
 
-                                                                            </div>
-                                                                            <div class="top-content">
-                                                                                        <div class="video-years">2020</div>
-                                                                                        <h6>
-                                                                                            <a
-                                                                                                href="../tv_shows/the-unstoppable-soldier/index.html">The
-                                                                                                Unstoppable Soldier</a>
-                                                                                        </h6>
-                                                                                        <div class="video-cat">
-                                                                                            <a href="../tv_shows_cat/drama/index.html"
-                                                                                                rel="tag">Drama</a> <a
-                                                                                                href="../tv_shows_cat/reality/index.html"
-                                                                                                rel="tag">Reality</a>
-                                                                                        </div>
+                                                                                </div>
+                                                                                <div class="top-content">
+                                                                                    <div class="video-years">2020</div>
+                                                                                    <h6>
+                                                                                        <a
+                                                                                            href="../tv_shows/the-unstoppable-soldier/index.html">The
+                                                                                            Unstoppable Soldier</a>
+                                                                                    </h6>
+                                                                                    <div class="video-cat">
+                                                                                        <a href="../tv_shows_cat/drama/index.html"
+                                                                                            rel="tag">Drama</a> <a
+                                                                                            href="../tv_shows_cat/reality/index.html"
+                                                                                            rel="tag">Reality</a>
+                                                                                    </div>
 
 
                                                                                 </div>
@@ -1326,22 +1327,22 @@
                                                                                         <img class='attachment-50x70 size-50x70'
                                                                                             alt=''
                                                                                             src="{{ asset('clients/wp-content/uploads/2023/02/Fireworks-Wednesday-50x70.jpg') }}">
-                                                                                </a>
+                                                                                    </a>
 
-                                                                            </div>
-                                                                            <div class="top-content">
-                                                                                        <div class="video-years">2019</div>
-                                                                                        <h6>
-                                                                                            <a
-                                                                                                href="../tv_shows/fireworks-wednesday/index.html">Fireworks
-                                                                                                Wednesday</a>
-                                                                                        </h6>
-                                                                                        <div class="video-cat">
-                                                                                            <a href="../tv_shows_cat/family/index.html"
-                                                                                                rel="tag">Family</a>
-                                                                                            <a href="../tv_shows_cat/international/index.html"
-                                                                                                rel="tag">International</a>
-                                                                                        </div>
+                                                                                </div>
+                                                                                <div class="top-content">
+                                                                                    <div class="video-years">2019</div>
+                                                                                    <h6>
+                                                                                        <a
+                                                                                            href="../tv_shows/fireworks-wednesday/index.html">Fireworks
+                                                                                            Wednesday</a>
+                                                                                    </h6>
+                                                                                    <div class="video-cat">
+                                                                                        <a href="../tv_shows_cat/family/index.html"
+                                                                                            rel="tag">Family</a>
+                                                                                        <a href="../tv_shows_cat/international/index.html"
+                                                                                            rel="tag">International</a>
+                                                                                    </div>
 
 
                                                                                 </div>
@@ -1580,11 +1581,11 @@
             let saveInterval = null; // interval lưu lịch sử
 
             // ID người dùng và CSRF từ Laravel
-            const userId = {{ auth()->user()->id??0 }};
+            const userId = {{ auth()->user()->id ?? 0 }};
             const token = '{{ csrf_token() }}';
 
-            if (userId) {
-// --- Hàm gửi lịch sử xem ---
+
+            // --- Hàm gửi lịch sử xem ---
             async function saveViewHistory(video, episodeId) {
                 try {
                     if (!video || video.paused) return; // chỉ lưu khi đang phát
@@ -1610,7 +1611,7 @@
                     console.error('Error updating view history:', error);
                 }
             }
-            }
+
 
 
             // --- Dọn dẹp ---
@@ -1691,8 +1692,11 @@
                 }
 
                 // --- Bắt đầu lưu lịch sử xem ---
-                const episodeId = data.id;
+                if (userId) {
+const episodeId = data.id;
                 saveInterval = setInterval(() => saveViewHistory(video, episodeId), 5000);
+                }
+
             }
 
             // --- Sự kiện click đổi tập ---
@@ -1725,11 +1729,13 @@
 
                     // đổi id tập phim trong form comment
                     const idEpisode = document.getElementById('episode_id');
+                    const commentEpisode = document.getElementById('comment');
+                    commentEpisode.value=data.title;
                     idEpisode.value = data.id;
                     // Gọi loadComments khi trang được tải
-                                $(document).ready(function() {
-                                    loadComments();
-                                });
+                    $(document).ready(function() {
+                        loadComments();
+                    });
 
                     const activeItem = link.closest('.jws-pisodes_advanced-item');
                     if (activeItem) activeItem.classList.add('active');
