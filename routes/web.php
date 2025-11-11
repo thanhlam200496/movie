@@ -105,6 +105,8 @@ Route::group(
     }
 );
 
+Route::get('/nguoi-dung', [UserController::class, 'personal'])->name('personal');
+
 
 Route::get('/test', [HomeController::class, 'test']);
 

@@ -1317,7 +1317,7 @@
                                                 <div class="jws_account jws-dropdown-ui">
 
                                                     <a class="dr-button"
-                                                        href="https://streamvid.jwsuperthemes.com/author/emily/">
+                                                        href="{{route('personal')}}">
                                                         <div class="user-avatar"><img alt=''
                                                                 src='https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/Emily-Carey-226x300.jpg'
                                                                 srcset='https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/Emily-Carey-226x300.jpg 226w, https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/Emily-Carey.jpg 452w'
@@ -1330,7 +1330,7 @@
                                                     <div class="dropdown-menu">
                                                         <div class="post-author">
                                                             <a
-                                                                href="https://streamvid.jwsuperthemes.com/author/emily/">
+                                                                href="{{route('personal')}}">
                                                                 <div class="user-avatar user-avatar-lg"><img
                                                                         alt=''
                                                                         src='https://streamvid.jwsuperthemes.com/wp-content/uploads/2023/06/Emily-Carey-226x300.jpg'
@@ -1372,7 +1372,7 @@
                                                                         class="jws-icon-video-camera"></i> <span
                                                                         class="menu-text">Go live</span></a></li>
                                                             <li class="nav-item nav-author"><a class="item-author "
-                                                                    href="https://streamvid.jwsuperthemes.com/author/emily/">
+                                                                    href="{{route('personal')}}">
                                                                     <i class="jws-icon-user-circle"></i> <span
                                                                         class="menu-text">My Profile</span></a></li>
                                                             <li class="nav-item nav-profile"><a class="item-profile "
