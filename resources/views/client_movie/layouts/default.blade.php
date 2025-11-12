@@ -22,7 +22,7 @@
     <meta name='robots' content='max-image-preview:large' />
     <meta property="og:title" content="Home" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://streamvid.jwsuperthemes.com/home/" />
+    {{-- <meta property="og:url" content="https://streamvid.jwsuperthemes.com/home/" /> --}}
     <meta property="og:site_name" content="StreamVid" />
     <script type="text/javascript">
         /* <![CDATA[ */

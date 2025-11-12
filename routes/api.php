@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\admins\MovieController;
 use App\Http\Controllers\clients\CommentController;
+use App\Http\Controllers\clients\FavoriteController;
 use App\Http\Controllers\clients\UserController;
 use App\Http\Controllers\ViewHistoryController;
 use Illuminate\Http\Request;
@@ -38,4 +39,6 @@ Route::controller(UserController::class)->group(function () {
 Route::controller(CommentController::class)->group(function () {
     Route::post('add-comment', 'store')->name('comment');
 });
-
+Route::group(['prefix' => 'favorite', 'as' => 'favorite.'], function () {
+    Route::post('add', [FavoriteController::class, 'store'])->name('add');
+});

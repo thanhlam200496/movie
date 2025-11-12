@@ -35,9 +35,9 @@ Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
     Route::get('fetch', [ClientsCategoryController::class, 'fetchMovies'])->name('fetch');
 
 });
-Route::group(['prefix' => 'favorite', 'as' => 'favorite.'], function () {
-    Route::post('add', [FavoriteController::class, 'store'])->name('add');
-});
+// Route::group(['prefix' => 'favorite', 'as' => 'favorite.'], function () {
+//     Route::post('add', [FavoriteController::class, 'store'])->name('add');
+// });
 Route::group(['prefix' => 'movie', 'as' => 'movie.'], function () {
     Route::get('show/{slug}/{episode?}', [ClientsMovieController::class, 'show'])->name('show');
 });
