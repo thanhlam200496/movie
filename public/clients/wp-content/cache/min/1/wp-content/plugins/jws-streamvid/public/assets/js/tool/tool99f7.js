@@ -22,9 +22,10 @@ console.log(post_id,user_id );
                 success: function (response) {
                     button.removeClass('loading');
                     if (response.data.status == 'good') {
-                        likes_count.text(response.data.count);
-                        button.addClass('liked') } else { button.removeClass('liked'); likes_count.text(response.data.count) }
+                        likes_count.text(response.data.favoriteTotal);
+                        button.addClass('liked') } else { button.removeClass('liked'); likes_count.text(response.data.favoriteTotal) }
                     jwsThemeModule.show_notification(response.data.message, 'success')
+
                 },
              error: function () { jwsThemeModule.show_notification('check lại đi.', 'error'); $elem.removeClass('loading') }, complete: function () { },
                         });
