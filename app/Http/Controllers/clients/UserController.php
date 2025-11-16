@@ -79,17 +79,7 @@ public function signinAjax(Request $request)
         return redirect()->route('home');
     }
 
-    // public function login(Request $request)
-    // {
-    //     if (!Auth::attempt($request->only('email', 'password'))) {
-    //         return response()->json(['message' => 'Đăng nhập thất bại'], 401);
-    //     }
 
-    //     $user = Auth::user();
-    //     $token = $user->createToken('auth-token')->plainTextToken;
-
-    //     return response()->json(['user' => $user, 'token' => $token]);
-    // }
 
     public function personal() {
         $moviesPopular = Movie::with(['categories', 'episodes'])->where(['status' => 'Public'])->orderBy('views', 'DESC')->take(10)->get();
@@ -104,17 +94,33 @@ public function signinAjax(Request $request)
             ->orderBy('views', 'DESC')
             ->take(10)
             ->get();
-        $favorites = Favorite::all();
-        if (Auth::check() && isset(Auth::user()->id)) {
-            $favoriteMovies = Movie::join('favorites', 'movies.id', '=', 'favorites.movie_id')
-                ->where('favorites.user_id', Auth::user()->id)
+        $favoriteMovies = Movie::join('favorites', 'movies.id', '=', 'favorites.movie_id')
+                ->where(['favorites.user_id'=> Auth::user()->id, 'movies.type_film'=>'Movie'])
                 ->select('movies.*', 'favorites.created_at as favorited_at')
                 ->orderBy('favorites.created_at', 'DESC')
                 ->get();
-        } else {
-            $favoriteMovies = '';
-        }
+        $favoriteFilms = Movie::join('favorites', 'movies.id', '=', 'favorites.movie_id')
+                ->where(['favorites.user_id'=> Auth::user()->id, 'movies.type_film'=>'TV Show'])
+                ->select('movies.*', 'favorites.created_at as favorited_at')
+                ->orderBy('favorites.created_at', 'DESC')
+                ->get();
+
         $moviesPopular = Movie::with(['categories', 'episodes'])->where(['status' => 'Public'])->orderBy('views', 'DESC')->take(10)->get();
-        return view('client_movie.personal',compact('moviesPopular', 'favorites', 'favoriteMovies', 'moviesNew', 'moviesHotInYear'));
+        return view('client_movie.personal',compact('moviesPopular','favoriteFilms', 'favoriteMovies', 'moviesNew', 'moviesHotInYear'));
+    }
+    public function personalHistory()  {
+        $historyMovies = Movie::with(['categories', 'episodes'])->where(['status' => 'Public'])->orderBy('views', 'DESC')->take(10)->get();
+
+        $historyFilms = Movie::with('categories')->where(['status' => 'Public'])->orderBy('created_at', 'DESC')->take(10)->get();
+        return response()->json(
+            [
+                'status'=>200,
+                'data'=>[
+                    'historyMovies'=>$historyMovies,
+                    'historyFilms'=>$historyFilms,
+                ],
+                
+            ]
+        );
     }
 }
