@@ -27,14 +27,18 @@ class FavoriteController extends Controller
 
         if ($favorite) {
             $favorite->delete();
-            $action = 'removed';
+            $status = 'bad';
         } else {
             Favorite::create([
                 'user_id' => $request->user_id,
                 'movie_id' => $movie->id
             ]);
-            $action = 'added';
+            $status = 'good';
         }
+	$favoriteTotal = Favorite::where([
+            
+            'movie_id' => $movie->id
+        ])->count();
 
         // Lấy danh sách yêu thích mới nhất
         $favoriteMovies = Favorite::where('user_id', $request->user_id)
@@ -45,8 +49,8 @@ class FavoriteController extends Controller
         return response()->json([
 
             'data' => [
-                'status' => "good",
-            'action' => $action,
+                'status' => $status,
+            'favoriteTotal'=>$favoriteTotal,
 
             ],
             'favoriteMovies' => $favoriteMovies

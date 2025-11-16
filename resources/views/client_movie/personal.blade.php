@@ -133,7 +133,7 @@
 
                                                         <div class="row movies_advanced_content layout6 movies_advanced_ajax_bfa9843 jws_has_pagination owl-carousel jws_movies_advanced_slider"
                                                             data-owl-option='{                "autoplay": false,                "nav": true,                "dots":false,                "autoplayTimeout": 5000,                "autoplayHoverPause":true,                "center":false,                "loop":false,                "autoWidth":true,                "smartSpeed": 750,                "responsive":{        "1500":{"items": 1,"slideBy": 1},        "1024":{"items": 1,"slideBy": 1},        "768":{"items": 1,"slideBy": 1},        "0":{"items": 1,"slideBy": 1}    }}'>
-                                                            @foreach ($moviesHotInYear as $movie)
+                                                            @foreach ($favoriteMovies as $movie)
                                                                 <div class="jws-post-item slider-item">
                                                                     <div class="post-inner hover-video">
 
@@ -285,7 +285,7 @@
 
                                                         <div class="row movies_advanced_content layout1 movies_advanced_ajax_cc7e695 jws_has_pagination owl-carousel jws_movies_advanced_slider"
                                                             data-owl-option='{                "autoplay": false,                "nav": true,                "dots":false,                "autoplayTimeout": 5000,                "autoplayHoverPause":true,                "center":false,                "loop":false,                "autoWidth":true,                "smartSpeed": 750,                "responsive":{        "1500":{"items": 1,"slideBy": 1},        "1024":{"items": 1,"slideBy": 1},        "768":{"items": 1,"slideBy": 1},        "0":{"items": 1,"slideBy": 1}    }}'>
-                                                            @foreach ($moviesNew as $movie)
+                                                            @foreach ($favoriteMovies as $movie)
                                                                 <div class="jws-post-item slider-item">
                                                                     <div class="post-inner">
 

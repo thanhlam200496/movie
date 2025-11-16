@@ -1,4 +1,4 @@
-@extends('client_movie.layouts.default')
+'@extends('client_movie.layouts.default')
 @section('title')
     @if (strlen($movie->title) < 40)
         Phim {{ substr($movie->title, 0, 30) }} Capy Phim miễn phí.
@@ -338,9 +338,9 @@
                             <div class="jws-tool">
 
                                 <div class="jws-likes">
-                                    <a href="#" class="like-button" data-type="tv_shows" data-post-id="{{ $movie->id }}" data-post-user="{{ Auth::user()->id }}">
+                                    <a href="#" class="like-button" data-type="tv_shows" data-post-id="{{ $movie->id }}" data-post-user="{{ Auth::user()->id??0 }}">
                                         <i class="jws-icon-thumbs-up"></i>
-                                        <span class="likes-count">2</span> <span>likes</span>
+                                        <span class="likes-count">{{$favoriteTotal}}</span> <span>likes</span>
                                     </a>
                                 </div>
                                 <div class="jws-watchlist">

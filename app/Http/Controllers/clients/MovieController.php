@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Episode;
 use App\Models\Movie;
+use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -28,6 +29,8 @@ class MovieController extends Controller
         $listWatched = DB::table('view_history')
             ->where('user_id', $userId)->get();;
         $episodeId = $episode ?? null;
+	
+	$favoriteTotal = Favorite::where('movie_id',$movie->id)->count();
 
         if ($episodeId) {
             $episode = Episode::where(['movie_id' => $movie->id, 'id' => $episodeId])->first();
@@ -46,6 +49,7 @@ class MovieController extends Controller
             'movie' => $movie,
             'totalEpisode'=>$totalEpisode,
             'episode' => $episode,
+	    'favoriteTotal'=>$favoriteTotal,
             'comments' => $comments,
             'watched_duration' => $watched_duration,
             'listWatched' => $listWatched
