@@ -128,7 +128,7 @@
                                                     <div class="jws-movies_advanced-element">
 
 
-                                                        <div class="row movies_advanced_content layout6 movies_advanced_ajax_bfa9843 jws_has_pagination owl-carousel jws_movies_advanced_slider"
+                                                        <div id="list-personal1" class="row movies_advanced_content layout6 movies_advanced_ajax_bfa9843 jws_has_pagination owl-carousel jws_movies_advanced_slider"
                                                             data-owl-option='{                "autoplay": false,                "nav": true,                "dots":false,                "autoplayTimeout": 5000,                "autoplayHoverPause":true,                "center":false,                "loop":false,                "autoWidth":true,                "smartSpeed": 750,                "responsive":{        "1500":{"items": 1,"slideBy": 1},        "1024":{"items": 1,"slideBy": 1},        "768":{"items": 1,"slideBy": 1},        "0":{"items": 1,"slideBy": 1}    }}'>
                                                             @foreach ($favoriteMovies as $movie)
                                                                 <div class="jws-post-item slider-item">
@@ -368,7 +368,83 @@ document.addEventListener('DOMContentLoaded', function () {
     if (historyBtn) {
         historyBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            $.get('')
+alert('clicked');
+            $.get('nguoi-dung/lich-su', function(data){
+		$('#list-personal1').empty();
+		data.historyMovies.forEach(movie=>{
+			$('#list-personal1').append(`
+<div class="jws-post-item slider-item">
+                                                                    <div class="post-inner hover-video">
+
+                                                                        <div class="post-media"
+                                                                            data-trailer="${ movie.trailer_url }">
+                                                                            <a
+                                                                                href="${ route('movie.show', ['slug' => movie.slug, 'episode' => movie.episodes[0].id]) }">
+                                                                                <img class='attachment-630x400 size-630x400'
+                                                                                    alt=''
+                                                                                    src="/timthumb.php?src=${ movie.poster_url != null ? Storage::url('public/images/' . movie.poster_url) : movie.link_poster_internet }&w=288&h=183">
+                                                                            </a>
+
+                                                                        </div>
+                                                                        <div class="videos-content">
+                                                                            <h6 class="video_title">
+                                                                                <a
+                                                                                    href="${ route('movie.show', ['slug' => movie.slug, 'episode' => movie.episodes[0].id]) }">
+                                                                                    ${ movie.title }
+                                                                            </h6>
+
+                                                                            <div class="video-meta">
+                                                                                <div class="video-years">
+                                                                                    ${ movie.release_year }</div>
+                                                                                <div class="video-time">
+                                                                                    ${ movie.duration }</div>
+                                                                                <div class="video-badge">
+                                                                                    ${ movie.type_film }</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="popup-detail">
+                                                                            <h6 class="video_title">
+                                                                                <a
+                                                                                    href="${ route('movie.show', ['slug' => movie.slug, 'episode' => movie.episodes[0].id]) }">
+                                                                                    ${ movie.title } </a>
+                                                                            </h6>
+
+                                                                            <div class="video-meta">
+                                                                                <div class="video-years">
+                                                                                    ${ movie.title }</div>
+                                                                                <div class="video-time">
+                                                                                    ${ movie.duration }</div>
+                                                                                <div class="video-badge">
+                                                                                    ${ movie.type_film }</div>
+                                                                            </div>
+                                                                            <div class="video-cat">
+                                                                            </div>
+                                                                            <div class="video-play">
+                                                                                <a class="btn-main jws-popup-detail"
+                                                                                    href="${ route('movie.show', ['slug' => movie.slug, 'episode' => movie.episodes[0].id]) }"
+                                                                                    data-post-id="9053">
+                                                                                    <span>View Detail</span>
+                                                                                    <i class="jws-icon-info-light"></i>
+                                                                                </a>
+                                                                                <a class="btn-main button-custom watchlist-add"
+                                                                                    href="${ route('movie.show', ['slug' => movie.slug, 'episode' => movie.episodes[0].id]) }"
+                                                                                    data-post-id="9053">
+                                                                                    <span class="added">Watchlisted</span>
+                                                                                    <span>Watch Later</span>
+                                                                                    <i
+                                                                                        class="jws-icon-bookmark-simple"></i>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+
+`
+);
+}
+})
 
         });
     } else {

@@ -34,6 +34,7 @@ Route::controller(UserController::class)->group(function () {
 
     Route::post('signinAjax', 'signinAjax')->name('signinAjax');
 
+	Route::get('nguoi-dung/lich-su', 'personalHistory')->name('personalHistory');
 });
 // Route::post('/comments', [CommentController::class, 'store'])->name('comment');
 Route::controller(CommentController::class)->group(function () {
